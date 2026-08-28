@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&family=Montserrat:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Montserrat:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <script>
         tailwind.config = {
             theme: {
@@ -18,7 +18,7 @@
                     fontFamily: {
                         sans: ['"Poppins"', 'sans-serif'],
                         display: ['"Montserrat"', 'sans-serif'],
-                        mono: ['"JetBrains Mono"', 'monospace']
+                        mono: ['"Quicksand"', 'sans-serif'] 
                     }
                 }
             }
@@ -30,6 +30,11 @@
         .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); }
         .fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* 隐藏数字输入框默认的上下箭头 */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"] { -moz-appearance: textfield; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
@@ -162,8 +167,58 @@
                 </div>
             </section>
 
+            <!-- Promociones Especiales (NUEVO) -->
+            <section class="bg-slate-50 pt-12 pb-4">
+                <div class="max-w-[1400px] mx-auto px-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Promo 1: VIP -->
+                        <div class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-700/50 shadow-lg group flex flex-col justify-between">
+                            <div class="absolute top-0 right-0 p-4 opacity-10 transform translate-x-4 -translate-y-4 group-hover:scale-110 group-hover:opacity-20 transition-all duration-500 pointer-events-none">
+                                <span class="text-9xl">👑</span>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="inline-flex items-center gap-1.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 font-black text-[10px] px-3 py-1 rounded-full uppercase tracking-wider mb-4 font-display">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                                    Beneficio Exclusivo
+                                </div>
+                                <h3 class="text-2xl sm:text-3xl font-black text-white font-display mb-3 leading-tight">Tarjeta VIP <br/>Electroluz</h3>
+                                <p class="text-slate-400 text-sm leading-relaxed max-w-sm mb-6 font-medium">
+                                    Por compras presenciales superiores a <strong class="text-amber-400 font-bold">$500</strong>, obtén tu credencial VIP y disfruta de <strong class="text-white">precios al mayor</strong> en todas tus compras futuras.
+                                </p>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <button onclick="switchView('catalog')" class="text-amber-400 font-bold text-xs uppercase tracking-widest flex items-center gap-2 hover:text-amber-300 transition-colors group/btn cursor-pointer">
+                                    Ver Catálogo <span class="group-hover/btn:translate-x-1 transition-transform">→</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Promo 2: Back to School -->
+                        <div class="relative overflow-hidden bg-gradient-to-br from-rose-500 via-rose-600 to-orange-500 rounded-3xl p-6 sm:p-8 border border-rose-400/50 shadow-lg group flex flex-col justify-between">
+                            <div class="absolute top-0 right-0 p-4 opacity-15 transform translate-x-4 -translate-y-4 group-hover:scale-110 group-hover:opacity-25 transition-all duration-500 pointer-events-none">
+                                <span class="text-9xl">🎒</span>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="inline-block bg-white/20 backdrop-blur-sm text-white font-black text-[10px] px-3 py-1 rounded-full uppercase tracking-wider mb-4 font-display border border-white/30">
+                                    Oferta Temporal
+                                </div>
+                                <h3 class="text-2xl sm:text-3xl font-black text-white font-display mb-3 leading-tight">¡Regreso a <br/>Clases!</h3>
+                                <p class="text-white/90 text-sm leading-relaxed max-w-sm mb-6 font-medium">
+                                    Prepárate para el nuevo año escolar. Disfruta de un <strong class="text-white bg-black/20 px-1.5 py-0.5 rounded font-black">-15% DE DESCUENTO</strong> en todos los útiles escolares y papelería.
+                                </p>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <button onclick="navToCategory('Papeleria')" class="bg-white text-rose-600 px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-rose-50 transition-colors shadow-lg active:scale-95 cursor-pointer w-max">
+                                    Comprar Papelería
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Modern Slender Category Cards -->
-            <section class="bg-slate-50 py-16 border-b border-slate-200/60">
+            <section class="bg-slate-50 py-12 border-b border-slate-200/60">
                 <div class="max-w-[1400px] mx-auto px-4 space-y-8">
                     <div class="text-center space-y-2">
                         <h2 class="text-2xl sm:text-3xl font-black text-slate-900 font-display">Categorías Principales</h2>
@@ -176,7 +231,7 @@
                                 <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform shrink-0">💡</div>
                                 <div>
                                     <h3 class="font-display font-bold text-slate-900 text-sm group-hover:text-blue-600 transition-colors">Iluminación LED</h3>
-                                    <p class="text-[11px] text-slate-500 font-mono font-semibold mt-0.5" id="count-cat-iluminacion">Calculando...</p>
+                                    <p class="text-[12px] text-slate-500 font-mono font-bold mt-0.5" id="count-cat-iluminacion">Calculando...</p>
                                 </div>
                             </div>
                             <div class="text-slate-300 group-hover:text-blue-500 text-lg">→</div>
@@ -187,7 +242,7 @@
                                 <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform shrink-0">🔧</div>
                                 <div>
                                     <h3 class="font-display font-bold text-slate-900 text-sm group-hover:text-amber-600 transition-colors">Ferretería</h3>
-                                    <p class="text-[11px] text-slate-500 font-mono font-semibold mt-0.5" id="count-cat-ferreteria">Calculando...</p>
+                                    <p class="text-[12px] text-slate-500 font-mono font-bold mt-0.5" id="count-cat-ferreteria">Calculando...</p>
                                 </div>
                             </div>
                             <div class="text-slate-300 group-hover:text-amber-500 text-lg">→</div>
@@ -198,7 +253,7 @@
                                 <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform shrink-0">🔌</div>
                                 <div>
                                     <h3 class="font-display font-bold text-slate-900 text-sm group-hover:text-emerald-600 transition-colors">Electrónica & Audio</h3>
-                                    <p class="text-[11px] text-slate-500 font-mono font-semibold mt-0.5" id="count-cat-electronico">Calculando...</p>
+                                    <p class="text-[12px] text-slate-500 font-mono font-bold mt-0.5" id="count-cat-electronico">Calculando...</p>
                                 </div>
                             </div>
                             <div class="text-slate-300 group-hover:text-emerald-500 text-lg">→</div>
@@ -209,7 +264,7 @@
                                 <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform shrink-0">📚</div>
                                 <div>
                                     <h3 class="font-display font-bold text-slate-900 text-sm group-hover:text-rose-600 transition-colors">Papelería y Oficina</h3>
-                                    <p class="text-[11px] text-slate-500 font-mono font-semibold mt-0.5" id="count-cat-papeleria">Calculando...</p>
+                                    <p class="text-[12px] text-slate-500 font-mono font-bold mt-0.5" id="count-cat-papeleria">Calculando...</p>
                                 </div>
                             </div>
                             <div class="text-slate-300 group-hover:text-rose-500 text-lg">→</div>
@@ -294,8 +349,8 @@
                         La Candelaria, Esq. Tracabordo A Puente Yáñez, Calle Este, Edif. Dofrepol. Frente a la tienda Textura y al lado de Zoom.
                     </p>
                     <div class="flex items-center gap-4 pt-2">
-                        <span class="bg-slate-950 text-white px-4 py-2 rounded-xl text-xs font-mono font-bold shadow-md">RIF J507436055</span>
-                        <span class="text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-3 py-2 rounded-xl font-mono">
+                        <span class="bg-slate-950 text-white px-4 py-2 rounded-xl text-xs font-mono font-bold shadow-md tracking-wide">RIF J507436055</span>
+                        <span class="text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-3 py-2 rounded-xl font-mono tracking-wide">
                             Lun - Sáb: 8:30 AM – 6:00 PM
                         </span>
                     </div>
@@ -317,6 +372,41 @@
         </div>
     </footer>
 
+    <!-- Product Modal (弹窗 HTML 结构) -->
+    <div id="product-modal" class="hidden fixed inset-0 z-[70] bg-slate-950/70 backdrop-blur-sm p-4 flex justify-center items-center opacity-0 transition-opacity duration-300">
+        <div id="product-modal-content" class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden flex flex-col scale-95 transition-transform duration-300 relative max-h-[90vh]">
+            <button onclick="closeProductModal()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-slate-100/80 backdrop-blur text-slate-600 font-bold hover:bg-rose-500 hover:text-white transition-all cursor-pointer shadow-sm flex items-center justify-center text-lg">✕</button>
+
+            <div class="relative bg-slate-50 w-full h-[250px] sm:h-[350px] p-6 border-b border-slate-100 flex items-center justify-center shrink-0">
+                <div id="modal-badge-container"></div>
+                <img id="modal-img" src="" class="w-full h-full object-contain drop-shadow-md" alt="">
+            </div>
+
+            <div class="p-5 sm:p-6 space-y-4 overflow-y-auto custom-scrollbar">
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span id="modal-id" class="bg-slate-900 text-white text-[10px] font-bold px-2 py-1 rounded font-mono shadow-sm"></span>
+                        <span id="modal-cat" class="bg-blue-50 text-blue-700 border border-blue-100 text-[10px] font-bold px-2 py-1 rounded"></span>
+                    </div>
+                    <h2 id="modal-name" class="text-lg sm:text-xl font-black text-slate-900 leading-tight font-display"></h2>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2">
+                    <div class="flex justify-between items-end">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Precio Detal (<6)</span>
+                        <span id="modal-price-retail" class="text-xl font-black font-mono text-slate-900"></span>
+                    </div>
+                    <div id="modal-wholesale-container" class="flex justify-between items-end pt-2 border-t border-slate-200">
+                        <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Precio Mayor (≥6)</span>
+                        <span id="modal-price-wholesale" class="text-xl font-black font-mono text-emerald-600"></span>
+                    </div>
+                </div>
+
+                <div id="modal-cart-controls" class="pt-2"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Cart Modal -->
     <div id="cart-modal" class="hidden fixed inset-0 z-[60] bg-slate-950/60 backdrop-blur-sm p-4 lg:p-10 flex justify-center lg:justify-end">
         <div class="w-full lg:max-w-md bg-white h-full rounded-2xl lg:rounded-none shadow-2xl flex flex-col overflow-hidden">
@@ -326,7 +416,42 @@
                 </div>
                 <button onclick="closeCartModal()" class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-bold hover:bg-rose-100 hover:text-rose-600 transition-colors cursor-pointer">✕</button>
             </div>
+            
             <div id="cart-items-list" class="flex-grow overflow-y-auto p-4 space-y-3 custom-scrollbar"></div>
+            
+            <!-- Shipping Options Selection -->
+            <div id="cart-shipping-options" class="px-5 py-4 border-t border-slate-100 bg-slate-50 hidden">
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Método de Entrega</h3>
+                <div class="grid grid-cols-3 gap-2">
+                    <label class="cursor-pointer relative">
+                        <input type="radio" name="shipping_method" value="Envío Nacional" class="peer sr-only" checked>
+                        <div class="h-full rounded-xl border border-slate-200 bg-white p-2.5 text-center hover:bg-slate-50 peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700 transition-all shadow-sm peer-checked:shadow-md">
+                            <div class="text-xl mb-1">🚚</div>
+                            <div class="text-[9px] font-bold uppercase leading-tight font-display">Envío<br/>Nacional</div>
+                        </div>
+                        <div class="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full text-white flex items-center justify-center text-[10px] opacity-0 peer-checked:opacity-100 transition-opacity shadow-sm">✓</div>
+                    </label>
+                    
+                    <label class="cursor-pointer relative">
+                        <input type="radio" name="shipping_method" value="Delivery Caracas" class="peer sr-only">
+                        <div class="h-full rounded-xl border border-slate-200 bg-white p-2.5 text-center hover:bg-slate-50 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 peer-checked:text-emerald-700 transition-all shadow-sm peer-checked:shadow-md">
+                            <div class="text-xl mb-1">🛵</div>
+                            <div class="text-[9px] font-bold uppercase leading-tight font-display">Delivery<br/>Caracas</div>
+                        </div>
+                        <div class="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full text-white flex items-center justify-center text-[10px] opacity-0 peer-checked:opacity-100 transition-opacity shadow-sm">✓</div>
+                    </label>
+                    
+                    <label class="cursor-pointer relative">
+                        <input type="radio" name="shipping_method" value="PickUp Sede" class="peer sr-only">
+                        <div class="h-full rounded-xl border border-slate-200 bg-white p-2.5 text-center hover:bg-slate-50 peer-checked:border-amber-500 peer-checked:bg-amber-50 peer-checked:text-amber-700 transition-all shadow-sm peer-checked:shadow-md">
+                            <div class="text-xl mb-1">🏬</div>
+                            <div class="text-[9px] font-bold uppercase leading-tight font-display">PickUp<br/>Sede</div>
+                        </div>
+                        <div class="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 rounded-full text-white flex items-center justify-center text-[10px] opacity-0 peer-checked:opacity-100 transition-opacity shadow-sm">✓</div>
+                    </label>
+                </div>
+            </div>
+
             <div class="p-5 border-t border-slate-200 bg-white space-y-4">
                 <div class="flex justify-between items-center text-lg font-bold text-slate-950 font-display">
                     <span>Total Estimado:</span>
@@ -355,16 +480,34 @@
             categoryTree: {}, itemsPerPage: 20, currentPage: 1
         };
 
+        // ==========================================
+        // 🚀 SUPER OPTIMIZED IMAGE LOADER
+        // ==========================================
         function getProductImageUrl(prod) {
+            // 1. Get whatever is in the spreadsheet
             let raw = prod.imageUrl || prod.image || prod.img || prod.foto || '';
-            if (!raw) return PLACEHOLDER_SVG;
-            raw = raw.trim().replace(/^["']+|["']+$/g, '');
-            if (raw.startsWith('http')) return raw.replace(/#/g, '%23');
             
+            // 2. CRITICAL FIX: Remove ALL spaces. This fixes the error in your screenshot 
+            // where spaces were accidentally added (like "r2. dev / FE2208 . png")
+            raw = raw.replace(/\s+/g, ''); 
+
+            // 3. ZERO-DATA MODE: If you left the image cell completely blank, 
+            // the code will automatically use the Product ID (e.g. FE2208.png)
+            if (!raw) {
+                return `${CLOUDFLARE_R2_URL}/${prod.id}.png`;
+            }
+
+            // 4. If it's a full URL (even a messed up one that we just cleaned), use it
+            if (raw.startsWith('http')) {
+                return raw.replace(/#/g, '%23');
+            }
+
+            // 5. SHORTNAME MODE: If you just typed "FE2208.png" or even just "FE2208"
             let filename = raw;
             if (filename.toLowerCase().startsWith('images/')) filename = filename.substring(7);
             filename = filename.replace(/#/g, '');
-            if (!filename.includes('.')) filename += '.webp';
+            // Auto-append .png if you forgot to type the format
+            if (!filename.includes('.')) filename += '.png';
             
             return `${CLOUDFLARE_R2_URL}/${filename}`;
         }
@@ -374,28 +517,20 @@
             const attempts = parseInt(img.dataset.attempts || '0');
             
             if (attempts === 0) {
-                // 尝试 1：换成 .jpg
+                // Attempt 1: Try swapping to .jpg
                 img.dataset.attempts = '1';
                 img.dataset.origSrc = currentSrc;
                 img.src = currentSrc.replace(/\.[^/.]+$/, '.jpg');
             } else if (attempts === 1) {
-                // 尝试 2：换成 .png (解决你的 .png 照片问题)
+                // Attempt 2: Try swapping to .png
                 img.dataset.attempts = '2';
                 img.src = img.dataset.origSrc.replace(/\.[^/.]+$/, '.png');
             } else if (attempts === 2) {
-                // 尝试 3：原路径全小写
+                // Attempt 3: Try all lowercase letters
                 img.dataset.attempts = '3';
                 img.src = img.dataset.origSrc.toLowerCase();
-            } else if (attempts === 3) {
-                // 尝试 4：.jpg 全小写
-                img.dataset.attempts = '4';
-                img.src = img.dataset.origSrc.replace(/\.[^/.]+$/, '.jpg').toLowerCase();
-            } else if (attempts === 4) {
-                // 尝试 5：.png 全小写
-                img.dataset.attempts = '5';
-                img.src = img.dataset.origSrc.replace(/\.[^/.]+$/, '.png').toLowerCase();
             } else {
-                // 彻底找不到，显示默认灰色 PV 占位图
+                // Final failure: show gray placeholder logo
                 img.onerror = null;
                 img.src = PLACEHOLDER_SVG;
             }
@@ -451,23 +586,50 @@
             return v !== '' && v !== 'no' && v !== 'false' && v !== '0' && v !== 'null';
         }
 
+        // ==========================================
+        // 🚀 升级版智能 CSV 解析器 (解决单元格内换行导致的错位问题)
+        // ==========================================
         function parseCSVToProducts(csvText) {
-            const lines = csvText.split(/\r\n|\n/);
-            if (lines.length < 2) return [];
-            
-            const splitCsvRow = (rowStr) => {
-                const result = []; let current = '', inQuotes = false;
-                for (let i = 0; i < rowStr.length; i++) {
-                    const char = rowStr[i];
-                    if (char === '"') inQuotes = !inQuotes;
-                    else if (char === ',' && !inQuotes) { result.push(current.trim().replace(/^"|"$/g, '')); current = ''; }
-                    else current += char;
-                }
-                result.push(current.trim().replace(/^"|"$/g, ''));
-                return result;
-            };
+            const rows = [];
+            let currentRow = [];
+            let currentCell = '';
+            let inQuotes = false;
 
-            const rawHeaders = splitCsvRow(lines[0]).map(h => h.toLowerCase().trim());
+            // 逐字读取，智能识别引号内的换行符和逗号
+            for (let i = 0; i < csvText.length; i++) {
+                const char = csvText[i];
+                const nextChar = csvText[i + 1];
+
+                if (char === '"') {
+                    if (inQuotes && nextChar === '"') {
+                        currentCell += '"'; // 处理转义的双引号
+                        i++; 
+                    } else {
+                        inQuotes = !inQuotes; // 切换引号状态
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    currentRow.push(currentCell.trim()); // 单元格结束
+                    currentCell = '';
+                } else if ((char === '\n' || (char === '\r' && nextChar === '\n')) && !inQuotes) {
+                    currentRow.push(currentCell.trim()); // 行结束
+                    if (currentRow.length > 0 && currentRow.some(c => c !== '')) {
+                        rows.push(currentRow);
+                    }
+                    currentRow = [];
+                    currentCell = '';
+                    if (char === '\r') i++; 
+                } else {
+                    currentCell += char;
+                }
+            }
+            if (currentCell !== '' || currentRow.length > 0) {
+                currentRow.push(currentCell.trim());
+                if (currentRow.some(c => c !== '')) rows.push(currentRow);
+            }
+
+            if (rows.length < 2) return [];
+
+            const rawHeaders = rows[0].map(h => h.toLowerCase().trim());
             const getColIdx = (keys) => rawHeaders.findIndex(h => keys.some(k => h.includes(k)));
 
             const idxId = getColIdx(['id', 'codigo', 'código', 'sku', 'ref']);
@@ -483,13 +645,16 @@
             const idxImg = getColIdx(['images', 'direccion', 'imageurl', 'imagen', 'foto', 'img']);
 
             const products = [];
-            for (let i = 1; i < lines.length; i++) {
-                if (!lines[i].trim()) continue;
-                const row = splitCsvRow(lines[i]);
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
                 if (row.length === 0) continue;
                 
                 const getVal = (idx, def = '') => (idx !== -1 && row[idx] !== undefined) ? row[idx] : def;
                 
+                const rawId = getVal(idxId);
+                // 过滤掉因为表格乱码导致的超长异常 ID
+                if (!rawId || rawId.length > 40) continue; 
+
                 const rawRetail = getVal(idxRetail, '0').replace(/[^0-9.,]/g, '').replace(',', '.');
                 const rawWholesale = getVal(idxWholesale, '0').replace(/[^0-9.,]/g, '').replace(',', '.');
                 const badge = getVal(idxBadge).trim().toUpperCase();
@@ -501,9 +666,11 @@
                 else primaryBadge = badge;
 
                 const prod = {
-                    id: getVal(idxId) || `PROD-${i}`, name: getVal(idxName) || 'Producto',
+                    id: rawId || `PROD-${i}`, 
+                    name: getVal(idxName) || 'Producto',
                     category: getVal(idxCat) || 'General',
-                    priceRetail: parseFloat(rawRetail) || 0, priceWholesale: parseFloat(rawWholesale) || 0,
+                    priceRetail: parseFloat(rawRetail) || 0, 
+                    priceWholesale: parseFloat(rawWholesale) || 0,
                     badge: primaryBadge,
                     isAgotado: ['si', 'sí', 'true', '1', 'agotado'].includes(getVal(idxAgotado).toLowerCase()),
                     imageUrl: getVal(idxImg)
@@ -677,21 +844,21 @@
                 return `
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-2.5 flex flex-col relative group hover:shadow-md transition-all">
                     ${badgeHtml}
-                    <div class="aspect-square bg-slate-50 rounded-xl overflow-hidden mb-2 relative flex items-center justify-center border border-slate-100">
-                        <img src="${getProductImageUrl(prod)}" loading="lazy" onerror="handleImgError(this)" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+                    <div onclick="openProductModal('${prod.id}')" class="aspect-square bg-slate-50 rounded-xl overflow-hidden mb-2 relative flex items-center justify-center border border-slate-100 p-2 cursor-pointer">
+                        <img src="${getProductImageUrl(prod)}" loading="lazy" onerror="handleImgError(this)" class="w-full h-full object-contain group-hover:scale-105 transition-transform">
                         ${prod.isAgotado ? '<div class="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center"><span class="bg-slate-900 text-white text-[10px] font-bold px-3 py-1 rounded uppercase font-display">Agotado</span></div>' : ''}
                     </div>
                     <div class="flex items-center gap-1.5 mb-1 flex-wrap">
                         <span class="bg-slate-900 text-white text-[9px] font-bold px-1.5 py-0.5 rounded font-mono">${prod.id}</span>
                         <span class="bg-blue-50 text-blue-700 border border-blue-100 text-[8px] font-bold px-1.5 py-0.5 rounded truncate max-w-full">${prod.hierarchy.l1}</span>
                     </div>
-                    <h3 class="text-xs font-bold text-slate-900 leading-tight uppercase line-clamp-2 font-display">${prod.name}</h3>
+                    <h3 onclick="openProductModal('${prod.id}')" class="text-xs font-bold text-slate-900 leading-tight uppercase line-clamp-2 font-display cursor-pointer hover:text-blue-600 transition-colors">${prod.name}</h3>
                     <div class="mt-auto">
                         ${pricesHtml}
                         ${prod.isAgotado ? '' : `
                         <div class="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-lg p-1 mt-2">
                             <button onclick="updateCart('${prod.id}', -1)" class="w-7 h-7 flex items-center justify-center text-slate-500 font-bold hover:bg-slate-200 rounded-md transition-colors cursor-pointer">-</button>
-                            <span class="text-xs font-bold w-6 text-center font-mono tabular-nums" id="qty-${prod.id}">${qty}</span>
+                            <input type="number" id="qty-${prod.id}" value="${qty}" onchange="setCartQty('${prod.id}', this.value)" onkeyup="if(event.key === 'Enter') this.blur();" class="text-xs font-bold w-10 text-center font-mono tabular-nums bg-white border border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 rounded py-0.5" />
                             <button onclick="updateCart('${prod.id}', 1)" class="w-7 h-7 flex items-center justify-center text-slate-500 font-bold hover:bg-slate-200 rounded-md transition-colors cursor-pointer">+</button>
                         </div>`}
                     </div>
@@ -716,6 +883,109 @@
             renderQuoteBar();
         };
 
+        window.openProductModal = function(id) {
+            const prod = state.productsData.find(p => p.id === id);
+            if (!prod) return;
+            
+            // 填充弹窗数据
+            document.getElementById('modal-img').src = getProductImageUrl(prod);
+            document.getElementById('modal-img').onerror = function() { handleImgError(this); };
+            document.getElementById('modal-id').innerText = prod.id;
+            document.getElementById('modal-cat').innerText = prod.category;
+            document.getElementById('modal-name').innerText = prod.name;
+            document.getElementById('modal-price-retail').innerHTML = formatPrice(prod.priceRetail, true);
+            
+            const hasWholesale = prod.priceWholesale > 0 && prod.priceWholesale !== prod.priceRetail;
+            const wholesaleContainer = document.getElementById('modal-wholesale-container');
+            if (hasWholesale) {
+                wholesaleContainer.classList.remove('hidden');
+                wholesaleContainer.classList.add('flex');
+                document.getElementById('modal-price-wholesale').innerHTML = formatPrice(prod.priceWholesale, true);
+            } else {
+                wholesaleContainer.classList.add('hidden');
+                wholesaleContainer.classList.remove('flex');
+            }
+            
+            // 填充角标
+            let badgeHtml = '';
+            if (prod.badge === 'NUEVO') badgeHtml = '<span class="absolute top-3 left-3 bg-emerald-500 text-white text-xs font-bold px-2.5 py-1 rounded shadow z-10 font-display">NUEVO</span>';
+            if (prod.badge === 'OFERTA') badgeHtml = '<span class="absolute top-3 left-3 bg-rose-500 text-white text-xs font-bold px-2.5 py-1 rounded shadow z-10 animate-pulse font-display">OFERTA</span>';
+            if (prod.badge === 'TOP') badgeHtml = '<span class="absolute top-3 left-3 bg-sky-500 text-white text-xs font-bold px-2.5 py-1 rounded shadow z-10 font-display">TOP</span>';
+            if (prod.isAgotado) badgeHtml += '<div class="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center"><span class="bg-slate-900 text-white text-sm font-bold px-4 py-2 rounded uppercase font-display">Agotado</span></div>';
+            document.getElementById('modal-badge-container').innerHTML = badgeHtml;
+            
+            // 填充独立的购物车控制台
+            const cartControls = document.getElementById('modal-cart-controls');
+            if (prod.isAgotado) {
+                cartControls.innerHTML = '<div class="bg-slate-100 text-slate-500 font-bold text-center py-3.5 rounded-xl uppercase text-xs border border-slate-200">Producto Agotado</div>';
+            } else {
+                const qty = state.cartQuantities[id] || 0;
+                cartControls.innerHTML = `
+                    <div class="flex items-center justify-between bg-white border-2 border-slate-900 rounded-xl p-2 shadow-sm">
+                        <button onclick="updateCart('${prod.id}', -1)" class="w-12 h-12 flex items-center justify-center text-slate-600 bg-slate-100 font-bold hover:bg-slate-200 rounded-lg transition-colors cursor-pointer text-xl active:scale-95">-</button>
+                        <div class="flex flex-col items-center">
+                            <span class="text-[10px] text-slate-500 font-bold uppercase tracking-widest font-mono mb-1">En Pedido</span>
+                            <input type="number" id="modal-qty" value="${qty}" onchange="setCartQty('${prod.id}', this.value)" onkeyup="if(event.key === 'Enter') this.blur();" class="text-2xl font-black w-24 text-center font-mono tabular-nums text-slate-900 leading-none bg-slate-50 border border-slate-200 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 rounded-lg py-1" />
+                        </div>
+                        <button onclick="updateCart('${prod.id}', 1)" class="w-12 h-12 flex items-center justify-center text-white bg-slate-900 font-bold hover:bg-slate-800 rounded-lg transition-colors cursor-pointer text-xl active:scale-95">+</button>
+                    </div>
+                `;
+            }
+
+            // 打开弹窗并加入动画
+            const modal = document.getElementById('product-modal');
+            const content = document.getElementById('product-modal-content');
+            
+            // 首先取消隐藏状态
+            modal.classList.remove('hidden');
+            
+            // 延迟一丢丢执行，让浏览器有机会渲染，从而触发平滑过渡动画
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        }
+
+        window.setCartQty = function(id, val) {
+            let newQty = parseInt(val, 10);
+            // 如果输入的是负数或者乱码，重置为 0
+            if (isNaN(newQty) || newQty < 0) newQty = 0;
+            
+            const current = state.cartQuantities[id] || 0;
+            if (newQty === 0) delete state.cartQuantities[id];
+            else state.cartQuantities[id] = newQty;
+            
+            // 同步更新页面上的输入框显示
+            const gridInput = document.getElementById(`qty-${id}`);
+            if (gridInput) gridInput.value = newQty;
+            
+            const modalInput = document.getElementById('modal-qty');
+            if (modalInput && document.getElementById('modal-id').innerText === id) {
+                modalInput.value = newQty;
+            }
+            
+            // 如果数量跨越了批发价门槛（6个），重新渲染网格来更新价格高亮
+            if ((current < 6 && newQty >= 6) || (current >= 6 && newQty < 6)) { 
+                renderGrid(false); 
+            }
+            renderQuoteBar();
+        };
+
+        window.updateCart = function(id, delta) {
+            const current = state.cartQuantities[id] || 0;
+            setCartQty(id, current + delta);
+        };
+
+        window.closeProductModal = function() {
+            const modal = document.getElementById('product-modal');
+            const content = document.getElementById('product-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300); // 等待淡出动画结束
+        };
+
         function getTier(prod, qty) {
             const hasWholesale = prod.priceWholesale > 0 && prod.priceWholesale !== prod.priceRetail;
             const isWholesale = hasWholesale && qty >= 6;
@@ -732,24 +1002,27 @@
 
         window.openCartModal = function() {
             const list = document.getElementById('cart-items-list'); if (!list) return;
+            const shippingOptions = document.getElementById('cart-shipping-options');
             list.innerHTML = '';
             let total = 0;
             const ids = Object.keys(state.cartQuantities);
             if (ids.length === 0) {
                 list.innerHTML = '<p class="text-center text-slate-400 py-12 font-semibold">Tu pedido está vacío.</p>';
+                if(shippingOptions) shippingOptions.classList.add('hidden');
             } else {
+                if(shippingOptions) shippingOptions.classList.remove('hidden');
                 ids.forEach(id => {
                     const p = state.productsData.find(x => x.id === id); if(!p) return;
                     const qty = state.cartQuantities[id];
                     const tier = getTier(p, qty); total += tier.subtotal;
                     list.innerHTML += `
                         <div class="flex items-center gap-3 p-3 border border-slate-100 rounded-xl bg-white shadow-sm">
-                            <img src="${getProductImageUrl(p)}" onerror="handleImgError(this)" class="w-14 h-14 rounded-lg object-cover bg-slate-50 border border-slate-100">
+                            <img src="${getProductImageUrl(p)}" onerror="handleImgError(this)" class="w-14 h-14 rounded-lg object-contain p-1 bg-slate-50 border border-slate-100 shrink-0">
                             <div class="flex-grow min-w-0">
                                 <p class="text-[11px] font-bold uppercase truncate text-slate-900 font-display">${p.name}</p>
                                 <span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100 font-mono">${tier.label}: ${formatPrice(tier.unitPrice)} (x${qty})</span>
                             </div>
-                            <div class="text-right"><p class="text-sm font-bold text-blue-600 font-mono">${formatPrice(tier.subtotal)}</p></div>
+                            <div class="text-right shrink-0"><p class="text-sm font-bold text-blue-600 font-mono">${formatPrice(tier.subtotal)}</p></div>
                         </div>`;
                 });
             }
@@ -763,7 +1036,20 @@
         window.exportQuoteToWhatsApp = function() {
             const ids = Object.keys(state.cartQuantities);
             if (ids.length === 0) return;
-            let text = `🛍️ *PEDIDO ELECTROLUZ PV C.A.*\n\n`;
+            
+            // Get selected shipping method
+            let shippingMethod = "No especificado";
+            const shippingRadios = document.getElementsByName('shipping_method');
+            for(let i=0; i<shippingRadios.length; i++){
+                if(shippingRadios[i].checked){
+                    shippingMethod = shippingRadios[i].value;
+                    break;
+                }
+            }
+
+            let text = `🛍️ *PEDIDO ELECTROLUZ PV C.A.*\n`;
+            text += `📦 *Entrega:* ${shippingMethod}\n\n`;
+            
             let total = 0;
             ids.forEach(id => {
                 const p = state.productsData.find(x => x.id === id); if(!p) return;
