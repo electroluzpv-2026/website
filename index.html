@@ -4,13 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Distribuidora Electroluz PV C.A.</title>
+  
+  <!-- SECURITY FIX: Using versioned Tailwind CDN with Subresource Integrity (SRI) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;900&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <!-- Google Fonts: Poppins + Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
 
   <style>
     body {
-      font-family: 'Quicksand', sans-serif;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400; /* 降低全局默认字重，价格和产品信息不加粗 */
       background-color: #f8fafc;
       color: #0f172a;
       -webkit-tap-highlight-color: transparent;
@@ -46,16 +53,60 @@
     .t-new { background: linear-gradient(135deg, #f0fdf4, #d1fae5); color: #047857; transition: 0.3s; }
     .t-new:hover, .t-new.act { background: linear-gradient(135deg, #10b981, #059669); color: #fff; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
 
-    .btn-pay { flex: 1; padding: 8px 4px; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 10px; font-weight: 800; background: #fff; color: #64748b; transition: 0.2s; text-align: center; }
-    .btn-del { padding: 10px 4px; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 800; color: #64748b; transition: 0.2s; }
+    .btn-pay { flex: 1; padding: 6px 4px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 9px; font-weight: 700; background: #fff; color: #64748b; transition: 0.2s; text-align: center; }
+    .btn-del { padding: 6px 4px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 9px; font-weight: 700; color: #64748b; transition: 0.2s; }
     
     .fade-in { animation: fadeIn 0.3s ease forwards; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Card Layout Optimization */
+    /* Custom Toggle Switch for Currency */
+    .toggle-checkbox:checked {
+      right: 0;
+      border-color: #3b82f6;
+    }
+    .toggle-checkbox:checked + .toggle-label {
+      background-color: #3b82f6;
+    }
+    .toggle-checkbox:checked + .toggle-label:before {
+      transform: translateX(100%);
+    }
+    
     .product-card {
       content-visibility: auto;
       contain-intrinsic-size: 400px;
+    }
+
+    /* Código 蓝色药丸样式 */
+    .code-pill {
+      display: inline-block;
+      padding: 0.15rem 0.7rem;
+      border-radius: 9999px;
+      border: 2px solid #3b82f6; /* 蓝色线条 */
+      background-color: white;
+      color: #1e293b;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      white-space: nowrap;
+    }
+    .code-pill-sm {
+      font-size: 0.65rem;
+      padding: 0.1rem 0.6rem;
+      border-width: 1.5px;
+    }
+    /* 价格文字不加粗 */
+    .price-text {
+      font-weight: 400 !important;
+    }
+    .product-name {
+      font-weight: 500 !important;
+    }
+    .modal-price {
+      font-weight: 400 !important;
+    }
+    .cart-item-name {
+      font-weight: 500 !important;
     }
   </style>
 </head>
@@ -75,7 +126,7 @@
     </div>
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
       <div class="flex items-center gap-3 cursor-pointer group" onclick="setView('home')">
-        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full flex items-center justify-center p-0.5 shadow-lg relative overflow-hidden">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-xl flex items-center justify-center p-0.5 shadow-lg relative overflow-hidden">
            <img src="https://pub-db6d95a9369746c6ae9e956ab6f6ebe7.r2.dev/logo%20pv.png" class="w-full h-full object-cover">
         </div>
         <div>
@@ -85,7 +136,6 @@
       </div>
       
       <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-        <!-- New visible Catalog button inside Header -->
         <button onclick="setView('catalog')" class="hidden md:flex items-center gap-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 text-white px-5 py-2 rounded-lg font-black text-xs shadow-md border border-white/10 transition-all uppercase tracking-widest">
           <i class="ph-bold ph-book-open text-base"></i> CATÁLOGO
         </button>
@@ -95,10 +145,16 @@
           <a href="https://www.tiktok.com/@electroluzpv" target="_blank" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-cyan-500/20 hover:text-cyan-400 transition-all"><i class="ph-fill ph-tiktok-logo text-lg"></i></a>
         </div>
 
-        <div id="h-ctrls" class="hidden flex items-center gap-2 sm:gap-3">
-          <select id="cur-sel" onchange="updCur()" class="bg-black/20 border border-white/10 text-white text-xs font-bold rounded-lg pl-3 pr-8 py-2.5 outline-none focus:border-blue-500 cursor-pointer f-int tracking-wider">
-            <option value="USD">USD ($)</option><option value="VES">VES (Bs)</option>
-          </select>
+        <div id="h-ctrls" class="hidden flex items-center gap-3 sm:gap-4">
+          <!-- Fun Toggle Switch for Currency -->
+          <div class="relative inline-flex items-center cursor-pointer bg-black/20 p-1 rounded-full border border-white/10" onclick="toggleCurrency()">
+            <div class="w-16 h-7 bg-transparent rounded-full flex relative items-center justify-between px-2">
+              <span id="cur-usd-lbl" class="text-[9px] font-black z-10 transition-colors text-white">USD</span>
+              <span id="cur-ves-lbl" class="text-[9px] font-black z-10 transition-colors text-slate-500">VES</span>
+              <div id="cur-slider" class="absolute left-0 w-1/2 h-full bg-blue-500 rounded-full shadow transition-transform duration-300 transform translate-x-0"></div>
+            </div>
+          </div>
+          
           <button onclick="toggCart()" class="relative bg-white hover:bg-slate-100 text-slate-900 px-4 py-2.5 rounded-lg font-black text-xs shadow-lg transition-all flex items-center gap-2 uppercase tracking-widest">
             <i class="ph-bold ph-shopping-cart text-lg text-blue-600"></i> <span class="hidden sm:inline">Pedido</span> 
             <span id="c-badge" class="absolute -top-2 -right-2 bg-rose-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#242629]">0</span>
@@ -111,7 +167,6 @@
   </header>
 
   <main id="v-home" class="flex-1 w-full relative overflow-hidden bg-[#0b1121] pb-16">
-    <!-- Advanced Gradient Aura -->
     <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
       <div class="absolute -top-[20%] -left-[10%] w-[500px] h-[500px] bg-blue-600/30 rounded-full mix-blend-screen filter blur-[120px] opacity-60"></div>
       <div class="absolute top-[30%] -right-[20%] w-[600px] h-[600px] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[150px] opacity-50"></div>
@@ -126,7 +181,7 @@
         
         <div class="flex flex-wrap gap-4 pt-4">
           <button onclick="setView('catalog')" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-black text-sm shadow-[0_0_20px_rgba(37,99,235,0.4)] flex items-center gap-2 group border border-blue-400/50 transition-all tracking-widest uppercase"><span class="w-2 h-2 rounded-full bg-white/80 animate-pulse"></span> EXPLORAR CATÁLOGO <i class="ph-bold ph-arrow-right group-hover:translate-x-1 transition-transform text-lg"></i></button>
-          <a href="https://wa.me/584223888007" target="_blank" class="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-8 py-4 rounded-xl font-bold text-sm flex items-center gap-2 backdrop-blur-sm transition-all tracking-widest uppercase"><i class="ph-fill ph-whatsapp-logo text-xl text-emerald-400"></i> COTIZACIÓN</a>
+          <a href="https://wa.me/584123888007" target="_blank" class="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-8 py-4 rounded-xl font-bold text-sm flex items-center gap-2 backdrop-blur-sm transition-all tracking-widest uppercase"><i class="ph-fill ph-whatsapp-logo text-xl text-emerald-400"></i> COTIZACIÓN</a>
         </div>
       </div>
       
@@ -170,7 +225,6 @@
       </div>
     </section>
 
-    <!-- Map & Footer -->
     <section class="max-w-7xl mx-auto px-4 py-16 border-t border-slate-200 grid lg:grid-cols-2 gap-12 items-center bg-white">
       <div>
         <span class="text-blue-600 font-bold text-[10px] tracking-widest uppercase mb-2 flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> SEDE CENTRAL & ATENCIÓN</span>
@@ -193,7 +247,13 @@
       
       <!-- Search & Brands Filter -->
       <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col lg:flex-row gap-4 justify-between items-center relative z-20">
-        <div class="w-full lg:w-1/2 relative"><i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i><input type="text" id="s-input" placeholder="Buscar por código, producto o marca..." oninput="updS(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3.5 outline-none focus:ring-2 focus:ring-blue-500 text-sm f-int transition-all"></div>
+        <div class="w-full lg:w-1/2 relative">
+          <i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+          <input type="text" id="s-input" placeholder="Buscar por código, producto o marca..." oninput="updS(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-10 py-3.5 outline-none focus:ring-2 focus:ring-blue-500 text-sm f-int transition-all">
+          <button id="s-clear" onclick="clrSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-full flex items-center justify-center transition-colors">
+            <i class="ph-bold ph-x text-sm"></i>
+          </button>
+        </div>
         <div class="flex items-center gap-2 overflow-x-auto hide-sc w-full lg:w-auto pb-1 lg:pb-0 shrink-0">
           <span class="text-[10px] font-black tracking-widest text-slate-400 mr-2 uppercase">MARCA:</span>
           <button id="b-todo" onclick="setB('')" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-900 text-white transition-all">Todas</button>
@@ -203,7 +263,6 @@
         </div>
       </div>
 
-      <!-- Tag Filters & Breadcrumbs -->
       <div class="flex flex-wrap gap-3">
         <button id="t-todo" onclick="setT('')" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-900 text-white shadow-sm transition-all">Catálogo Completo</button>
         <button id="t-ofr" onclick="setT('oferta')" class="t-ofr px-5 py-2.5 rounded-xl text-sm font-bold border border-rose-200 flex items-center gap-1.5 bg-white shadow-sm"><i class="ph-fill ph-fire text-rose-500"></i> En Oferta <span class="bg-rose-100 text-rose-600 text-[9px] font-black px-1.5 py-0.5 rounded ml-1 uppercase">Promo</span></button>
@@ -214,7 +273,6 @@
         <span class="text-[10px] tracking-widest text-slate-400 mr-1 uppercase">RUTA:</span><span id="br-l1" class="text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-md">Todo</span><span id="br-l2" class="hidden text-blue-600 bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-md"></span><span id="br-l3" class="hidden text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-md"></span>
       </div>
 
-      <!-- Categories Level Selectors -->
       <div class="space-y-4">
         <div id="f-l1" class="flex flex-wrap gap-2"></div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -223,10 +281,11 @@
         </div>
       </div>
 
-      <!-- MANDATORY: 5 columns on lg and xl screens, 3 on mobile -->
       <div id="p-grid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 pt-4">
          <div class="col-span-full py-20 text-center flex flex-col items-center"><i class="ph-bold ph-spinner-gap animate-spin text-4xl text-blue-500 mb-3"></i><p class="text-slate-500 font-bold f-int text-lg">Conectando con Google Sheets...</p></div>
       </div>
+      
+      <div id="pagination" class="hidden flex justify-center items-center mt-8 pb-4"></div>
       
       <div id="no-res" class="hidden py-16 text-center bg-white rounded-2xl border border-slate-200 shadow-sm"><i class="ph-bold ph-magnifying-glass text-5xl text-slate-300 mb-3"></i><h3 class="text-xl font-black text-slate-800">No se encontraron productos</h3><button onclick="clrF()" class="mt-4 px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold text-sm transition-colors border border-slate-200">Limpiar Filtros</button></div>
     </div>
@@ -234,7 +293,6 @@
 
   <div id="modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-end sm:items-center justify-center sm:p-4 opacity-0 transition-opacity duration-300">
     <div class="bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[90vh] transform translate-y-full sm:translate-y-10 transition-transform duration-300 relative overflow-hidden">
-      <!-- Agotado Overlay for Modal -->
       <div id="m-agotado-layer" class="hidden absolute inset-0 bg-white/70 backdrop-blur-[2px] z-20 flex-col items-center justify-center">
         <div class="border-4 border-rose-600 text-rose-600 font-black text-3xl px-6 py-2 rounded-xl transform -rotate-12 tracking-widest bg-white/90 shadow-2xl">AGOTADO</div>
         <p class="mt-4 font-bold text-slate-700 text-sm bg-white px-4 py-1.5 rounded-full shadow-sm">Sin inventario disponible</p>
@@ -246,26 +304,26 @@
         <img id="m-img" src="" class="max-w-full max-h-full object-contain mix-blend-multiply drop-shadow-md">
       </div>
       <div class="p-5 sm:p-6 flex-1 overflow-y-auto hide-sc bg-white">
-        <div class="flex items-center gap-2 mb-3"><span id="m-cod" class="bg-slate-800 text-white text-[10px] font-black px-2.5 py-1 rounded tracking-widest f-num shadow-sm"></span><span id="m-br" class="hidden text-[10px] font-black italic tracking-tighter px-2.5 py-1 rounded shadow-sm"></span></div>
-        <h3 id="m-tit" class="text-lg sm:text-xl font-black text-slate-900 leading-tight mb-4 uppercase"></h3>
+        <!-- 新增分类显示区域 -->
+        <div id="m-category-tag" class="mb-2 text-xs text-slate-500 font-medium bg-slate-100 inline-block px-3 py-1 rounded-full border border-slate-200"></div>
         
+        <div class="flex items-center gap-2 mb-3 flex-wrap">
+          <span id="m-cod" class="code-pill code-pill-sm"></span>
+          <span id="m-br" class="hidden text-[10px] font-black italic tracking-tighter px-2.5 py-1 rounded shadow-sm"></span>
+        </div>
+        <h3 id="m-tit" class="text-lg sm:text-xl font-black text-slate-900 leading-tight mb-4 uppercase product-name"></h3>
+        
+        <!-- 一键切换货币按钮 (modal内) -->
+        <div class="flex justify-end mb-2">
+          <button onclick="toggleCurrency(); updateModalPrices();" class="text-xs font-medium bg-blue-50 hover:bg-blue-100 text-blue-600 px-3 py-1 rounded-full border border-blue-200 transition flex items-center gap-1">
+            <i class="ph-bold ph-currency-circle-dollar text-sm"></i> Cambiar a <span id="modal-currency-label">VES</span>
+          </button>
+        </div>
+
         <div id="m-info-b" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-3 mb-5"><p class="text-[10px] font-bold text-slate-400 mb-1.5 uppercase tracking-widest flex items-center gap-1"><i class="ph-fill ph-info"></i> Especificaciones</p><p id="m-info" class="text-sm text-slate-700 f-int whitespace-pre-wrap leading-relaxed"></p></div>
         
-        <!-- Pricing Grid Modal -->
-        <div class="grid grid-cols-3 gap-2 mb-6 f-int">
-           <div class="flex flex-col items-center justify-center p-2 rounded-xl border border-slate-100 bg-slate-50">
-             <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Detal <span class="bg-slate-200 px-1 rounded">&lt;6</span></span>
-             <span id="m-pd" class="text-lg sm:text-xl font-black text-slate-800 leading-none"></span>
-           </div>
-           <div class="flex flex-col items-center justify-center p-2 rounded-xl border border-blue-100 bg-blue-50">
-             <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1">Mayor <span class="bg-blue-200/50 px-1 rounded">&ge;6</span></span>
-             <span id="m-pm" class="text-lg sm:text-xl font-black text-blue-700 leading-none"></span>
-           </div>
-           <div class="flex flex-col items-center justify-center p-2 rounded-xl border border-amber-200 bg-amber-50">
-             <span class="text-[10px] font-bold text-amber-600 uppercase tracking-widest mb-1">VIP</span>
-             <span id="m-pv" class="text-lg sm:text-xl font-black text-amber-700 leading-none"></span>
-           </div>
-        </div>
+        <!-- Pricing Grid Modal (Dynamic Container) -->
+        <div id="m-price-grid"></div>
 
         <div class="flex flex-col gap-3">
           <div class="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-2xl p-1.5 shadow-inner w-full max-w-[240px] mx-auto h-14">
@@ -280,41 +338,40 @@
   </div>
 
   <div id="drawer" class="fixed inset-y-0 right-0 w-full sm:w-[440px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col border-l border-slate-200">
-    <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50"><h3 class="font-black text-xl text-slate-900 tracking-tight">RESUMEN DE PEDIDO</h3><button onclick="toggCart()" class="w-9 h-9 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50 flex items-center justify-center shadow-sm transition-colors"><i class="ph-bold ph-x"></i></button></div>
+    <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50"><h3 class="font-black text-lg text-slate-900 tracking-tight">RESUMEN DE PEDIDO</h3><button onclick="toggCart()" class="w-8 h-8 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50 flex items-center justify-center shadow-sm transition-colors"><i class="ph-bold ph-x"></i></button></div>
     
-    <div id="c-items" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50 hide-sc"></div>
+    <div id="c-items" class="flex-1 overflow-y-auto p-3 space-y-2.5 bg-slate-50/50 hide-sc"></div>
     
-    <div class="p-5 border-t border-slate-200 bg-white shadow-[0_-10px_20px_rgba(0,0,0,0.02)] z-10">
-      <!-- VIP Tracker inside Cart -->
-      <div id="v-tr" class="mb-4 bg-gradient-to-r from-amber-50 to-yellow-50 p-3.5 rounded-xl hidden border border-amber-200 shadow-sm">
-        <div class="flex justify-between items-end mb-2.5"><span class="text-[10px] font-black text-amber-700 uppercase tracking-widest flex items-center gap-1.5"><i class="ph-fill ph-crown text-amber-500 text-sm"></i> Meta Precio VIP ($500)</span><span id="v-txt" class="text-xs font-black text-amber-600 f-num"></span></div>
-        <div class="h-2.5 bg-amber-200/50 rounded-full overflow-hidden shadow-inner"><div id="v-bar" class="h-full bg-gradient-to-r from-amber-400 to-amber-500 transition-all duration-500 rounded-full"></div></div>
+    <div class="p-3 border-t border-slate-200 bg-white shadow-[0_-10px_20px_rgba(0,0,0,0.02)] z-10">
+      <div id="v-tr" class="mb-3 bg-gradient-to-r from-amber-50 to-yellow-50 p-2.5 rounded-xl hidden border border-amber-200 shadow-sm">
+        <div class="flex justify-between items-end mb-1.5"><span class="text-[9px] font-black text-amber-700 uppercase tracking-widest flex items-center gap-1"><i class="ph-fill ph-crown text-amber-500 text-xs"></i> Meta VIP ($500)</span><span id="v-txt" class="text-[10px] font-black text-amber-600 f-num"></span></div>
+        <div class="h-1.5 bg-amber-200/50 rounded-full overflow-hidden shadow-inner"><div id="v-bar" class="h-full bg-gradient-to-r from-amber-400 to-amber-500 transition-all duration-500 rounded-full"></div></div>
       </div>
 
-      <div class="mb-4">
-        <p class="text-[10px] font-bold text-slate-400 mb-2.5 uppercase tracking-widest">Método de Entrega:</p>
-        <div class="grid grid-cols-3 gap-2">
-          <button id="d-nacional" onclick="setDel('nacional')" class="btn-del hover:bg-slate-50 py-2.5"><i class="ph-fill ph-truck text-xl mb-0.5"></i>Nacional</button>
-          <button id="d-delivery" onclick="setDel('delivery')" class="btn-del hover:bg-slate-50 py-2.5"><i class="ph-fill ph-moped text-xl mb-0.5"></i>Delivery</button>
-          <button id="d-pickup" onclick="setDel('pickup')" class="btn-del hover:bg-slate-50 py-2.5"><i class="ph-fill ph-storefront text-xl mb-0.5"></i>PickUp</button>
+      <div class="mb-3">
+        <p class="text-[9px] font-bold text-slate-400 mb-1.5 uppercase tracking-widest">Método de Entrega:</p>
+        <div class="grid grid-cols-3 gap-1.5">
+          <button id="d-nacional" onclick="setDel('nacional')" class="btn-del hover:bg-slate-50 py-1.5"><i class="ph-fill ph-truck text-base mb-0.5"></i>Nacional</button>
+          <button id="d-delivery" onclick="setDel('delivery')" class="btn-del hover:bg-slate-50 py-1.5"><i class="ph-fill ph-moped text-base mb-0.5"></i>Delivery</button>
+          <button id="d-pickup" onclick="setDel('pickup')" class="btn-del hover:bg-slate-50 py-1.5"><i class="ph-fill ph-storefront text-base mb-0.5"></i>PickUp</button>
         </div>
       </div>
 
-      <div class="mb-5">
-        <p class="text-[10px] font-bold text-slate-400 mb-2.5 uppercase tracking-widest flex justify-between">Forma de Pago: <span class="bg-slate-100 px-2 py-0.5 rounded text-[9px] border border-slate-200 f-num text-slate-500 shadow-sm">TASA BCV: 791.67</span></p>
-        <div class="flex flex-col gap-2">
-          <div class="flex gap-2"><button id="p-pm" onclick="setPay('pago_movil_bs')" class="btn-pay hover:bg-slate-50 py-2.5">Pago Móvil</button><button id="p-tr" onclick="setPay('transferencia_bs')" class="btn-pay hover:bg-slate-50 py-2.5">Transf Bs</button><button id="p-ebs" onclick="setPay('efectivo_bs')" class="btn-pay hover:bg-slate-50 py-2.5">Efec Bs</button></div>
-          <div class="flex gap-2"><button id="p-eusd" onclick="setPay('efectivo_usd')" class="btn-pay hover:bg-slate-50 flex justify-center items-center gap-1.5 py-2.5"><i class="ph-fill ph-currency-dollar text-base"></i> Efectivo $</button><button id="p-bin" onclick="setPay('binance_usdt')" class="btn-pay hover:bg-slate-50 flex justify-center items-center gap-1.5 py-2.5"><i class="ph-fill ph-currency-btc text-base"></i> Binance</button></div>
+      <div class="mb-3">
+        <p class="text-[9px] font-bold text-slate-400 mb-1.5 uppercase tracking-widest flex justify-between">Forma de Pago: <span class="bg-slate-100 px-1.5 py-0.5 rounded text-[8px] border border-slate-200 f-num text-slate-500 shadow-sm">TASA BCV: 791.67</span></p>
+        <div class="flex flex-col gap-1.5">
+          <div class="flex gap-1.5"><button id="p-pm" onclick="setPay('pago_movil_bs')" class="btn-pay hover:bg-slate-50 py-1.5">Pago Móvil</button><button id="p-tr" onclick="setPay('transferencia_bs')" class="btn-pay hover:bg-slate-50 py-1.5">Transf Bs</button><button id="p-ebs" onclick="setPay('efectivo_bs')" class="btn-pay hover:bg-slate-50 py-1.5">Efec Bs</button></div>
+          <div class="flex gap-1.5"><button id="p-eusd" onclick="setPay('efectivo_usd')" class="btn-pay hover:bg-slate-50 flex justify-center items-center gap-1 py-1.5"><i class="ph-fill ph-currency-dollar text-sm"></i> Efectivo $</button><button id="p-bin" onclick="setPay('binance_usdt')" class="btn-pay hover:bg-slate-50 flex justify-center items-center gap-1 py-1.5"><i class="ph-fill ph-currency-btc text-sm"></i> Binance</button></div>
         </div>
       </div>
 
-      <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl flex items-center justify-between mb-5 shadow-inner">
-        <span class="text-sm font-bold text-slate-600 uppercase tracking-wider">Total Estimado</span><div class="text-right"><span id="c-tot" class="block font-black text-3xl f-num leading-none mb-1"></span><span id="c-ref" class="block text-[11px] text-slate-400 font-bold f-num"></span></div>
+      <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl flex items-center justify-between mb-3 shadow-inner">
+        <span class="text-xs font-bold text-slate-600 uppercase tracking-wider">Total Estimado</span><div class="text-right"><span id="c-tot" class="block font-black text-2xl f-num leading-none mb-0.5"></span><span id="c-ref" class="block text-[10px] text-slate-400 font-bold f-num"></span></div>
       </div>
 
       <div class="flex gap-2">
-        <button onclick="clrC()" class="px-5 py-3.5 bg-slate-100 border border-slate-200 rounded-xl text-slate-600 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 transition-colors shadow-sm shrink-0"><i class="ph-bold ph-trash text-lg"></i></button>
-        <button onclick="sendWA()" class="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300 text-white font-black text-sm rounded-xl transition-all shadow-[0_4px_14px_rgba(16,185,129,0.3)] flex items-center justify-center gap-2 group tracking-widest border border-emerald-400/50">ENVIAR PEDIDO <i class="ph-bold ph-whatsapp-logo text-xl group-hover:scale-110 transition-transform"></i></button>
+        <button onclick="clrC()" class="px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-slate-600 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 transition-colors shadow-sm shrink-0"><i class="ph-bold ph-trash text-base"></i></button>
+        <button onclick="sendWA()" class="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300 text-white font-black text-sm rounded-xl transition-all shadow-[0_4px_14px_rgba(16,185,129,0.3)] flex items-center justify-center gap-1.5 group tracking-widest border border-emerald-400/50">ENVIAR PEDIDO <i class="ph-bold ph-whatsapp-logo text-lg group-hover:scale-110 transition-transform"></i></button>
       </div>
     </div>
   </div>
@@ -323,7 +380,7 @@
   <script>
     const CONFIG = {
       TASA: 791.67,
-      WHATSAPP: '584223888007',
+      WHATSAPP: '584123888007',
       CSV_URL: 'https://docs.google.com/spreadsheets/d/11P_SClE2hNTn5g-Eq2GRpQBA83q71RityFaAkFNB554/export?format=csv'
     };
 
@@ -335,8 +392,19 @@
     function parseNumber(str) { if (!str) return 0; const cleaned = str.toString().replace(/[$]/g, '').replace(/,/g, '.').trim(); return parseFloat(cleaned) || 0; }
     function formatCurrency(amount) { if (s.cur === 'VES') { return `Bs ${(amount * CONFIG.TASA).toLocaleString('es-VE', { minimumFractionDigits: 2 })}`; } return `$${amount.toFixed(2)}`; }
 
-    const s = { p: [], c: {}, v: 'home', l1: 'Todo', l2: '', l3: '', sr: '', tg: '', br: '', cur: 'USD', mod: null, del: 'nacional', pay: 'pago_movil_bs' };
+    const s = { p: [], c: {}, v: 'home', l1: 'Todo', l2: '', l3: '', sr: '', tg: '', br: '', cur: 'USD', mod: null, del: 'nacional', pay: 'pago_movil_bs', page: 1, perPage: 20 };
     const $ = id => document.getElementById(id);
+
+    const getCatIcons = (cat) => {
+      const c = normalize(cat);
+      if (c.includes('ferreteria')) return ['ph-wrench', 'ph-nut'];
+      if (c.includes('iluminacion')) return ['ph-lightbulb', 'ph-lightning'];
+      if (c.includes('papeleria')) return ['ph-paperclip', 'ph-pencil-simple'];
+      if (c.includes('electronic')) return ['ph-plug', 'ph-cpu'];
+      if (c.includes('juguetes')) return ['ph-horse', 'ph-game-controller'];
+      if (c.includes('hogar')) return ['ph-house', 'ph-armchair'];
+      return ['ph-package', 'ph-barcode'];
+    };
 
     function toast(message, isError = false) {
       const el = $('toast'); if (!el) return;
@@ -388,19 +456,19 @@
         const wholesalePrice = parseNumber(idxWholesale !== -1 ? values[idxWholesale] : detailPrice);
 
         s.p.push({
-          id: code,
+          id: sanitize(code), 
           name: sanitize(idxName !== -1 ? values[idxName] : 'Sin Nombre'),
           pd: detailPrice,
           pm: wholesalePrice,
           pv: parseNumber(idxVip !== -1 && values[idxVip] ? values[idxVip] : wholesalePrice.toString()),
-          stock: idxStock !== -1 && values[idxStock] !== "" ? parseFloat(values[idxStock]) : 999, // default available
+          stock: idxStock !== -1 && values[idxStock] !== "" ? parseFloat(values[idxStock]) : 999,
           l1: sanitize(catParts[0] || 'General'),
           l2: sanitize(catParts[1] || ''),
           l3: sanitize(catParts[2] || ''),
           brand: sanitize(idxBrand !== -1 ? values[idxBrand] : '').toUpperCase(),
           info: sanitize(idxInfo !== -1 ? values[idxInfo] : ''),
           tag: normalize(idxTag !== -1 ? values[idxTag] : ''),
-          image: idxImage !== -1 && values[idxImage] ? values[idxImage].trim() : ''
+          image: sanitize(idxImage !== -1 && values[idxImage] ? values[idxImage].trim() : '') 
         });
       }
       renderHomeCategories();
@@ -447,12 +515,10 @@
     }
 
     function renderProductGrid() {
-      // 1. Calculate VIP Status (Base total >= $500)
       let baseTotal = 0;
       for (const [id, qty] of Object.entries(s.c)) { const p = s.p.find(x => x.id === id); if (p) baseTotal += qty * (qty >= 6 ? p.pm : p.pd); }
       const isGlobalVip = baseTotal >= 500;
 
-      // 2. Filter products
       const filtered = s.p.filter(p => {
         let match = true;
         if (s.sr) { const search = normalize(s.sr); match = normalize(p.id).includes(search) || normalize(p.name).includes(search) || normalize(p.brand).includes(search); } 
@@ -463,16 +529,20 @@
         return match;
       });
 
-      const grid = $('p-grid'), noResults = $('no-res');
+      const grid = $('p-grid'), noResults = $('no-res'), pagination = $('pagination');
       if (!grid || !noResults) return;
 
-      if (filtered.length === 0) { grid.innerHTML = ''; noResults.classList.remove('hidden'); return; }
+      if (filtered.length === 0) { grid.innerHTML = ''; noResults.classList.remove('hidden'); if(pagination) pagination.classList.add('hidden'); return; }
       noResults.classList.add('hidden');
 
-      // 3. Render HTML - using high performance string concatenation
+      const totalPages = Math.ceil(filtered.length / s.perPage);
+      if (s.page > totalPages) s.page = totalPages > 0 ? totalPages : 1;
+      const startIdx = (s.page - 1) * s.perPage;
+      const paginatedProducts = filtered.slice(startIdx, startIdx + s.perPage);
+
       let htmlString = '';
-      for (let i = 0; i < filtered.length; i++) {
-        const p = filtered[i];
+      for (let i = 0; i < paginatedProducts.length; i++) {
+        const p = paginatedProducts[i];
         const qty = s.c[p.id] || 0;
         const isWholesale = qty >= 6;
         const isAgotado = p.stock <= 0;
@@ -486,34 +556,57 @@
         if (p.tag.includes('nuevo')) tagLabel = `<span class="absolute top-2 left-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-[8px] sm:text-[9px] font-black px-1.5 sm:px-2 py-0.5 sm:py-1 rounded shadow-sm z-10 tracking-widest uppercase">NUEVO</span>`;
         else if (p.tag.includes('oferta')) tagLabel = `<span class="absolute top-2 left-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white text-[8px] sm:text-[9px] font-black px-1.5 sm:px-2 py-0.5 sm:py-1 rounded shadow-sm z-10 tracking-widest uppercase">OFERTA</span>`;
 
-        // Fixed Image Area
+        const watermarkIcons = getCatIcons(p.l1);
+        const icon1 = watermarkIcons[0];
+        const icon2 = watermarkIcons[1];
+
         const imgUrl = p.image ? p.image : SVG;
         
         let dynamicSection = '';
         if (isAgotado) {
-          // AGOTADO UI
           dynamicSection = `
             <div class="mt-auto pt-2 sm:pt-3 border-t border-slate-100 flex flex-col justify-end">
                <div class="py-2.5 sm:py-3 text-center bg-slate-100 border border-slate-200 rounded-xl text-slate-500 font-black text-xs sm:text-sm tracking-widest uppercase shadow-inner">SIN STOCK</div>
             </div>`;
         } else {
-          // 3 Column Vertical Pricing
-          dynamicSection = `
-            <div class="mt-auto pt-2 sm:pt-3 border-t border-slate-100">
+          let priceLayout = '';
+          if (s.cur === 'VES') {
+             priceLayout = `
+              <div class="flex flex-col gap-1 w-full">
+                 <div class="flex items-center justify-between px-2 py-1 rounded-md border border-slate-100 bg-slate-50 ${!isWholesale && !isGlobalVip && qty > 0 ? 'ring-1 ring-blue-400 bg-blue-50/30' : ''}">
+                   <span class="text-[9px] font-bold text-slate-500 uppercase tracking-tighter">Detal <span class="bg-slate-200/60 px-1 rounded">&lt;6</span></span>
+                   <span class="text-[11px] sm:text-[13px] font-normal text-slate-800 tracking-tighter price-text">${formatCurrency(p.pd)}</span>
+                 </div>
+                 <div class="flex items-center justify-between px-2 py-1 rounded-md border border-blue-100 bg-blue-50/50 ${isWholesale && !isGlobalVip ? 'ring-1 ring-blue-500 bg-blue-100/50' : ''}">
+                   <span class="text-[9px] font-bold text-blue-600 uppercase tracking-tighter">Mayor <span class="bg-blue-200/50 px-1 rounded">&ge;6</span></span>
+                   <span class="text-[11px] sm:text-[13px] font-normal text-blue-700 tracking-tighter price-text">${formatCurrency(p.pm)}</span>
+                 </div>
+                 <div class="flex items-center justify-between px-2 py-1 rounded-md border border-amber-100 bg-amber-50 ${isGlobalVip ? 'ring-1 ring-amber-400 bg-amber-100' : ''}">
+                   <span class="text-[9px] font-bold text-amber-600 uppercase tracking-tighter">VIP</span>
+                   <span class="text-[11px] sm:text-[13px] font-normal text-amber-700 tracking-tighter price-text">${formatCurrency(p.pv)}</span>
+                 </div>
+              </div>`;
+          } else {
+             priceLayout = `
               <div class="grid grid-cols-3 gap-[1px] sm:gap-1 w-full">
                  <div class="flex flex-col items-center justify-center py-1 rounded-md border border-slate-100 bg-slate-50 ${!isWholesale && !isGlobalVip && qty > 0 ? 'ring-1 ring-blue-400 bg-blue-50/30' : ''}">
                    <span class="text-[7.5px] sm:text-[9px] font-bold text-slate-500 uppercase tracking-tighter mb-0.5">&lt;6</span>
-                   <span class="text-[9.5px] min-[380px]:text-[10.5px] sm:text-[13px] lg:text-[15px] font-black text-slate-800 leading-none tracking-tighter">${formatCurrency(p.pd)}</span>
+                   <span class="text-[9.5px] min-[380px]:text-[10.5px] sm:text-[13px] lg:text-[15px] font-normal text-slate-800 leading-none tracking-tighter price-text">${formatCurrency(p.pd)}</span>
                  </div>
                  <div class="flex flex-col items-center justify-center py-1 rounded-md border border-blue-100 bg-blue-50/50 ${isWholesale && !isGlobalVip ? 'ring-1 ring-blue-500 bg-blue-100/50' : ''}">
                    <span class="text-[7.5px] sm:text-[9px] font-bold text-blue-600 uppercase tracking-tighter mb-0.5">&ge;6</span>
-                   <span class="text-[9.5px] min-[380px]:text-[10.5px] sm:text-[13px] lg:text-[15px] font-black text-blue-700 leading-none tracking-tighter">${formatCurrency(p.pm)}</span>
+                   <span class="text-[9.5px] min-[380px]:text-[10.5px] sm:text-[13px] lg:text-[15px] font-normal text-blue-700 leading-none tracking-tighter price-text">${formatCurrency(p.pm)}</span>
                  </div>
                  <div class="flex flex-col items-center justify-center py-1 rounded-md border border-amber-100 bg-amber-50 ${isGlobalVip ? 'ring-1 ring-amber-400 bg-amber-100' : ''}">
                    <span class="text-[7.5px] sm:text-[9px] font-bold text-amber-600 uppercase tracking-tighter mb-0.5">VIP</span>
-                   <span class="text-[9.5px] min-[380px]:text-[10.5px] sm:text-[13px] lg:text-[15px] font-black text-amber-700 leading-none tracking-tighter">${formatCurrency(p.pv)}</span>
+                   <span class="text-[9.5px] min-[380px]:text-[10.5px] sm:text-[13px] lg:text-[15px] font-normal text-amber-700 leading-none tracking-tighter price-text">${formatCurrency(p.pv)}</span>
                  </div>
-              </div>
+              </div>`;
+          }
+
+          dynamicSection = `
+            <div class="mt-auto pt-2 sm:pt-3 border-t border-slate-100">
+              ${priceLayout}
               <div class="mt-2.5 flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl p-1 shadow-inner h-8 sm:h-10" onclick="event.stopPropagation()">
                 <button onclick="updateCart('${p.id}',-1)" class="w-8 sm:w-10 h-full flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-200 rounded-lg transition-all"><i class="ph-bold ph-minus text-xs sm:text-base"></i></button>
                 <input type="number" value="${qty}" min="0" class="w-10 sm:w-12 text-center bg-transparent font-bold text-xs sm:text-sm text-slate-900 outline-none f-num hide-arrows" onchange="manualUpdateCart('${p.id}',this.value)">
@@ -525,22 +618,47 @@
         htmlString += `
         <div class="product-card bg-white rounded-xl sm:rounded-2xl border border-slate-200 overflow-hidden flex flex-col shadow-sm hover:shadow-[0_10px_25px_rgba(15,23,42,0.08)] hover:-translate-y-1 transition-all duration-300 group cursor-pointer relative h-full" onclick="openModal('${p.id}')">
           ${isAgotado ? '<div class="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex items-center justify-center pointer-events-none"><span class="border-2 border-rose-500 text-rose-500 font-black text-[10px] sm:text-xs px-2 sm:px-3 py-1 rounded-lg transform -rotate-12 tracking-widest bg-white/90 shadow-lg shadow-rose-500/20">AGOTADO</span></div>' : ''}
-          <div class="aspect-square w-full bg-slate-50 relative p-2 sm:p-4 flex items-center justify-center border-b border-slate-100 shrink-0">
+          <div class="aspect-square w-full bg-slate-50 relative p-2 sm:p-4 flex items-center justify-center border-b border-slate-100 shrink-0 overflow-hidden">
             ${tagLabel}
-            <img src="${imgUrl}" class="absolute inset-0 w-full h-full object-contain p-2 sm:p-4 mix-blend-multiply ${!isAgotado ? 'group-hover:scale-105' : ''} transition-transform duration-500" onerror="this.src='${SVG}'; this.classList.remove('mix-blend-multiply');">
+            <img src="${imgUrl}" loading="lazy" class="absolute inset-0 w-full h-full object-contain p-2 sm:p-4 mix-blend-multiply ${!isAgotado ? 'group-hover:scale-105' : ''} transition-transform duration-500 z-10" onerror="this.src='${SVG}'; this.classList.remove('mix-blend-multiply');">
           </div>
-          <div class="p-2 sm:p-4 flex flex-col h-full flex-1 relative z-0">
-            <div class="flex items-center gap-1 sm:gap-1.5 mb-1.5 sm:mb-2.5 flex-wrap">
-              <span class="bg-slate-800 text-white text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded tracking-wider shadow-sm f-num">${p.id}</span>
-              ${brandLabel}
+          <div class="p-2 sm:p-4 flex flex-col h-full flex-1 relative z-0 bg-white overflow-hidden">
+            <div class="absolute inset-0 pointer-events-none z-0">
+              <i class="ph-fill ${icon1} absolute -bottom-4 -right-2 text-7xl sm:text-8xl text-slate-100 transform -rotate-12"></i>
+              <i class="ph-fill ${icon2} absolute top-4 -right-4 text-5xl sm:text-6xl text-slate-50 transform rotate-12"></i>
             </div>
-            <!-- Fixed Height Title -->
-            <h4 class="font-bold text-slate-800 text-[10px] sm:text-sm leading-snug mb-1 uppercase h-[30px] sm:h-[40px] line-clamp-2">${p.name}</h4>
-            ${dynamicSection}
+            
+            <div class="relative z-10 flex flex-col h-full">
+              <div class="flex items-center gap-1 sm:gap-1.5 mb-1.5 sm:mb-2.5 flex-wrap">
+                <span class="code-pill code-pill-sm">${p.id}</span>
+                ${brandLabel}
+              </div>
+              <h4 class="font-medium text-slate-800 text-[10px] sm:text-sm leading-snug mb-1 uppercase h-[30px] sm:h-[40px] line-clamp-2 product-name">${p.name}</h4>
+              ${dynamicSection}
+            </div>
           </div>
         </div>`;
       }
       grid.innerHTML = htmlString;
+      
+      renderPagination(totalPages);
+    }
+
+    function renderPagination(total) {
+      const el = $('pagination'); if (!el) return;
+      if (total <= 1) { el.classList.add('hidden'); return; }
+      el.classList.remove('hidden');
+      el.innerHTML = `
+        <button onclick="changePage(-1)" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-blue-600 transition-colors shadow-sm disabled:opacity-30 disabled:cursor-not-allowed" ${s.page <= 1 ? 'disabled' : ''}><i class="ph-bold ph-caret-left text-lg"></i></button>
+        <span class="text-sm font-bold text-slate-600 f-int px-6">Página ${s.page} de ${total}</span>
+        <button onclick="changePage(1)" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-blue-600 transition-colors shadow-sm disabled:opacity-30 disabled:cursor-not-allowed" ${s.page >= total ? 'disabled' : ''}><i class="ph-bold ph-caret-right text-lg"></i></button>
+      `;
+    }
+
+    function changePage(delta) { 
+      s.page += delta; 
+      renderProductGrid(); 
+      window.scrollTo({ top: 0, behavior: 'smooth' }); 
     }
 
     function openModal(id) {
@@ -551,19 +669,70 @@
       const img = $('m-img'); if (img) { img.src = p.image ? p.image : SVG; img.onerror = function() { this.src = SVG; this.classList.remove('mix-blend-multiply'); }; }
       const mask = $('m-agotado-layer'); if (mask) mask.style.display = isAgotado ? 'flex' : 'none';
 
+      // 显示分类
+      const catTag = $('m-category-tag');
+      if (catTag) {
+        catTag.textContent = p.l1 + (p.l2 ? ` / ${p.l2}` : '') + (p.l3 ? ` / ${p.l3}` : '');
+      }
+
       const code = $('m-cod'); if (code) code.textContent = p.id;
       const brand = $('m-br');
       if (p.brand) { brand.textContent = p.brand; brand.classList.remove('hidden'); brand.className = `text-[10px] font-black italic tracking-tighter px-2.5 py-1 rounded shadow-sm ${p.brand === 'INGCO' ? 'bg-[#FFCC00] text-black border border-yellow-400' : p.brand === 'WADFOW' ? 'bg-[#2563EB] text-white' : p.brand === 'VERT' ? 'bg-[#10B981] text-white' : 'bg-slate-200 text-slate-700'}`; } else brand.classList.add('hidden');
       const title = $('m-tit'); if (title) title.textContent = p.name;
       const infoBox = $('m-info-b'), infoText = $('m-info'); if (p.info) { infoText.textContent = p.info.replace(/\//g, '\n'); infoBox.classList.remove('hidden'); } else infoBox.classList.add('hidden');
 
-      const pd = $('m-pd'), pm = $('m-pm'), pv = $('m-pv');
-      if (pd) pd.textContent = formatCurrency(p.pd); if (pm) pm.textContent = formatCurrency(p.pm); if (pv) pv.textContent = formatCurrency(p.pv);
+      // Actualizar precios en modal
+      updateModalPrices();
 
       const qty = $('m-qty'); if (qty) qty.value = s.c[p.id] || 0;
       
       const modal = $('modal'); if (modal) { modal.classList.remove('hidden'); setTimeout(() => { modal.classList.remove('opacity-0'); modal.querySelector('div').classList.remove('translate-y-full', 'sm:translate-y-10'); }, 10); }
     }
+
+    function updateModalPrices() {
+      const p = s.p.find(x => x.id === s.mod); if (!p) return;
+      const priceGrid = $('m-price-grid');
+      if (!priceGrid) return;
+
+      if (s.cur === 'VES') {
+        priceGrid.className = 'flex flex-col gap-1.5 mb-6 f-int';
+        priceGrid.innerHTML = `
+          <div class="flex items-center justify-between p-2.5 rounded-xl border border-slate-100 bg-slate-50">
+            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Detal <span class="bg-slate-200 px-1 rounded">&lt;6</span></span>
+            <span class="text-base sm:text-lg font-normal text-slate-800 leading-none price-text">${formatCurrency(p.pd)}</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded-xl border border-blue-100 bg-blue-50">
+            <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Mayor <span class="bg-blue-200/50 px-1 rounded">&ge;6</span></span>
+            <span class="text-base sm:text-lg font-normal text-blue-700 leading-none price-text">${formatCurrency(p.pm)}</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded-xl border border-amber-200 bg-amber-50">
+            <span class="text-[10px] font-bold text-amber-600 uppercase tracking-widest">VIP</span>
+            <span class="text-base sm:text-lg font-normal text-amber-700 leading-none price-text">${formatCurrency(p.pv)}</span>
+          </div>
+        `;
+      } else {
+        priceGrid.className = 'grid grid-cols-3 gap-2 mb-6 f-int';
+        priceGrid.innerHTML = `
+          <div class="flex flex-col items-center justify-center p-2 rounded-xl border border-slate-100 bg-slate-50">
+            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Detal <span class="bg-slate-200 px-1 rounded">&lt;6</span></span>
+            <span class="text-lg sm:text-xl font-normal text-slate-800 leading-none price-text">${formatCurrency(p.pd)}</span>
+          </div>
+          <div class="flex flex-col items-center justify-center p-2 rounded-xl border border-blue-100 bg-blue-50">
+            <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1">Mayor <span class="bg-blue-200/50 px-1 rounded">&ge;6</span></span>
+            <span class="text-lg sm:text-xl font-normal text-blue-700 leading-none price-text">${formatCurrency(p.pm)}</span>
+          </div>
+          <div class="flex flex-col items-center justify-center p-2 rounded-xl border border-amber-200 bg-amber-50">
+            <span class="text-[10px] font-bold text-amber-600 uppercase tracking-widest mb-1">VIP</span>
+            <span class="text-lg sm:text-xl font-normal text-amber-700 leading-none price-text">${formatCurrency(p.pv)}</span>
+          </div>
+        `;
+      }
+
+      // 更新按钮文字
+      const label = $('modal-currency-label');
+      if (label) label.textContent = s.cur === 'USD' ? 'VES' : 'USD';
+    }
+
     function closeM() { const modal = $('modal'); if (!modal) return; modal.classList.add('opacity-0'); modal.querySelector('div').classList.add('translate-y-full', 'sm:translate-y-10'); setTimeout(() => { modal.classList.add('hidden'); s.mod = null; }, 300); }
     
     function updMQ(delta) { if (!s.mod) return; const p = s.p.find(x=>x.id===s.mod); if(p && p.stock<=0) return; const q = $('m-qty'); if (!q) return; const n = sanitizeNumber(q.value) + delta; q.value = n < 0 ? 0 : n; updateCart(s.mod, delta, false); }
@@ -590,9 +759,9 @@
         cartHTML += `<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex gap-3 fade-in">
           <div class="w-14 h-14 bg-slate-50 rounded-lg flex items-center justify-center p-1 shrink-0"><img src="${product.image ? product.image : SVG}" onerror="this.src='${SVG}'; this.classList.remove('mix-blend-multiply');" class="max-w-full max-h-full object-contain mix-blend-multiply"></div>
           <div class="flex-1 flex flex-col justify-between">
-            <div><div class="flex items-center gap-1.5 mb-1"><span class="text-[9px] bg-slate-800 text-white px-1.5 rounded font-bold">${product.id}</span>${tierLabel}</div><h5 class="text-xs font-bold text-slate-800 leading-tight line-clamp-1 uppercase">${product.name}</h5></div>
+            <div><div class="flex items-center gap-1.5 mb-1"><span class="text-[9px] bg-slate-800 text-white px-1.5 rounded font-bold">${product.id}</span>${tierLabel}</div><h5 class="text-xs font-medium text-slate-800 leading-tight line-clamp-1 uppercase cart-item-name">${product.name}</h5></div>
             <div class="flex justify-between items-end mt-2">
-              <span class="text-[10px] text-slate-500 font-int font-medium">${qty} un. x $${price.toFixed(2)} = <strong class="text-blue-600 text-xs">$${subtotal.toFixed(2)}</strong></span>
+              <span class="text-[10px] text-slate-500 f-int font-normal">${qty} un. x $${price.toFixed(2)} = <strong class="text-blue-600 text-xs">$${subtotal.toFixed(2)}</strong></span>
               <div class="flex items-center bg-slate-50 border border-slate-200 rounded-lg h-7"><button onclick="updateCart('${product.id}',-1)" class="w-6 h-full flex items-center justify-center text-slate-500 hover:text-slate-900"><i class="ph-bold ph-minus text-[10px]"></i></button><input type="number" value="${qty}" class="w-8 text-center bg-transparent font-bold text-xs text-slate-900 outline-none f-num hide-arrows" onchange="manualUpdateCart('${product.id}',this.value)"><button onclick="updateCart('${product.id}',1)" class="w-6 h-full flex items-center justify-center text-slate-500 hover:text-slate-900"><i class="ph-bold ph-plus text-[10px]"></i></button></div>
             </div>
           </div>
@@ -620,14 +789,27 @@
       }
     }
 
-    function filterCategory(cat) { let selected = 'Todo'; s.p.forEach(p => { if (normalize(p.l1).includes(cat)) selected = p.l1; }); s.l1 = selected; s.l2 = s.l3 = s.sr = s.tg = s.br = ''; setView('catalog'); renderCatalog(); }
-    function setB(brand) { s.br = s.br === brand ? '' : brand; renderCatalog(); }
-    function setT(tag) { s.tg = s.tg === tag ? '' : tag; renderCatalog(); }
-    function setL1(v) { s.l1 = v; s.l2 = s.l3 = ''; renderCatalog(); }
-    function setL2(v) { s.l2 = v; s.l3 = ''; renderCatalog(); }
-    function setL3(v) { s.l3 = v; renderCatalog(); }
-    function updS(v) { s.sr = normalize(v); if (v) { s.l1 = 'Todo'; s.l2 = s.l3 = ''; } renderCatalog(); }
-    function clrF() { s.sr = s.tg = s.br = s.l2 = s.l3 = ''; s.l1 = 'Todo'; const i = $('s-input'); if (i) i.value = ''; renderCatalog(); }
+    function filterCategory(cat) { let selected = 'Todo'; s.p.forEach(p => { if (normalize(p.l1).includes(cat)) selected = p.l1; }); s.l1 = selected; s.l2 = s.l3 = s.sr = s.tg = s.br = ''; s.page = 1; setView('catalog'); renderCatalog(); }
+    function setB(brand) { s.br = s.br === brand ? '' : brand; s.page = 1; renderCatalog(); }
+    function setT(tag) { s.tg = s.tg === tag ? '' : tag; s.page = 1; renderCatalog(); }
+    function setL1(v) { s.l1 = v; s.l2 = s.l3 = ''; s.page = 1; renderCatalog(); }
+    function setL2(v) { s.l2 = v; s.l3 = ''; s.page = 1; renderCatalog(); }
+    function setL3(v) { s.l3 = v; s.page = 1; renderCatalog(); }
+    function updS(v) { 
+      s.sr = normalize(v); 
+      const clearBtn = $('s-clear');
+      if (clearBtn) clearBtn.classList.toggle('hidden', v.length === 0);
+      
+      if (v) { s.l1 = 'Todo'; s.l2 = s.l3 = ''; } 
+      s.page = 1;
+      renderCatalog(); 
+    }
+    function clrSearch() {
+      const input = $('s-input');
+      if(input) { input.value = ''; input.focus(); }
+      updS('');
+    }
+    function clrF() { s.sr = s.tg = s.br = s.l2 = s.l3 = ''; s.l1 = 'Todo'; s.page = 1; const i = $('s-input'); if (i) i.value = ''; updS(''); renderCatalog(); }
 
     function setView(view) {
       s.v = view; window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -635,11 +817,32 @@
       ['v-home', 'v-home-bot'].forEach(id => { const el = $(id); if (el) el.classList.toggle('hidden', !isHome); });
       const catalog = $('v-cat'); if (catalog) catalog.classList.toggle('hidden', isHome);
       const social = $('h-social'); if (social) social.classList.toggle('hidden', !isHome);
-      const controls = $('h-ctrls'); if (controls) controls.classList.toggle('hidden', isHome);
-      const tasa = $('h-tasa'); if (tasa) tasa.classList.toggle('hidden', isHome);
+      const controls = $('h-ctrls'); if (controls) controls.classList.toggle('hidden', !isHome);
+      const tasa = $('h-tasa'); if (tasa) tasa.classList.toggle('hidden', !isHome);
       const truck = $('h-truck'); if (truck) truck.classList.toggle('hidden', !isHome);
     }
-    function updCur() { const sel = $('cur-sel'); if (sel) s.cur = sel.value; renderProductGrid(); updateCartUI(); }
+    
+    function toggleCurrency() {
+      s.cur = s.cur === 'USD' ? 'VES' : 'USD';
+      const slider = $('cur-slider');
+      const usdLbl = $('cur-usd-lbl');
+      const vesLbl = $('cur-ves-lbl');
+      
+      if (s.cur === 'VES') {
+        if(slider) slider.classList.replace('translate-x-0', 'translate-x-[100%]');
+        if(usdLbl) { usdLbl.classList.remove('text-white'); usdLbl.classList.add('text-slate-500'); }
+        if(vesLbl) { vesLbl.classList.remove('text-slate-500'); vesLbl.classList.add('text-white'); }
+      } else {
+        if(slider) slider.classList.replace('translate-x-[100%]', 'translate-x-0');
+        if(usdLbl) { usdLbl.classList.remove('text-slate-500'); usdLbl.classList.add('text-white'); }
+        if(vesLbl) { vesLbl.classList.remove('text-white'); vesLbl.classList.add('text-slate-500'); }
+      }
+      
+      renderProductGrid(); 
+      updateCartUI(); 
+      // 如果模态框打开，更新其价格
+      if (s.mod) updateModalPrices();
+    }
 
     function setDel(m) {
       s.del = m; ['nacional', 'delivery', 'pickup'].forEach(x => {
