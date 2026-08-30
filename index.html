@@ -17,7 +17,7 @@
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      font-weight: 400; /* 降低全局默认字重，价格和产品信息不加粗 */
+      font-weight: 400;
       background-color: #f8fafc;
       color: #0f172a;
       -webkit-tap-highlight-color: transparent;
@@ -81,7 +81,7 @@
       display: inline-block;
       padding: 0.15rem 0.7rem;
       border-radius: 9999px;
-      border: 2px solid #3b82f6; /* 蓝色线条 */
+      border: 2px solid #3b82f6;
       background-color: white;
       color: #1e293b;
       font-size: 0.7rem;
@@ -95,7 +95,6 @@
       padding: 0.1rem 0.6rem;
       border-width: 1.5px;
     }
-    /* 价格文字不加粗 */
     .price-text {
       font-weight: 400 !important;
     }
@@ -107,6 +106,21 @@
     }
     .cart-item-name {
       font-weight: 500 !important;
+    }
+
+    /* Cart Drawer - 适配当前风格 */
+    #drawer {
+      font-family: 'Poppins', sans-serif;
+    }
+    #drawer .btn-pay {
+      font-weight: 700;
+      font-size: 9px;
+      padding: 6px 4px;
+    }
+    #drawer .btn-del {
+      font-weight: 700;
+      font-size: 9px;
+      padding: 6px 4px;
     }
   </style>
 </head>
@@ -288,6 +302,8 @@
       <div id="pagination" class="hidden flex justify-center items-center mt-8 pb-4"></div>
       
       <div id="no-res" class="hidden py-16 text-center bg-white rounded-2xl border border-slate-200 shadow-sm"><i class="ph-bold ph-magnifying-glass text-5xl text-slate-300 mb-3"></i><h3 class="text-xl font-black text-slate-800">No se encontraron productos</h3><button onclick="clrF()" class="mt-4 px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold text-sm transition-colors border border-slate-200">Limpiar Filtros</button></div>
+
+      <div id="pagination" class="hidden flex justify-center items-center mt-8 pb-4"></div>
     </div>
   </main>
 
@@ -337,44 +353,94 @@
     </div>
   </div>
 
+  <!-- ==================== CART DRAWER (PEDIDO) - 整合完整功能 ==================== -->
   <div id="drawer" class="fixed inset-y-0 right-0 w-full sm:w-[440px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col border-l border-slate-200">
-    <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50"><h3 class="font-black text-lg text-slate-900 tracking-tight">RESUMEN DE PEDIDO</h3><button onclick="toggCart()" class="w-8 h-8 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50 flex items-center justify-center shadow-sm transition-colors"><i class="ph-bold ph-x"></i></button></div>
+    <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+      <h3 class="font-black text-lg text-slate-900 tracking-tight">RESUMEN DE PEDIDO</h3>
+      <button onclick="toggCart()" class="w-8 h-8 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-rose-500 hover:border-rose-200 hover:bg-rose-50 flex items-center justify-center shadow-sm transition-colors">
+        <i class="ph-bold ph-x"></i>
+      </button>
+    </div>
     
+    <!-- 商品列表 -->
     <div id="c-items" class="flex-1 overflow-y-auto p-3 space-y-2.5 bg-slate-50/50 hide-sc"></div>
     
+    <!-- 底部：总计 + 操作按钮 -->
     <div class="p-3 border-t border-slate-200 bg-white shadow-[0_-10px_20px_rgba(0,0,0,0.02)] z-10">
+      
+      <!-- VIP 进度追踪 -->
       <div id="v-tr" class="mb-3 bg-gradient-to-r from-amber-50 to-yellow-50 p-2.5 rounded-xl hidden border border-amber-200 shadow-sm">
-        <div class="flex justify-between items-end mb-1.5"><span class="text-[9px] font-black text-amber-700 uppercase tracking-widest flex items-center gap-1"><i class="ph-fill ph-crown text-amber-500 text-xs"></i> Meta VIP ($500)</span><span id="v-txt" class="text-[10px] font-black text-amber-600 f-num"></span></div>
-        <div class="h-1.5 bg-amber-200/50 rounded-full overflow-hidden shadow-inner"><div id="v-bar" class="h-full bg-gradient-to-r from-amber-400 to-amber-500 transition-all duration-500 rounded-full"></div></div>
+        <div class="flex justify-between items-end mb-1.5">
+          <span class="text-[9px] font-black text-amber-700 uppercase tracking-widest flex items-center gap-1">
+            <i class="ph-fill ph-crown text-amber-500 text-xs"></i> Meta VIP ($500)
+          </span>
+          <span id="v-txt" class="text-[10px] font-black text-amber-600 f-num"></span>
+        </div>
+        <div class="h-1.5 bg-amber-200/50 rounded-full overflow-hidden shadow-inner">
+          <div id="v-bar" class="h-full bg-gradient-to-r from-amber-400 to-amber-500 transition-all duration-500 rounded-full"></div>
+        </div>
       </div>
 
+      <!-- 交付方式 -->
       <div class="mb-3">
         <p class="text-[9px] font-bold text-slate-400 mb-1.5 uppercase tracking-widest">Método de Entrega:</p>
         <div class="grid grid-cols-3 gap-1.5">
-          <button id="d-nacional" onclick="setDel('nacional')" class="btn-del hover:bg-slate-50 py-1.5"><i class="ph-fill ph-truck text-base mb-0.5"></i>Nacional</button>
-          <button id="d-delivery" onclick="setDel('delivery')" class="btn-del hover:bg-slate-50 py-1.5"><i class="ph-fill ph-moped text-base mb-0.5"></i>Delivery</button>
-          <button id="d-pickup" onclick="setDel('pickup')" class="btn-del hover:bg-slate-50 py-1.5"><i class="ph-fill ph-storefront text-base mb-0.5"></i>PickUp</button>
+          <button id="d-nacional" onclick="setDel('nacional')" class="btn-del hover:bg-slate-50 py-1.5">
+            <i class="ph-fill ph-truck text-base mb-0.5"></i>Nacional
+          </button>
+          <button id="d-delivery" onclick="setDel('delivery')" class="btn-del hover:bg-slate-50 py-1.5">
+            <i class="ph-fill ph-moped text-base mb-0.5"></i>Delivery
+          </button>
+          <button id="d-pickup" onclick="setDel('pickup')" class="btn-del hover:bg-slate-50 py-1.5">
+            <i class="ph-fill ph-storefront text-base mb-0.5"></i>PickUp
+          </button>
         </div>
       </div>
 
+      <!-- 支付方式 -->
       <div class="mb-3">
-        <p class="text-[9px] font-bold text-slate-400 mb-1.5 uppercase tracking-widest flex justify-between">Forma de Pago: <span class="bg-slate-100 px-1.5 py-0.5 rounded text-[8px] border border-slate-200 f-num text-slate-500 shadow-sm">TASA BCV: 791.67</span></p>
+        <p class="text-[9px] font-bold text-slate-400 mb-1.5 uppercase tracking-widest flex justify-between">
+          Forma de Pago: 
+          <span class="bg-slate-100 px-1.5 py-0.5 rounded text-[8px] border border-slate-200 f-num text-slate-500 shadow-sm">TASA BCV: 791.67</span>
+        </p>
         <div class="flex flex-col gap-1.5">
-          <div class="flex gap-1.5"><button id="p-pm" onclick="setPay('pago_movil_bs')" class="btn-pay hover:bg-slate-50 py-1.5">Pago Móvil</button><button id="p-tr" onclick="setPay('transferencia_bs')" class="btn-pay hover:bg-slate-50 py-1.5">Transf Bs</button><button id="p-ebs" onclick="setPay('efectivo_bs')" class="btn-pay hover:bg-slate-50 py-1.5">Efec Bs</button></div>
-          <div class="flex gap-1.5"><button id="p-eusd" onclick="setPay('efectivo_usd')" class="btn-pay hover:bg-slate-50 flex justify-center items-center gap-1 py-1.5"><i class="ph-fill ph-currency-dollar text-sm"></i> Efectivo $</button><button id="p-bin" onclick="setPay('binance_usdt')" class="btn-pay hover:bg-slate-50 flex justify-center items-center gap-1 py-1.5"><i class="ph-fill ph-currency-btc text-sm"></i> Binance</button></div>
+          <div class="flex gap-1.5">
+            <button id="p-pm" onclick="setPay('pago_movil_bs')" class="btn-pay hover:bg-slate-50 py-1.5">Pago Móvil</button>
+            <button id="p-tr" onclick="setPay('transferencia_bs')" class="btn-pay hover:bg-slate-50 py-1.5">Transf Bs</button>
+            <button id="p-ebs" onclick="setPay('efectivo_bs')" class="btn-pay hover:bg-slate-50 py-1.5">Efec Bs</button>
+          </div>
+          <div class="flex gap-1.5">
+            <button id="p-eusd" onclick="setPay('efectivo_usd')" class="btn-pay hover:bg-slate-50 flex justify-center items-center gap-1 py-1.5">
+              <i class="ph-fill ph-currency-dollar text-sm"></i> Efectivo $
+            </button>
+            <button id="p-bin" onclick="setPay('binance_usdt')" class="btn-pay hover:bg-slate-50 flex justify-center items-center gap-1 py-1.5">
+              <i class="ph-fill ph-currency-btc text-sm"></i> Binance
+            </button>
+          </div>
         </div>
       </div>
 
+      <!-- 总计金额 -->
       <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl flex items-center justify-between mb-3 shadow-inner">
-        <span class="text-xs font-bold text-slate-600 uppercase tracking-wider">Total Estimado</span><div class="text-right"><span id="c-tot" class="block font-black text-2xl f-num leading-none mb-0.5"></span><span id="c-ref" class="block text-[10px] text-slate-400 font-bold f-num"></span></div>
+        <span class="text-xs font-bold text-slate-600 uppercase tracking-wider">Total Estimado</span>
+        <div class="text-right">
+          <span id="c-tot" class="block font-black text-2xl f-num leading-none mb-0.5"></span>
+          <span id="c-ref" class="block text-[10px] text-slate-400 font-bold f-num"></span>
+        </div>
       </div>
 
+      <!-- 操作按钮 -->
       <div class="flex gap-2">
-        <button onclick="clrC()" class="px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-slate-600 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 transition-colors shadow-sm shrink-0"><i class="ph-bold ph-trash text-base"></i></button>
-        <button onclick="sendWA()" class="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300 text-white font-black text-sm rounded-xl transition-all shadow-[0_4px_14px_rgba(16,185,129,0.3)] flex items-center justify-center gap-1.5 group tracking-widest border border-emerald-400/50">ENVIAR PEDIDO <i class="ph-bold ph-whatsapp-logo text-lg group-hover:scale-110 transition-transform"></i></button>
+        <button onclick="clrC()" class="px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-slate-600 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 transition-colors shadow-sm shrink-0">
+          <i class="ph-bold ph-trash text-base"></i>
+        </button>
+        <button onclick="sendWA()" class="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300 text-white font-black text-sm rounded-xl transition-all shadow-[0_4px_14px_rgba(16,185,129,0.3)] flex items-center justify-center gap-1.5 group tracking-widest border border-emerald-400/50">
+          ENVIAR PEDIDO <i class="ph-bold ph-whatsapp-logo text-lg group-hover:scale-110 transition-transform"></i>
+        </button>
       </div>
     </div>
   </div>
+  <!-- 遮罩层 -->
   <div id="overlay" onclick="toggCart()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-40 opacity-0 transition-opacity duration-300"></div>
 
   <script>
@@ -817,8 +883,8 @@
       ['v-home', 'v-home-bot'].forEach(id => { const el = $(id); if (el) el.classList.toggle('hidden', !isHome); });
       const catalog = $('v-cat'); if (catalog) catalog.classList.toggle('hidden', isHome);
       const social = $('h-social'); if (social) social.classList.toggle('hidden', !isHome);
-      const controls = $('h-ctrls'); if (controls) controls.classList.toggle('hidden', !isHome);
-      const tasa = $('h-tasa'); if (tasa) tasa.classList.toggle('hidden', !isHome);
+      const controls = $('h-ctrls'); if (controls) controls.classList.toggle('hidden', isHome);
+      const tasa = $('h-tasa'); if (tasa) tasa.classList.toggle('hidden', isHome);
       const truck = $('h-truck'); if (truck) truck.classList.toggle('hidden', !isHome);
     }
     
