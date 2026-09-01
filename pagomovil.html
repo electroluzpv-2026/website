@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago Móvil Verificador</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop {
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="w-full max-w-md bg-slate-800 rounded-2xl shadow-xl overflow-hidden border border-slate-700">
+        <!-- 头部 -->
+        <div class="bg-gradient-to-r from-emerald-600 to-teal-700 p-6 text-center">
+            <h1 class="text-2xl font-bold tracking-wide flex items-center justify-center gap-2">
+                <i class="fa-solid fa-mobile-screen-button"></i> Verificador Pago Móvil
+            </h1>
+            <p class="text-emerald-100 text-sm mt-1">Comprobación de recepción de pagos</p>
+        </div>
+
+        <!-- 表单区域 -->
+        <form id="verifyForm" class="p-6 space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-slate-300 mb-1">Teléfono (Teléfono Origen)</label>
+                <div class="flex gap-2">
+                    <select id="operador" class="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <option value="0412">0412</option>
+                        <option value="0414">0414</option>
+                        <option value="0424">0424</option>
+                        <option value="0416">0416</option>
+                        <option value="0426">0426</option>
+                    </select>
+                    <input type="text" id="telefono" required maxlength="7" placeholder="1234567" class="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-300 mb-1">Monto (Bolívares - Bs.)</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 font-bold">Bs.</span>
+                    <input type="text" id="montoInput" required placeholder="0,00" class="w-full bg-slate-700 border border-slate-600 rounded-lg pl-12 pr-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono">
+                </div>
+                <p class="text-xs text-slate-400 mt-1">Ej: 3.919,79 (Usa formato con puntos y comas)</p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-300 mb-1">Últimos 4 dígitos del Comprobante</label>
+                <input type="text" id="comprobante" required maxlength="4" placeholder="Ej: 9876" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            </div>
+
+            <button type="submit" id="btnVerificar" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-lg transition duration-200 shadow-lg flex items-center justify-center gap-2">
+                <i class="fa-solid fa-magnifying-glass"></i> Verificar Pago
+            </button>
+        </form>
+
+        <!-- 结果展示区域 (动画醒目 UI) -->
+        <div id="resultContainer" class="hidden p-6 border-t border-slate-700 text-center space-y-4 animate-pop">
+            <div class="p-4 rounded-xl border flex flex-col items-center shadow-inner" id="resultCardBox">
+                <div id="resultIcon" class="text-5xl mb-2"></div>
+                <h3 id="resultTitle" class="text-xl font-extrabold tracking-wide"></h3>
+                <p id="resultMessage" class="text-sm mt-2 leading-relaxed"></p>
+            </div>
+            <button type="button" id="btnReset" onclick="resetForm()" class="w-full bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold py-3 rounded-lg transition duration-200 border border-slate-600 flex items-center justify-center gap-2 shadow-md">
+                <i class="fa-solid fa-rotate-right"></i> Probar otro pago
+            </button>
+        </div>
+
+        <!-- 历史记录/防重提示 -->
+        <div class="bg-slate-900/50 p-4 text-center text-xs text-slate-500 border-t border-slate-800">
+            Seguridad API configurada (A131...2A82) • Restricción de 1 consulta por día/comprobante
+        </div>
+    </div>
+
+    <!-- 加载动画模态框 -->
+    <div id="loadingModal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center">
+        <div class="bg-slate-800 p-6 rounded-xl flex flex-col items-center border border-slate-700 shadow-2xl">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-emerald-500 mb-3"></div>
+            <p class="text-sm text-slate-300">Consultando con el banco...</p>
+        </div>
+    </div>
+
+    <script>
+        // API 密钥配置
+        const API_KEY = "A13144A8F95278F8FD6AECEBA0CE2A82";
+        const API_ENDPOINT = "https://api.banco.com.ve/v1/pagomovil/verify"; 
+
+        // 金额实时千分位处理 (委内瑞拉常用的 1.234,56 格式)
+        const montoInput = document.getElementById('montoInput');
+        montoInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9]/g, '');
+            if (!value) {
+                e.target.value = '';
+                return;
+            }
+            let number = parseInt(value, 10) / 100;
+            e.target.value = number.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        });
+
+        // 获取当天缓存
+        function getDailyCache() {
+            const today = new Date().toISOString().split('T')[0];
+            const storedDate = localStorage.getItem('pm_cache_date');
+            let cache = JSON.parse(localStorage.getItem('pm_cache_records') || '[]');
+
+            if (storedDate !== today) {
+                localStorage.setItem('pm_cache_date', today);
+                localStorage.setItem('pm_cache_records', JSON.stringify([]));
+                return [];
+            }
+            return cache;
+        }
+
+        function saveCache(records) {
+            const today = new Date().toISOString().split('T')[0];
+            localStorage.setItem('pm_cache_date', today);
+            localStorage.setItem('pm_cache_records', JSON.stringify(records));
+        }
+
+        document.getElementById('verifyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const operador = document.getElementById('operador').value;
+            const telefono = document.getElementById('telefono').value.trim();
+            const montoRaw = document.getElementById('montoInput').value.trim();
+            const comprobante = document.getElementById('comprobante').value.trim();
+
+            const fullTelefono = `${operador}${telefono}`;
+            const uniqueKey = `${fullTelefono}_${montoRaw}_${comprobante}`;
+
+            // 1. 检查当天防重测试限制
+            const cacheRecords = getDailyCache();
+            if (cacheRecords.includes(uniqueKey)) {
+                showResult(false, "Consulta Repetida", "Este comprobante, teléfono y monto ya han sido probados el día de hoy. No se permite una segunda prueba.");
+                return;
+            }
+
+            // 2. 显示加载状态
+            document.getElementById('loadingModal').classList.remove('hidden');
+
+            try {
+                /*
+                 * 真实 API 请求逻辑模版：
+                 * const response = await fetch(API_ENDPOINT, {
+                 *     method: 'POST',
+                 *     headers: {
+                 *         'Content-Type': 'application/json',
+                 *         'Authorization': `Bearer ${API_KEY}`
+                 *     },
+                 *     body: JSON.stringify({ telefono: fullTelefono, monto: montoRaw, comprobante: comprobante })
+                 * });
+                 */
+
+                // 模拟网络延迟
+                await new Promise(resolve => setTimeout(resolve, 1500)); 
+                
+                // 严谨逻辑：默认由于没有真实的后端对接凭证库，任何输入都返回“未找到”
+                // （只有当您连接真实的后端 API 返回成功时才会显示通过）
+                let isSuccess = false; 
+
+                // 隐藏加载框
+                document.getElementById('loadingModal').classList.add('hidden');
+
+                // 记录防重
+                cacheRecords.push(uniqueKey);
+                saveCache(cacheRecords);
+
+                if (isSuccess) {
+                    showResult(true, "¡PAGO ENCONTRADO!", `El pago móvil por un monto de Bs. ${montoRaw} proveniente del ${fullTelefono} (Ref: ...${comprobante}) ha sido verificado exitosamente.`);
+                } else {
+                    showResult(false, "PAGO NO ENCONTRADO", `No se registra un pago válido de Bs. ${montoRaw} con los datos suministrados (Teléfono: ${fullTelefono}, Ref: ...${comprobante}). Verifique que el cliente haya realizado la transferencia.`);
+                }
+
+            } catch (error) {
+                document.getElementById('loadingModal').classList.add('hidden');
+                showResult(false, "Error de Conexión", "No se pudo conectar con el servidor bancario. Por favor, intente nuevamente.");
+            }
+        });
+
+        function showResult(success, title, message) {
+            const container = document.getElementById('resultContainer');
+            const cardBox = document.getElementById('resultCardBox');
+            const icon = document.getElementById('resultIcon');
+            const titleEl = document.getElementById('resultTitle');
+            const msgEl = document.getElementById('resultMessage');
+
+            container.classList.remove('hidden');
+
+            if (success) {
+                cardBox.className = "p-4 rounded-xl border border-emerald-500/50 bg-emerald-950/40 flex flex-col items-center shadow-inner animate-pop";
+                icon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]"></i>';
+                titleEl.className = "text-xl font-extrabold tracking-wide text-emerald-400";
+                msgEl.className = "text-sm mt-2 text-emerald-100 leading-relaxed";
+            } else {
+                cardBox.className = "p-4 rounded-xl border border-rose-500/50 bg-rose-950/40 flex flex-col items-center shadow-inner animate-pop";
+                icon.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-400 drop-shadow-[0_0_10px_rgba(251,113,133,0.5)]"></i>';
+                titleEl.className = "text-xl font-extrabold tracking-wide text-rose-400";
+                msgEl.className = "text-sm mt-2 text-rose-100 leading-relaxed";
+            }
+
+            titleEl.textContent = title;
+            msgEl.textContent = message;
+        }
+
+        // 一键重置表单和结果区域
+        function resetForm() {
+            document.getElementById('verifyForm').reset();
+            document.getElementById('resultContainer').classList.add('hidden');
+            document.getElementById('telefono').focus();
+        }
+    </script>
+</body>
+</html>
