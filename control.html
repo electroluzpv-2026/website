@@ -30,6 +30,8 @@
         .image-modal.active { display: flex; }
         .image-modal img { max-width: 90vw; max-height: 85vh; border-radius: 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.5); object-fit: contain; background: white; padding: 0.5rem; }
 
+        .stock-col { display: none; }
+        .admin-mode .stock-col { display: table-cell; }
         .admin-only { display: none; }
         .admin-mode .admin-only { display: table-cell; }
 
@@ -54,7 +56,6 @@
         .save-btn { background: #10b981; color: white; padding: 0.4rem 1.2rem; border-radius: 0.75rem; font-weight: 700; font-size: 0.85rem; transition: 0.2s; border: none; cursor: pointer; }
         .save-btn:hover { background: #059669; transform: scale(1.02); }
 
-        /* Tabla con bordes horizontales */
         .inventory-table th { background: #f1f5f9; border-bottom: 2px solid #e2e8f0; }
         .inventory-table td { border-bottom: 1px solid #e2e8f0; padding: 0.5rem 0.75rem; }
         .inventory-table tr:hover td { background: #f8fafc; }
@@ -68,8 +69,8 @@
     <!-- HEADER -->
     <header class="bg-[#242629] sticky top-0 z-40 shadow-md border-b border-white/5">
         <div class="border-b border-white/5 bg-[#191a1d] px-4 py-1.5 flex justify-between text-[10px] font-bold text-slate-400 f-int">
-            <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span> TASA BCV: 1 USD = 791.67 VES</span>
             <span>RIF J507436055</span>
+            <span>Electroluz PV</span>
         </div>
         <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
             <div class="flex items-center gap-3 cursor-pointer" onclick="location.reload()">
@@ -172,7 +173,7 @@
             </div>
         </div>
 
-        <!-- Tabla con bordes horizontales -->
+        <!-- Tabla -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden" id="table-container">
             <div class="overflow-x-auto">
                 <table class="inventory-table w-full text-sm">
@@ -182,7 +183,7 @@
                             <th class="text-left">CÓDIGO</th>
                             <th class="text-left">DESCRIPCIÓN</th>
                             <th class="text-left">MARCA</th>
-                            <th class="text-center w-20">STOCK</th>
+                            <th class="text-center w-20 stock-col">STOCK</th>
                             <th class="text-center w-20">CANTIDAD</th>
                             <th class="text-center w-24">ACCIÓN</th>
                             <th class="text-center w-20 admin-only">REAL</th>
@@ -211,7 +212,6 @@
     <script>
         // ========== CONFIG ==========
         const CONFIG = {
-            TASA: 791.67,
             CSV_URL: 'https://docs.google.com/spreadsheets/d/11P_SClE2hNTn5g-Eq2GRpQBA83q71RityFaAkFNB554/export?format=csv',
             ADMIN_PASSWORD: '200404030040403'
         };
@@ -224,8 +224,8 @@
         let adminMode = false;
         let brandFilter = '';
         let searchTerm = '';
-        let cart = {}; // { id: quantity } - temporal para el panel
-        let savedInventory = {}; // datos guardados por el usuario
+        let cart = {};
+        let savedInventory = {};
 
         // ========== UTILIDADES ==========
         function sanitize(str) { if (!str) return ''; const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }; return str.toString().replace(/[&<>"']/g, m => map[m]); }
@@ -304,7 +304,7 @@
                     id: sanitize(code),
                     name: sanitize(name),
                     brand: sanitize(brand).toUpperCase(),
-                    stock: stock,  // Stock del Google Sheets
+                    stock: stock,
                     image: sanitize(image)
                 });
             }
@@ -316,7 +316,6 @@
 
             products.sort((a, b) => a.id.localeCompare(b.id));
 
-            // Inicializar savedInventory con 0 para todos
             products.forEach(p => {
                 savedInventory[p.id] = 0;
             });
@@ -381,7 +380,7 @@
                         <td><span class="code-pill">${p.id}</span></td>
                         <td class="font-medium text-slate-800 text-sm">${p.name}</td>
                         <td class="text-xs font-black italic text-slate-600">${p.brand || '—'}</td>
-                        <td class="text-center font-bold f-num">${p.stock}</td>
+                        <td class="text-center font-bold f-num stock-col">${p.stock}</td>
                         <td class="text-center">
                             <input type="number" class="qty-input" id="qty_${p.id}" value="${cart[p.id] || 0}" min="0" onchange="updateCartQtyFromTable('${p.id}', this.value)" />
                         </td>
@@ -474,14 +473,14 @@
             else { cart[id] = num; }
             updateCartBadge();
             renderCart();
-            // También actualizar el input en la tabla si está visible
             const tableInput = document.getElementById(`qty_${id}`);
             if (tableInput) tableInput.value = cart[id] || 0;
         }
 
         function updateCartBadge() {
-            const total = Object.values(cart).reduce((a, b) => a + b, 0);
-            document.getElementById('cart-badge').textContent = total;
+            // Mostrar número de productos diferentes (no la suma total)
+            const count = Object.keys(cart).filter(id => cart[id] > 0).length;
+            document.getElementById('cart-badge').textContent = count;
         }
 
         function toggleCart() {
@@ -533,7 +532,6 @@
             cart = {};
             updateCartBadge();
             renderCart();
-            // Limpiar inputs en tabla
             products.forEach(p => {
                 const input = document.getElementById(`qty_${p.id}`);
                 if (input) input.value = 0;
@@ -589,10 +587,15 @@
 
         function updateAdminStats() {
             document.getElementById('total-prod').textContent = products.length;
+            // Solo contar discrepancias en productos que han sido agregados
             let disc = 0;
-            products.forEach(p => {
-                const real = savedInventory[p.id] || 0;
-                if (real !== p.stock) disc++;
+            const addedIds = Object.keys(cart).filter(id => cart[id] > 0);
+            addedIds.forEach(id => {
+                const p = products.find(x => x.id === id);
+                if (p) {
+                    const real = savedInventory[id] || 0;
+                    if (real !== p.stock) disc++;
+                }
             });
             document.getElementById('total-disc').textContent = disc;
         }
@@ -600,17 +603,28 @@
         function checkStock() {
             let mismatches = 0;
             let msg = '';
-            products.forEach(p => {
-                const real = savedInventory[p.id] || 0;
+            const addedIds = Object.keys(cart).filter(id => cart[id] > 0);
+            
+            if (addedIds.length === 0) {
+                document.getElementById('admin-msg').innerHTML = '<span class="text-amber-600 font-bold">⚠️ No hay productos agregados para verificar.</span>';
+                toast('No hay productos agregados', true);
+                return;
+            }
+            
+            addedIds.forEach(id => {
+                const p = products.find(x => x.id === id);
+                if (!p) return;
+                const real = savedInventory[id] || 0;
                 if (real !== p.stock) {
                     mismatches++;
                     const diff = real - p.stock;
                     msg += `• ${p.id} : ${p.name} — inventario ${p.stock} → real ${real} (${diff > 0 ? '+' : ''}${diff})\n`;
                 }
             });
+            
             const el = document.getElementById('admin-msg');
             if (mismatches === 0) {
-                el.innerHTML = '<span class="text-emerald-600 font-bold">✅ Todos los productos coinciden con el inventario.</span>';
+                el.innerHTML = '<span class="text-emerald-600 font-bold">✅ Todos los productos agregados coinciden con el inventario.</span>';
             } else {
                 el.innerHTML = `<span class="text-rose-600 font-bold">⚠️ ${mismatches} producto(s) con discrepancia:</span><br><pre class="text-xs text-slate-700 whitespace-pre-wrap mt-1">${msg}</pre>`;
             }
@@ -620,8 +634,11 @@
         // ========== EXPORTAR DISCREPANCIAS ==========
         function getDiscrepancias() {
             const result = [];
-            products.forEach(p => {
-                const real = savedInventory[p.id] || 0;
+            const addedIds = Object.keys(cart).filter(id => cart[id] > 0);
+            addedIds.forEach(id => {
+                const p = products.find(x => x.id === id);
+                if (!p) return;
+                const real = savedInventory[id] || 0;
                 if (real !== p.stock) {
                     result.push({
                         id: p.id,
@@ -712,11 +729,14 @@
             document.body.appendChild(container);
 
             try {
+                await new Promise(resolve => setTimeout(resolve, 300));
                 const canvas = await html2canvas(container, {
                     scale: 2,
                     useCORS: true,
                     logging: false,
-                    backgroundColor: '#ffffff'
+                    backgroundColor: '#ffffff',
+                    width: 800,
+                    height: container.scrollHeight
                 });
                 const imgData = canvas.toDataURL('image/jpeg', 0.95);
                 const { jsPDF } = window.jspdf;
@@ -813,11 +833,14 @@
             document.body.appendChild(container);
 
             try {
+                await new Promise(resolve => setTimeout(resolve, 300));
                 const canvas = await html2canvas(container, {
                     scale: 2,
                     useCORS: true,
                     logging: false,
-                    backgroundColor: '#ffffff'
+                    backgroundColor: '#ffffff',
+                    width: 800,
+                    height: container.scrollHeight
                 });
                 const imgData = canvas.toDataURL('image/jpeg', 0.95);
                 const { jsPDF } = window.jspdf;
