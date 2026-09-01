@@ -4,127 +4,128 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Distribuidora Electroluz PV C.A.</title>
-  
-  <!-- SECURITY FIX: Using versioned Tailwind CDN with Subresource Integrity (SRI) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Google Fonts: Poppins + Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  
-  <!-- Phosphor Icons -->
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
-
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 400;
-      background-color: #f8fafc;
-      color: #0f172a;
-      -webkit-tap-highlight-color: transparent;
-    }
+    body { font-family: 'Poppins', sans-serif; font-weight: 400; background-color: #f8fafc; color: #0f172a; -webkit-tap-highlight-color: transparent; }
     .f-int { font-family: 'Inter', sans-serif; }
     .f-num { font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; }
-    
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     .hide-sc::-webkit-scrollbar { display: none; }
     .hide-sc { -ms-overflow-style: none; scrollbar-width: none; }
-
-    select {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 1rem center;
-      background-size: 1em;
-    }
+    select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; }
     input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-
     .b-ing { color: #FFCC00; transition: 0.3s; }
     .b-ing:hover, .b-ing.act { background: #FFCC00; color: #111827; transform: scale(1.05); box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4); }
     .b-wad { color: #2563EB; transition: 0.3s; }
     .b-wad:hover, .b-wad.act { background: #2563EB; color: #fff; transform: scale(1.05); box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); }
     .b-ver { color: #10B981; transition: 0.3s; }
     .b-ver:hover, .b-ver.act { background: #10B981; color: #fff; transform: scale(1.05); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
-
     .t-ofr { background: linear-gradient(135deg, #fff1f2, #ffe4e6); color: #be123c; transition: 0.3s; }
     .t-ofr:hover, .t-ofr.act { background: linear-gradient(135deg, #f43f5e, #e11d48); color: #fff; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.3); }
     .t-new { background: linear-gradient(135deg, #f0fdf4, #d1fae5); color: #047857; transition: 0.3s; }
     .t-new:hover, .t-new.act { background: linear-gradient(135deg, #10b981, #059669); color: #fff; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
-
     .btn-pay { flex: 1; padding: 6px 4px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 9px; font-weight: 700; background: #fff; color: #64748b; transition: 0.2s; text-align: center; }
     .btn-del { padding: 6px 4px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 9px; font-weight: 700; color: #64748b; transition: 0.2s; }
-    
     .fade-in { animation: fadeIn 0.3s ease forwards; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* Custom Toggle Switch for Currency */
-    .toggle-checkbox:checked {
-      right: 0;
-      border-color: #3b82f6;
+    .toggle-checkbox:checked { right: 0; border-color: #3b82f6; }
+    .toggle-checkbox:checked + .toggle-label { background-color: #3b82f6; }
+    .toggle-checkbox:checked + .toggle-label:before { transform: translateX(100%); }
+    .product-card { content-visibility: auto; contain-intrinsic-size: 400px; }
+    .code-pill { display: inline-block; padding: 0.15rem 0.7rem; border-radius: 9999px; border: 2px solid #3b82f6; background-color: white; color: #1e293b; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.02em; box-shadow: 0 1px 2px rgba(0,0,0,0.05); white-space: nowrap; }
+    .code-pill-sm { font-size: 0.65rem; padding: 0.1rem 0.6rem; border-width: 1.5px; }
+    .price-text { font-weight: 400 !important; }
+    .product-name { font-weight: 500 !important; }
+    .modal-price { font-weight: 400 !important; }
+    .cart-item-name { font-weight: 500 !important; }
+    #drawer { display: flex; flex-direction: column; }
+    #drawer .cart-header { flex-shrink: 0; }
+    #drawer #c-items { flex: 1; overflow-y: auto; min-height: 0; }
+    #drawer .cart-footer { flex-shrink: 0; padding: 0.75rem; }
+    .usd-reveal-btn {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      z-index: 25;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: #1e3a8a;
+      border: none;
+      box-shadow: 0 6px 20px rgba(30, 58, 138, 0.45);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
     }
-    .toggle-checkbox:checked + .toggle-label {
-      background-color: #3b82f6;
+    .usd-reveal-btn:active { transform: scale(0.92); }
+    .usd-ring {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: #60a5fa;
+      border-right-color: #3b82f6;
+      animation: spinGlow 1.6s linear infinite;
+      pointer-events: none;
+      box-shadow: 0 0 12px rgba(59,130,246,0.3);
     }
-    .toggle-checkbox:checked + .toggle-label:before {
-      transform: translateX(100%);
+    .usd-ring::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      border-bottom-color: #93c5fd;
+      border-left-color: #2563eb;
+      animation: spinGlow 2.2s linear infinite reverse;
+      opacity: 0.6;
     }
-    
-    .product-card {
-      content-visibility: auto;
-      contain-intrinsic-size: 400px;
+    @keyframes spinGlow { to { transform: rotate(360deg); } }
+    .usd-icon {
+      font-size: 24px;
+      color: white;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      line-height: 1;
+      z-index: 2;
+      background: #1e3a8a;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.15);
     }
-
-    /* Código 蓝色药丸样式 */
-    .code-pill {
-      display: inline-block;
-      padding: 0.15rem 0.7rem;
-      border-radius: 9999px;
-      border: 2px solid #3b82f6;
-      background-color: white;
-      color: #1e293b;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    .usd-icon i { font-size: 26px; }
+    .usd-price-badge {
+      position: absolute;
+      bottom: 82px;
+      right: 20px;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(8px);
+      padding: 8px 16px;
+      border-radius: 40px;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      color: #facc15;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.3px;
+      display: none;
+      z-index: 26;
+      font-family: 'Inter', sans-serif;
       white-space: nowrap;
     }
-    .code-pill-sm {
-      font-size: 0.65rem;
-      padding: 0.1rem 0.6rem;
-      border-width: 1.5px;
-    }
-    .price-text {
-      font-weight: 400 !important;
-    }
-    .product-name {
-      font-weight: 500 !important;
-    }
-    .modal-price {
-      font-weight: 400 !important;
-    }
-    .cart-item-name {
-      font-weight: 500 !important;
-    }
-
-    /* 购物车 - 正常比例 */
-    #drawer {
-      display: flex;
-      flex-direction: column;
-    }
-    #drawer .cart-header {
-      flex-shrink: 0;
-    }
-    #drawer #c-items {
-      flex: 1;
-      overflow-y: auto;
-      min-height: 0;
-    }
-    #drawer .cart-footer {
-      flex-shrink: 0;
-      padding: 0.75rem;
-    }
+    .usd-price-badge.show { display: block; animation: fadeIn 0.25s ease; }
+    .usd-price-badge small { color: #94a3b8; font-size: 11px; font-weight: 400; margin-right: 6px; }
   </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
@@ -151,19 +152,15 @@
           <p class="text-slate-400 text-[8px] font-black tracking-[0.2em] uppercase mt-0.5">ILUMINACIÓN • FERRETERÍA • ELECTRÓNICA</p>
         </div>
       </div>
-      
       <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
         <button onclick="setView('catalog')" class="hidden md:flex items-center gap-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 text-white px-5 py-2 rounded-lg font-black text-xs shadow-md border border-white/10 transition-all uppercase tracking-widest">
           <i class="ph-bold ph-book-open text-base"></i> CATÁLOGO
         </button>
-
         <div id="h-social" class="flex items-center gap-2">
           <a href="https://www.instagram.com/electroluzpv" target="_blank" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pink-500/20 hover:text-pink-400 transition-all"><i class="ph-fill ph-instagram-logo text-lg"></i></a>
           <a href="https://www.tiktok.com/@electroluzpv" target="_blank" class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-cyan-500/20 hover:text-cyan-400 transition-all"><i class="ph-fill ph-tiktok-logo text-lg"></i></a>
         </div>
-
         <div id="h-ctrls" class="hidden flex items-center gap-3 sm:gap-4">
-          <!-- Fun Toggle Switch for Currency -->
           <div class="relative inline-flex items-center cursor-pointer bg-black/20 p-1 rounded-full border border-white/10" onclick="toggleCurrency()">
             <div class="w-16 h-7 bg-transparent rounded-full flex relative items-center justify-between px-2">
               <span id="cur-usd-lbl" class="text-[9px] font-black z-10 transition-colors text-white">USD</span>
@@ -171,13 +168,11 @@
               <div id="cur-slider" class="absolute left-0 w-1/2 h-full bg-blue-500 rounded-full shadow transition-transform duration-300 transform translate-x-0"></div>
             </div>
           </div>
-          
           <button onclick="toggCart()" class="relative bg-white hover:bg-slate-100 text-slate-900 px-4 py-2.5 rounded-lg font-black text-xs shadow-lg transition-all flex items-center gap-2 uppercase tracking-widest">
             <i class="ph-bold ph-shopping-cart text-lg text-blue-600"></i> <span class="hidden sm:inline">Pedido</span> 
             <span id="c-badge" class="absolute -top-2 -right-2 bg-rose-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#242629]">0</span>
           </button>
         </div>
-        
         <button class="md:hidden w-10 h-10 flex items-center justify-center text-white bg-white/5 rounded-lg border border-white/10" onclick="setView(s.v==='home'?'catalog':'home')"><i class="ph-bold ph-list text-xl"></i></button>
       </div>
     </div>
@@ -189,22 +184,19 @@
       <div class="absolute top-[30%] -right-[20%] w-[600px] h-[600px] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[150px] opacity-50"></div>
       <div class="absolute -bottom-[10%] left-[20%] w-[400px] h-[400px] bg-indigo-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-40"></div>
     </div>
-
     <section class="max-w-7xl mx-auto px-4 pt-16 pb-20 grid lg:grid-cols-2 gap-12 items-center relative z-10">
       <div class="space-y-6">
         <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-amber-400 bg-amber-400/10 px-3 py-1.5 rounded-full border border-amber-400/20 backdrop-blur-sm"><i class="ph-fill ph-star text-amber-400 animate-pulse"></i> Aliados Cashea</span>
         <h2 class="text-4xl lg:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-md">Tu distribuidora de <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-cyan-300">iluminación, ferretería y electrónica.</span></h2>
         <p class="text-slate-300 text-lg leading-relaxed f-int max-w-xl font-medium drop-shadow-sm">Abastecemos a empresas y particulares en toda Venezuela. Financiamiento disponible con <strong class="text-amber-400">Cashea (Inicial + 3 cuotas)</strong>.</p>
-        
         <div class="flex flex-wrap gap-4 pt-4">
           <button onclick="setView('catalog')" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-black text-sm shadow-[0_0_20px_rgba(37,99,235,0.4)] flex items-center gap-2 group border border-blue-400/50 transition-all tracking-widest uppercase"><span class="w-2 h-2 rounded-full bg-white/80 animate-pulse"></span> EXPLORAR CATÁLOGO <i class="ph-bold ph-arrow-right group-hover:translate-x-1 transition-transform text-lg"></i></button>
           <a href="https://wa.me/584223888007" target="_blank" class="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-8 py-4 rounded-xl font-bold text-sm flex items-center gap-2 backdrop-blur-sm transition-all tracking-widest uppercase"><i class="ph-fill ph-whatsapp-logo text-xl text-emerald-400"></i> COTIZACIÓN</a>
         </div>
       </div>
-      
       <div class="relative w-full aspect-[4/3] rounded-[2rem] overflow-hidden shadow-[0_0_50px_rgba(37,99,235,0.15)] border border-white/10 group">
         <div class="absolute inset-0 bg-[#0b1121]/30 z-10 mix-blend-overlay"></div>
-        <img src="https://pub-db6d95a9369746c6ae9e956ab6f6ebe7.r2.dev/tiendapv.jpeg" alt="Sede" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+        <img src="https://pub-db6d95a9369746c6ae9e956ab6f6ebe7.r2.dev/tiendapv.jpg" alt="Sede" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
         <div class="absolute bottom-6 left-6 z-20 bg-[#0b1121]/80 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/10"><p class="text-white font-bold text-sm">Sede Central • La Candelaria</p><p class="text-blue-400 text-[10px] font-bold uppercase tracking-widest mt-0.5">Ventas al Mayor y Detal</p></div>
       </div>
     </section>
@@ -215,7 +207,6 @@
       <div class="text-center mb-10"><h3 class="text-3xl font-black text-slate-900 tracking-tight">Categorías Principales</h3><p class="text-slate-400 text-[10px] font-bold tracking-widest uppercase mt-2">SELECCIONA UNA LÍNEA PARA VER EL CATÁLOGO</p></div>
       <div id="h-cats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
     </section>
-
     <section class="max-w-7xl mx-auto px-4 pb-16 grid md:grid-cols-2 gap-6">
       <div class="bg-gradient-to-br from-[#0b1121] to-[#1e293b] rounded-3xl p-8 sm:p-10 relative overflow-hidden shadow-xl cursor-pointer group border border-slate-800" onclick="setView('catalog')">
         <i class="ph-fill ph-crown absolute -right-4 -bottom-4 text-9xl text-amber-500/10 group-hover:text-amber-500/20 transition-colors"></i>
@@ -228,7 +219,6 @@
           <button class="mt-8 text-amber-400 font-black text-sm flex items-center gap-2 group-hover:gap-3 transition-all tracking-widest uppercase bg-white/5 px-5 py-2.5 rounded-lg backdrop-blur-sm border border-white/5">VER CATÁLOGO <i class="ph-bold ph-arrow-right"></i></button>
         </div>
       </div>
-
       <div class="bg-gradient-to-br from-rose-600 to-pink-600 rounded-3xl p-8 sm:p-10 relative overflow-hidden shadow-xl cursor-pointer group" onclick="filterC('papeleria')">
         <i class="ph-fill ph-backpack absolute -right-4 -bottom-4 text-9xl text-white/10 group-hover:scale-110 transition-transform duration-500"></i>
         <div class="relative z-10 h-full flex flex-col items-start justify-between">
@@ -241,7 +231,6 @@
         </div>
       </div>
     </section>
-
     <section class="max-w-7xl mx-auto px-4 py-16 border-t border-slate-200 grid lg:grid-cols-2 gap-12 items-center bg-white">
       <div>
         <span class="text-blue-600 font-bold text-[10px] tracking-widest uppercase mb-2 flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> SEDE CENTRAL & ATENCIÓN</span>
@@ -253,7 +242,6 @@
         <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3922.9610255094144!2d-66.90973692519916!3d10.503735989628947!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTDCsDMwJzEzLjUiTiA2NsKwNTQnMjUuOCJX!5e0!3m2!1szh-CN!2sve!4v1788108354107!5m2!1szh-CN!2sve" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
     </section>
-
     <footer class="bg-[#070b15] py-8 text-slate-500 text-xs f-int border-t border-white/5">
       <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4"><p>© 2026 Distribuidora Electroluz PV C.A. – Todos los derechos reservados.</p><div class="flex items-center gap-4"><a href="https://www.instagram.com/electroluzpv" target="_blank" class="hover:text-pink-400 flex items-center gap-1 transition-colors"><i class="ph-fill ph-instagram-logo text-xl"></i> Instagram</a><a href="https://www.tiktok.com/@electroluzpv" target="_blank" class="hover:text-cyan-400 flex items-center gap-1 transition-colors"><i class="ph-fill ph-tiktok-logo text-xl"></i> TikTok</a></div></div>
     </footer>
@@ -261,8 +249,6 @@
 
   <main id="v-cat" class="hidden flex-1 w-full bg-slate-50 p-3 sm:p-4 lg:p-6 pb-24">
     <div class="max-w-[1400px] mx-auto space-y-4">
-      
-      <!-- Search & Brands Filter -->
       <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col lg:flex-row gap-4 justify-between items-center relative z-20">
         <div class="w-full lg:w-1/2 relative">
           <i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
@@ -279,17 +265,14 @@
           <button id="b-vert" onclick="setB('VERT')" class="px-5 py-2.5 rounded-xl text-sm font-black italic b-ver border border-slate-200 bg-white">VERT</button>
         </div>
       </div>
-
       <div class="flex flex-wrap gap-3">
         <button id="t-todo" onclick="setT('')" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-900 text-white shadow-sm transition-all">Catálogo Completo</button>
         <button id="t-ofr" onclick="setT('oferta')" class="t-ofr px-5 py-2.5 rounded-xl text-sm font-bold border border-rose-200 flex items-center gap-1.5 bg-white shadow-sm"><i class="ph-fill ph-fire text-rose-500"></i> En Oferta <span class="bg-rose-100 text-rose-600 text-[9px] font-black px-1.5 py-0.5 rounded ml-1 uppercase">Promo</span></button>
         <button id="t-new" onclick="setT('nuevo')" class="t-new px-5 py-2.5 rounded-xl text-sm font-bold border border-emerald-200 flex items-center gap-1.5 bg-white shadow-sm"><i class="ph-fill ph-sparkle text-emerald-500"></i> Nuevos Ingresos <span class="bg-emerald-100 text-emerald-700 text-[9px] font-black px-1.5 py-0.5 rounded ml-1 uppercase">New</span></button>
       </div>
-
       <div class="bg-white px-4 py-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-500 flex items-center gap-2 overflow-x-auto hide-sc shadow-sm">
         <span class="text-[10px] tracking-widest text-slate-400 mr-1 uppercase">RUTA:</span><span id="br-l1" class="text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-md">Todo</span><span id="br-l2" class="hidden text-blue-600 bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-md"></span><span id="br-l3" class="hidden text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-md"></span>
       </div>
-
       <div class="space-y-4">
         <div id="f-l1" class="flex flex-wrap gap-2"></div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -297,17 +280,15 @@
           <select id="f-l3" onchange="setL3(this.value)" class="hidden w-full bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-xl px-4 py-3.5 outline-none focus:ring-2 focus:ring-emerald-100 shadow-sm cursor-pointer"></select>
         </div>
       </div>
-
       <div id="p-grid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 pt-4">
          <div class="col-span-full py-20 text-center flex flex-col items-center"><i class="ph-bold ph-spinner-gap animate-spin text-4xl text-blue-500 mb-3"></i><p class="text-slate-500 font-bold f-int text-lg">Conectando con Google Sheets...</p></div>
       </div>
-      
       <div id="pagination" class="hidden flex justify-center items-center mt-8 pb-4"></div>
-      
       <div id="no-res" class="hidden py-16 text-center bg-white rounded-2xl border border-slate-200 shadow-sm"><i class="ph-bold ph-magnifying-glass text-5xl text-slate-300 mb-3"></i><h3 class="text-xl font-black text-slate-800">No se encontraron productos</h3><button onclick="clrF()" class="mt-4 px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold text-sm transition-colors border border-slate-200">Limpiar Filtros</button></div>
     </div>
   </main>
 
+  <!-- MODAL -->
   <div id="modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-end sm:items-center justify-center sm:p-4 opacity-0 transition-opacity duration-300">
     <div class="bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[90vh] transform translate-y-full sm:translate-y-10 transition-transform duration-300 relative overflow-hidden">
       <div id="m-agotado-layer" class="hidden absolute inset-0 bg-white/70 backdrop-blur-[2px] z-20 flex-col items-center justify-center">
@@ -315,30 +296,24 @@
         <p class="mt-4 font-bold text-slate-700 text-sm bg-white px-4 py-1.5 rounded-full shadow-sm">Sin inventario disponible</p>
         <button onclick="closeM()" class="mt-6 px-6 py-2 bg-slate-900 text-white rounded-lg font-bold">Cerrar</button>
       </div>
-
       <div class="relative bg-slate-50 p-6 flex justify-center items-center h-56 sm:h-64 border-b border-slate-100">
         <button onclick="closeM()" class="absolute top-4 right-4 w-9 h-9 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors shadow-sm z-10 flex items-center justify-center"><i class="ph-bold ph-x text-lg"></i></button>
         <img id="m-img" src="" class="max-w-full max-h-full object-contain mix-blend-multiply drop-shadow-md">
       </div>
-      <div class="p-5 sm:p-6 flex-1 overflow-y-auto hide-sc bg-white">
+      <div class="p-5 sm:p-6 flex-1 overflow-y-auto hide-sc bg-white relative">
         <div id="m-category-tag" class="mb-2 text-xs text-slate-500 font-medium bg-slate-100 inline-block px-3 py-1 rounded-full border border-slate-200"></div>
-        
         <div class="flex items-center gap-2 mb-3 flex-wrap">
           <span id="m-cod" class="code-pill code-pill-sm"></span>
           <span id="m-br" class="hidden text-[10px] font-black italic tracking-tighter px-2.5 py-1 rounded shadow-sm"></span>
         </div>
         <h3 id="m-tit" class="text-lg sm:text-xl font-black text-slate-900 leading-tight mb-4 uppercase product-name"></h3>
-        
         <div class="flex justify-end mb-2">
-          <button onclick="toggleCurrency(); updateModalPrices();" class="text-xs font-medium bg-blue-50 hover:bg-blue-100 text-blue-600 px-3 py-1 rounded-full border border-blue-200 transition flex items-center gap-1">
+          <button onclick="toggleModalCurrency()" class="text-xs font-medium bg-blue-50 hover:bg-blue-100 text-blue-600 px-3 py-1 rounded-full border border-blue-200 transition flex items-center gap-1">
             <i class="ph-bold ph-currency-circle-dollar text-sm"></i> Cambiar a <span id="modal-currency-label">VES</span>
           </button>
         </div>
-
         <div id="m-info-b" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-3 mb-5"><p class="text-[10px] font-bold text-slate-400 mb-1.5 uppercase tracking-widest flex items-center gap-1"><i class="ph-fill ph-info"></i> Especificaciones</p><p id="m-info" class="text-sm text-slate-700 f-int whitespace-pre-wrap leading-relaxed"></p></div>
-        
         <div id="m-price-grid"></div>
-
         <div class="flex flex-col gap-3">
           <div class="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-2xl p-1.5 shadow-inner w-full max-w-[240px] mx-auto h-14">
             <button onclick="updMQ(-1)" class="w-12 h-full flex items-center justify-center text-slate-500 hover:text-slate-900 active:scale-90 transition-all bg-white rounded-xl shadow-sm border border-slate-100"><i class="ph-bold ph-minus"></i></button>
@@ -348,26 +323,33 @@
           <p class="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Total se actualiza automáticamente</p>
         </div>
       </div>
+      <!-- USD Reveal -->
+      <div class="absolute bottom-4 right-4 z-30" style="pointer-events: none;">
+        <div class="relative" style="pointer-events: auto;">
+          <div id="usdPriceBadge" class="usd-price-badge">
+            <small>USD</small> <span id="usdPriceValue">0.00</span>
+          </div>
+          <button id="usdRevealBtn" class="usd-reveal-btn" onclick="toggleUsdPrice()">
+            <div class="usd-ring"></div>
+            <div class="usd-icon">
+              <i class="ph-fill ph-currency-dollar"></i>
+            </div>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- ==================== CART DRAWER (PEDIDO) - 正常比例 ==================== -->
+  <!-- CART -->
   <div id="drawer" class="fixed inset-y-0 right-0 w-full sm:w-[420px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col border-l border-slate-200">
-    <!-- 头部 -->
     <div class="cart-header p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-shrink-0">
       <h3 class="font-black text-lg text-slate-900 tracking-tight">📦 RESUMEN DE PEDIDO</h3>
       <button onclick="toggCart()" class="w-8 h-8 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-rose-500 shadow-sm transition-colors flex items-center justify-center">
         <i class="ph-bold ph-x"></i>
       </button>
     </div>
-    
-    <!-- 商品列表 -->
     <div id="c-items" class="flex-1 overflow-y-auto p-3 space-y-2.5 bg-slate-50/50 hide-sc"></div>
-    
-    <!-- 底部 -->
     <div class="cart-footer flex-shrink-0 bg-white border-t border-slate-200 p-4">
-      
-      <!-- VIP 进度追踪 -->
       <div id="v-tr" class="mb-3 bg-gradient-to-r from-amber-50 to-yellow-50 p-2.5 rounded-xl hidden border border-amber-200">
         <div class="flex justify-between items-end mb-1.5">
           <span class="text-[9px] font-black text-amber-700 uppercase tracking-widest flex items-center gap-1">
@@ -379,8 +361,6 @@
           <div id="v-bar" class="h-full bg-gradient-to-r from-amber-400 to-amber-500 transition-all duration-500 rounded-full"></div>
         </div>
       </div>
-
-      <!-- 交付方式 -->
       <div class="mb-3">
         <p class="text-[9px] font-bold text-slate-400 mb-1.5 uppercase tracking-widest">Método de Entrega:</p>
         <div class="grid grid-cols-3 gap-1.5">
@@ -395,8 +375,6 @@
           </button>
         </div>
       </div>
-
-      <!-- 支付方式 -->
       <div class="mb-3">
         <p class="text-[9px] font-bold text-slate-400 mb-1.5 uppercase tracking-widest flex justify-between">
           Forma de Pago: 
@@ -418,8 +396,6 @@
           </div>
         </div>
       </div>
-
-      <!-- 总计金额 -->
       <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl flex items-center justify-between mb-3 shadow-inner">
         <span class="text-sm font-bold text-slate-600 uppercase tracking-wider">Total Estimado</span>
         <div class="text-right">
@@ -427,8 +403,6 @@
           <span id="c-ref" class="block text-[10px] text-slate-400 font-bold f-num"></span>
         </div>
       </div>
-
-      <!-- 操作按钮 -->
       <div class="flex gap-2">
         <button onclick="clrC()" class="px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-slate-600 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 transition-colors shadow-sm shrink-0">
           <i class="ph-bold ph-trash text-base"></i>
@@ -442,24 +416,56 @@
   <div id="overlay" onclick="toggCart()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-40 opacity-0 transition-opacity duration-300"></div>
 
   <script>
-    const CONFIG = {
-      TASA: 791.67,
-      WHATSAPP: '584223888007',
-      CSV_URL: 'https://docs.google.com/spreadsheets/d/11P_SClE2hNTn5g-Eq2GRpQBA83q71RityFaAkFNB554/export?format=csv'
-    };
-
+    const CONFIG = { TASA: 791.67, WHATSAPP: '584223888007', CSV_URL: 'https://docs.google.com/spreadsheets/d/11P_SClE2hNTn5g-Eq2GRpQBA83q71RityFaAkFNB554/export?format=csv' };
     const SVG = `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3crect width='100' height='100' fill='%23f1f5f9'/%3e%3ctext x='50' y='50' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='8' font-weight='bold' fill='%2394a3b8'%3eSin Imagen%3c/text%3e%3c/svg%3e`;
 
-    function sanitize(str) { if (!str) return ''; const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }; return str.toString().replace(/[&<>"']/g, function(m) { return map[m]; }); }
+    function sanitize(str) { if (!str) return ''; const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }; return str.toString().replace(/[&<>"']/g, m => map[m]); }
     function sanitizeNumber(val) { const num = parseInt(val); return isNaN(num) || num < 0 ? 0 : num; }
     function normalize(str) { return str ? str.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase() : ''; }
     function parseNumber(str) { if (!str) return 0; const cleaned = str.toString().replace(/[$]/g, '').replace(/,/g, '.').trim(); return parseFloat(cleaned) || 0; }
-    function formatCurrency(amount) { if (s.cur === 'VES') { return `Bs ${(amount * CONFIG.TASA).toLocaleString('es-VE', { minimumFractionDigits: 2 })}`; } return `$${amount.toFixed(2)}`; }
+    function formatCurrency(amount) { if (s.cur === 'VES') return `Bs ${(amount * CONFIG.TASA).toLocaleString('es-VE', { minimumFractionDigits: 2 })}`; return `$${amount.toFixed(2)}`; }
+
+    // 图片加载自动尝试png和jpg
+    function loadImageWithFallback(imgElement, url) {
+      if (!url) { imgElement.src = SVG; return; }
+      if (url.startsWith('data:') || url.startsWith('http') === false) { imgElement.src = url; return; }
+      
+      imgElement.src = url;
+      
+      if (url.toLowerCase().endsWith('.png')) {
+        const jpgUrl = url.substring(0, url.lastIndexOf('.')) + '.jpg';
+        imgElement.onerror = function() {
+          if (this.src !== jpgUrl && !this._triedJpg) {
+            this._triedJpg = true;
+            this.src = jpgUrl;
+          } else {
+            this.src = SVG;
+            this.classList.remove('mix-blend-multiply');
+          }
+        };
+      } else if (url.toLowerCase().endsWith('.jpg') || url.toLowerCase().endsWith('.jpeg')) {
+        const pngUrl = url.substring(0, url.lastIndexOf('.')) + '.png';
+        imgElement.onerror = function() {
+          if (this.src !== pngUrl && !this._triedPng) {
+            this._triedPng = true;
+            this.src = pngUrl;
+          } else {
+            this.src = SVG;
+            this.classList.remove('mix-blend-multiply');
+          }
+        };
+      } else {
+        imgElement.onerror = function() {
+          this.src = SVG;
+          this.classList.remove('mix-blend-multiply');
+        };
+      }
+    }
 
     const s = { p: [], c: {}, v: 'home', l1: 'Todo', l2: '', l3: '', sr: '', tg: '', br: '', cur: 'USD', mod: null, del: 'nacional', pay: 'pago_movil_bs', page: 1, perPage: 20 };
     const $ = id => document.getElementById(id);
 
-    const getCatIcons = (cat) => {
+    function getCatIcons(cat) {
       const c = normalize(cat);
       if (c.includes('ferreteria')) return ['ph-wrench', 'ph-nut'];
       if (c.includes('iluminacion')) return ['ph-lightbulb', 'ph-lightning'];
@@ -468,13 +474,35 @@
       if (c.includes('juguetes')) return ['ph-horse', 'ph-game-controller'];
       if (c.includes('hogar')) return ['ph-house', 'ph-armchair'];
       return ['ph-package', 'ph-barcode'];
-    };
+    }
 
     function toast(message, isError = false) {
       const el = $('toast'); if (!el) return;
       el.innerHTML = `<i class="ph-fill ${isError ? 'ph-warning-circle' : 'ph-check-circle'} text-lg"></i> ${sanitize(message)}`;
       el.className = `fixed top-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-white font-bold text-sm shadow-2xl z-50 flex items-center gap-2 transition-all duration-300 ${isError ? 'bg-rose-500' : 'bg-slate-800'}`;
-      setTimeout(() => el.classList.add('-translate-y-24', 'opacity-0'), 2500); setTimeout(() => el.className = 'hidden', 2800);
+      setTimeout(() => el.classList.add('-translate-y-24', 'opacity-0'), 2500);
+      setTimeout(() => el.className = 'hidden', 2800);
+    }
+
+    let usdVisible = false;
+    function toggleUsdPrice() {
+      const badge = document.getElementById('usdPriceBadge');
+      if (!badge) return;
+      usdVisible = !usdVisible;
+      badge.classList.toggle('show', usdVisible);
+      if (s.mod) {
+        const p = s.p.find(x => x.id === s.mod);
+        if (p) {
+          document.getElementById('usdPriceValue').textContent = p.usdPrice ? p.usdPrice.toFixed(2) : p.pd.toFixed(2);
+        }
+      }
+    }
+
+    function toggleModalCurrency() {
+      s.cur = s.cur === 'USD' ? 'VES' : 'USD';
+      updateModalPrices();
+      const label = $('modal-currency-label');
+      if (label) label.textContent = s.cur === 'USD' ? 'VES' : 'USD';
     }
 
     async function fetchCSV() {
@@ -482,28 +510,44 @@
         const response = await fetch(CONFIG.CSV_URL);
         if (!response.ok) throw new Error('HTTP ' + response.status);
         const text = await response.text();
-        if (text.toLowerCase().includes('<html')) { const grid = $('p-grid'); if (grid) grid.innerHTML = `<div class="col-span-full py-16 text-center"><p class="text-rose-600 font-bold">Google Sheet bloqueado. Requiere 'Publicar en la Web'.</p></div>`; return; }
+        if (text.toLowerCase().includes('<html')) {
+          const grid = $('p-grid');
+          if (grid) grid.innerHTML = `<div class="col-span-full py-16 text-center"><p class="text-rose-600 font-bold">Google Sheet bloqueado. Requiere 'Publicar en la Web'.</p></div>`;
+          return;
+        }
         parseCSV(text);
-      } catch (error) { toast("Error conectando con catálogo: " + error.message, true); }
+      } catch (error) {
+        toast("Error conectando con catálogo: " + error.message, true);
+      }
     }
 
     function parseCSV(text) {
       const lines = text.split(/\r?\n/);
       if (lines.length < 2) return;
-      const headers = lines[0].split(',').map(normalize);
-      const findIndex = (...names) => { const lowerNames = names.map(n => normalize(n)); return headers.findIndex(h => lowerNames.some(n => h.includes(n))); };
+      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+      
+      // 精确列名匹配 - 基于您的表格结构
+      // I列: Detal, J列: Mayor, K列: VIP, L列: 美金价格, M列: CantidadBul
+      const findIndex = (...names) => {
+        const lowerNames = names.map(n => n.toLowerCase().trim());
+        return headers.findIndex(h => lowerNames.some(n => h.includes(n) || n.includes(h)));
+      };
 
-      const idxCode = findIndex('cod', 'codigo', 'id');
-      const idxName = findIndex('desc', 'nombre', 'producto');
-      const idxDetail = findIndex('detal', 'menor');
-      const idxWholesale = findIndex('mayor');
-      const idxVip = findIndex('vip', 'precio3', 'especial');
-      const idxStock = findIndex('stock', 'cant', 'inv', 'disp');
-      const idxCategory = findIndex('cat');
-      const idxBrand = findIndex('marc', 'brand');
-      const idxInfo = findIndex('info', 'spec');
-      const idxTag = findIndex('ofer', 'tag');
-      const idxImage = findIndex('images', 'img', 'url');
+      const idxCode = findIndex('cod', 'codigo', 'id', 'sku');
+      const idxName = findIndex('desc', 'nombre', 'producto', 'name');
+      const idxDetail = findIndex('detal', 'menor', 'detalle', 'precio detal');
+      const idxWholesale = findIndex('mayor', 'precio mayor', 'wholesale');
+      const idxVip = findIndex('vip', 'precio3', 'especial', 'precio vip');
+      // 美金价格列 - 优先匹配 L列 (美金价格)
+      const idxUsdPrice = findIndex('美金', 'usd', 'dollar', 'precio usd', 'usd price');
+      const idxStock = findIndex('stock', 'cant', 'inv', 'disp', 'inventario');
+      const idxCategory = findIndex('cat', 'categoria', 'categoría', 'category');
+      const idxBrand = findIndex('marc', 'brand', 'marca');
+      const idxInfo = findIndex('info', 'spec', 'especificaciones', 'detalles');
+      const idxTag = findIndex('ofer', 'tag', 'etiqueta', 'tipo');
+      const idxImage = findIndex('images', 'img', 'url', 'foto', 'imagen');
+
+      console.log('列索引 - Detal:', idxDetail, 'Mayor:', idxWholesale, 'VIP:', idxVip, '美金价格:', idxUsdPrice);
 
       s.p = [];
       for (let i = 1; i < lines.length; i++) {
@@ -511,20 +555,31 @@
         let row = lines[i];
         while ((row.match(/"/g) || []).length % 2 !== 0 && i < lines.length - 1) row += " " + lines[++i];
         const values = []; let current = ''; let insideQuotes = false;
-        for (let ch of row) { if (ch === '"') insideQuotes = !insideQuotes; else if (ch === ',' && !insideQuotes) { values.push(current.trim()); current = ''; } else current += ch; }
+        for (let ch of row) {
+          if (ch === '"') insideQuotes = !insideQuotes;
+          else if (ch === ',' && !insideQuotes) { values.push(current.trim()); current = ''; }
+          else current += ch;
+        }
         values.push(current.trim());
 
-        const code = idxCode !== -1 ? values[idxCode] : ''; if (!code) continue;
+        const code = idxCode !== -1 ? values[idxCode] : '';
+        if (!code) continue;
         const catParts = idxCategory !== -1 ? (values[idxCategory] || '').split('/').map(x => x.trim()).filter(Boolean) : [];
         const detailPrice = parseNumber(idxDetail !== -1 ? values[idxDetail] : 0);
         const wholesalePrice = parseNumber(idxWholesale !== -1 ? values[idxWholesale] : detailPrice);
+        // 提取美金价格 - 使用L列（美金价格），如果没有则使用Detal
+        let usdPrice = parseNumber(idxUsdPrice !== -1 && values[idxUsdPrice] ? values[idxUsdPrice] : '');
+        if (!usdPrice || usdPrice === 0) {
+          usdPrice = detailPrice;
+        }
 
         s.p.push({
-          id: sanitize(code), 
+          id: sanitize(code),
           name: sanitize(idxName !== -1 ? values[idxName] : 'Sin Nombre'),
           pd: detailPrice,
           pm: wholesalePrice,
           pv: parseNumber(idxVip !== -1 && values[idxVip] ? values[idxVip] : wholesalePrice.toString()),
+          usdPrice: usdPrice,
           stock: idxStock !== -1 && values[idxStock] !== "" ? parseFloat(values[idxStock]) : 999,
           l1: sanitize(catParts[0] || 'General'),
           l2: sanitize(catParts[1] || ''),
@@ -532,7 +587,7 @@
           brand: sanitize(idxBrand !== -1 ? values[idxBrand] : '').toUpperCase(),
           info: sanitize(idxInfo !== -1 ? values[idxInfo] : ''),
           tag: normalize(idxTag !== -1 ? values[idxTag] : ''),
-          image: sanitize(idxImage !== -1 && values[idxImage] ? values[idxImage].trim() : '') 
+          image: sanitize(idxImage !== -1 && values[idxImage] ? values[idxImage].trim() : '')
         });
       }
       renderHomeCategories();
@@ -541,7 +596,8 @@
 
     function renderHomeCategories() {
       const container = $('h-cats'); if (!container) return;
-      const catMap = {}; s.p.forEach(p => { const key = normalize(p.l1); catMap[key] = (catMap[key] || 0) + 1; });
+      const catMap = {};
+      s.p.forEach(p => { const key = normalize(p.l1); catMap[key] = (catMap[key] || 0) + 1; });
       const cats = [
         { name: 'Iluminación LED', key: 'iluminacion', icon: 'ph-fill ph-lightbulb', color: 'bg-amber-400/10 text-amber-500' },
         { name: 'Ferretería', key: 'ferreteria', icon: 'ph-fill ph-wrench', color: 'bg-blue-500/10 text-blue-600' },
@@ -563,21 +619,47 @@
       if (l2) { if (s.l1 !== 'Todo' && s.l2) { l2.textContent = s.l2; l2.classList.remove('hidden'); } else l2.classList.add('hidden'); }
       if (l3) { if (s.l1 !== 'Todo' && s.l2 && s.l3) { l3.textContent = s.l3; l3.classList.remove('hidden'); } else l3.classList.add('hidden'); }
 
-      const f1 = $('f-l1'); 
-      if (f1) { 
-        const cats = new Set(['Todo']); 
-        s.p.forEach(p => p.l1 && cats.add(p.l1)); 
-        f1.innerHTML = Array.from(cats).map(cat => 
+      const f1 = $('f-l1');
+      if (f1) {
+        const cats = new Set(['Todo']);
+        s.p.forEach(p => p.l1 && cats.add(p.l1));
+        f1.innerHTML = Array.from(cats).map(cat =>
           `<button onclick="setL1('${cat}')" class="px-4 py-2 rounded-full text-sm font-bold shadow-sm transition-all ${s.l1 === cat && !s.sr ? 'bg-blue-600 text-white border-transparent' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}">${cat}</button>`
-        ).join(''); 
+        ).join('');
       }
-      
-      const l2Sel = $('f-l2'), l3Sel = $('f-l3');
-      if (l2Sel) { if (s.l1 === 'Todo' || s.sr) l2Sel.classList.add('hidden'); else { const subs = new Set(['Todas']); s.p.forEach(p => { if (p.l1 === s.l1 && p.l2) subs.add(p.l2); }); if (subs.size > 1) { l2Sel.innerHTML = Array.from(subs).map(c => `<option value="${c === 'Todas' ? '' : c}" ${s.l2 === c || (c === 'Todas' && s.l2 === '') ? 'selected' : ''}>${c === 'Todas' ? 'Todas las Sub-categorías' : c}</option>`).join(''); l2Sel.classList.remove('hidden'); } else l2Sel.classList.add('hidden'); } }
-      if (l3Sel) { if (s.l1 === 'Todo' || s.sr || !s.l2) l3Sel.classList.add('hidden'); else { const types = new Set(['Todas']); s.p.forEach(p => { if (p.l1 === s.l1 && p.l2 === s.l2 && p.l3) types.add(p.l3); }); if (types.size > 1) { l3Sel.innerHTML = Array.from(types).map(c => `<option value="${c === 'Todas' ? '' : c}" ${s.l3 === c || (c === 'Todas' && s.l3 === '') ? 'selected' : ''}>${c === 'Todas' ? 'Todos los Tipos' : c}</option>`).join(''); l3Sel.classList.remove('hidden'); } else l3Sel.classList.add('hidden'); } }
 
-      ['todo', 'ingco', 'wadfow', 'vert'].forEach(b => { const el = $(`b-${b}`); if (!el) return; const isActive = s.br === (b === 'todo' ? '' : b.toUpperCase()); if (b === 'todo') el.className = `px-5 py-2.5 rounded-xl text-sm transition-all shadow-sm border ${isActive ? 'bg-slate-900 text-white font-bold border-slate-900' : 'bg-white text-slate-600 font-bold border-slate-200'}`; else el.className = `px-5 py-2.5 rounded-xl text-sm transition-all border ${isActive ? 'act' : 'bg-white font-black italic border-slate-200'} b-${b.substring(0, 3)}`; });
-      
+      const l2Sel = $('f-l2'), l3Sel = $('f-l3');
+      if (l2Sel) {
+        if (s.l1 === 'Todo' || s.sr) l2Sel.classList.add('hidden');
+        else {
+          const subs = new Set(['Todas']);
+          s.p.forEach(p => { if (p.l1 === s.l1 && p.l2) subs.add(p.l2); });
+          if (subs.size > 1) {
+            l2Sel.innerHTML = Array.from(subs).map(c => `<option value="${c === 'Todas' ? '' : c}" ${s.l2 === c || (c === 'Todas' && s.l2 === '') ? 'selected' : ''}>${c === 'Todas' ? 'Todas las Sub-categorías' : c}</option>`).join('');
+            l2Sel.classList.remove('hidden');
+          } else l2Sel.classList.add('hidden');
+        }
+      }
+      if (l3Sel) {
+        if (s.l1 === 'Todo' || s.sr || !s.l2) l3Sel.classList.add('hidden');
+        else {
+          const types = new Set(['Todas']);
+          s.p.forEach(p => { if (p.l1 === s.l1 && p.l2 === s.l2 && p.l3) types.add(p.l3); });
+          if (types.size > 1) {
+            l3Sel.innerHTML = Array.from(types).map(c => `<option value="${c === 'Todas' ? '' : c}" ${s.l3 === c || (c === 'Todas' && s.l3 === '') ? 'selected' : ''}>${c === 'Todas' ? 'Todos los Tipos' : c}</option>`).join('');
+            l3Sel.classList.remove('hidden');
+          } else l3Sel.classList.add('hidden');
+        }
+      }
+
+      ['todo', 'ingco', 'wadfow', 'vert'].forEach(b => {
+        const el = $(`b-${b}`);
+        if (!el) return;
+        const isActive = s.br === (b === 'todo' ? '' : b.toUpperCase());
+        if (b === 'todo') el.className = `px-5 py-2.5 rounded-xl text-sm transition-all shadow-sm border ${isActive ? 'bg-slate-900 text-white font-bold border-slate-900' : 'bg-white text-slate-600 font-bold border-slate-200'}`;
+        else el.className = `px-5 py-2.5 rounded-xl text-sm transition-all border ${isActive ? 'act' : 'bg-white font-black italic border-slate-200'} b-${b.substring(0, 3)}`;
+      });
+
       const tTodo = $('t-todo'), tOfr = $('t-ofr'), tNew = $('t-new');
       if (tTodo) tTodo.className = `px-5 py-2.5 rounded-xl text-sm font-bold border shadow-sm transition-all ${!s.tg ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200'}`;
       if (tOfr) { const isActive = s.tg === 'oferta'; tOfr.className = `t-ofr px-5 py-2.5 rounded-xl text-sm font-bold border flex items-center gap-1.5 shadow-sm transition-all ${isActive ? 'act border-transparent' : 'border-rose-200'}`; }
@@ -588,13 +670,22 @@
 
     function renderProductGrid() {
       let baseTotal = 0;
-      for (const [id, qty] of Object.entries(s.c)) { const p = s.p.find(x => x.id === id); if (p) baseTotal += qty * (qty >= 6 ? p.pm : p.pd); }
+      for (const [id, qty] of Object.entries(s.c)) {
+        const p = s.p.find(x => x.id === id);
+        if (p) baseTotal += qty * (qty >= 6 ? p.pm : p.pd);
+      }
       const isGlobalVip = baseTotal >= 500;
 
       const filtered = s.p.filter(p => {
         let match = true;
-        if (s.sr) { const search = normalize(s.sr); match = normalize(p.id).includes(search) || normalize(p.name).includes(search) || normalize(p.brand).includes(search); } 
-        else { if (s.l1 !== 'Todo') match = p.l1 === s.l1; if (match && s.l2) match = p.l2 === s.l2; if (match && s.l3) match = p.l3 === s.l3; }
+        if (s.sr) {
+          const search = normalize(s.sr);
+          match = normalize(p.id).includes(search) || normalize(p.name).includes(search) || normalize(p.brand).includes(search);
+        } else {
+          if (s.l1 !== 'Todo') match = p.l1 === s.l1;
+          if (match && s.l2) match = p.l2 === s.l2;
+          if (match && s.l3) match = p.l3 === s.l3;
+        }
         if (match && s.tg === 'oferta') match = p.tag.includes('oferta');
         if (match && s.tg === 'nuevo') match = p.tag.includes('nuevo');
         if (match && s.br) match = p.brand === s.br;
@@ -604,7 +695,12 @@
       const grid = $('p-grid'), noResults = $('no-res'), pagination = $('pagination');
       if (!grid || !noResults) return;
 
-      if (filtered.length === 0) { grid.innerHTML = ''; noResults.classList.remove('hidden'); if(pagination) pagination.classList.add('hidden'); return; }
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        noResults.classList.remove('hidden');
+        if (pagination) pagination.classList.add('hidden');
+        return;
+      }
       noResults.classList.add('hidden');
 
       const totalPages = Math.ceil(filtered.length / s.perPage);
@@ -633,7 +729,7 @@
         const icon2 = watermarkIcons[1];
 
         const imgUrl = p.image ? p.image : SVG;
-        
+
         let dynamicSection = '';
         if (isAgotado) {
           dynamicSection = `
@@ -643,7 +739,7 @@
         } else {
           let priceLayout = '';
           if (s.cur === 'VES') {
-             priceLayout = `
+            priceLayout = `
               <div class="flex flex-col gap-0.5 w-full">
                  <div class="flex items-center justify-between px-2 py-0.5 rounded-md border border-slate-100 bg-slate-50 ${!isWholesale && !isGlobalVip && qty > 0 ? 'ring-1 ring-blue-400 bg-blue-50/30' : ''}">
                    <span class="text-[8px] sm:text-[9px] font-bold text-slate-500 uppercase tracking-tighter">Detal <span class="bg-slate-200/60 px-0.5 rounded text-[7px]">&lt;6</span></span>
@@ -659,7 +755,7 @@
                  </div>
               </div>`;
           } else {
-             priceLayout = `
+            priceLayout = `
               <div class="grid grid-cols-3 gap-0.5 w-full">
                  <div class="flex flex-col items-center justify-center py-0.5 rounded-md border border-slate-100 bg-slate-50 ${!isWholesale && !isGlobalVip && qty > 0 ? 'ring-1 ring-blue-400 bg-blue-50/30' : ''}">
                    <span class="text-[7px] sm:text-[9px] font-bold text-slate-500 uppercase tracking-tighter mb-0">&lt;6</span>
@@ -699,7 +795,6 @@
               <i class="ph-fill ${icon1} absolute -bottom-4 -right-2 text-7xl sm:text-8xl text-slate-100 transform -rotate-12"></i>
               <i class="ph-fill ${icon2} absolute top-4 -right-4 text-5xl sm:text-6xl text-slate-50 transform rotate-12"></i>
             </div>
-            
             <div class="relative z-10 flex flex-col h-full">
               <div class="flex items-center gap-1 sm:gap-1.5 mb-1 sm:mb-2.5 flex-wrap">
                 <span class="code-pill code-pill-sm">${p.id}</span>
@@ -712,12 +807,12 @@
         </div>`;
       }
       grid.innerHTML = htmlString;
-      
       renderPagination(totalPages);
     }
 
     function renderPagination(total) {
-      const el = $('pagination'); if (!el) return;
+      const el = $('pagination');
+      if (!el) return;
       if (total <= 1) { el.classList.add('hidden'); return; }
       el.classList.remove('hidden');
       el.innerHTML = `
@@ -727,40 +822,65 @@
       `;
     }
 
-    function changePage(delta) { 
-      s.page += delta; 
-      renderProductGrid(); 
-      window.scrollTo({ top: 0, behavior: 'smooth' }); 
+    function changePage(delta) {
+      s.page += delta;
+      renderProductGrid();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function openModal(id) {
-      const p = s.p.find(x => x.id === id); if (!p) return;
+      const p = s.p.find(x => x.id === id);
+      if (!p) return;
       s.mod = id;
       const isAgotado = p.stock <= 0;
 
-      const img = $('m-img'); if (img) { img.src = p.image ? p.image : SVG; img.onerror = function() { this.src = SVG; this.classList.remove('mix-blend-multiply'); }; }
-      const mask = $('m-agotado-layer'); if (mask) mask.style.display = isAgotado ? 'flex' : 'none';
+      const img = $('m-img');
+      if (img) { 
+        loadImageWithFallback(img, p.image ? p.image : SVG);
+      }
+      const mask = $('m-agotado-layer');
+      if (mask) mask.style.display = isAgotado ? 'flex' : 'none';
 
       const catTag = $('m-category-tag');
-      if (catTag) {
-        catTag.textContent = p.l1 + (p.l2 ? ` / ${p.l2}` : '') + (p.l3 ? ` / ${p.l3}` : '');
-      }
+      if (catTag) catTag.textContent = p.l1 + (p.l2 ? ` / ${p.l2}` : '') + (p.l3 ? ` / ${p.l3}` : '');
 
-      const code = $('m-cod'); if (code) code.textContent = p.id;
+      const code = $('m-cod');
+      if (code) code.textContent = p.id;
       const brand = $('m-br');
-      if (p.brand) { brand.textContent = p.brand; brand.classList.remove('hidden'); brand.className = `text-[10px] font-black italic tracking-tighter px-2.5 py-1 rounded shadow-sm ${p.brand === 'INGCO' ? 'bg-[#FFCC00] text-black border border-yellow-400' : p.brand === 'WADFOW' ? 'bg-[#2563EB] text-white' : p.brand === 'VERT' ? 'bg-[#10B981] text-white' : 'bg-slate-200 text-slate-700'}`; } else brand.classList.add('hidden');
-      const title = $('m-tit'); if (title) title.textContent = p.name;
-      const infoBox = $('m-info-b'), infoText = $('m-info'); if (p.info) { infoText.textContent = p.info.replace(/\//g, '\n'); infoBox.classList.remove('hidden'); } else infoBox.classList.add('hidden');
+      if (p.brand) {
+        brand.textContent = p.brand;
+        brand.classList.remove('hidden');
+        brand.className = `text-[10px] font-black italic tracking-tighter px-2.5 py-1 rounded shadow-sm ${p.brand === 'INGCO' ? 'bg-[#FFCC00] text-black border border-yellow-400' : p.brand === 'WADFOW' ? 'bg-[#2563EB] text-white' : p.brand === 'VERT' ? 'bg-[#10B981] text-white' : 'bg-slate-200 text-slate-700'}`;
+      } else brand.classList.add('hidden');
+      const title = $('m-tit');
+      if (title) title.textContent = p.name;
+      const infoBox = $('m-info-b'), infoText = $('m-info');
+      if (p.info) { infoText.textContent = p.info.replace(/\//g, '\n'); infoBox.classList.remove('hidden'); } else infoBox.classList.add('hidden');
 
       updateModalPrices();
 
-      const qty = $('m-qty'); if (qty) qty.value = s.c[p.id] || 0;
-      
-      const modal = $('modal'); if (modal) { modal.classList.remove('hidden'); setTimeout(() => { modal.classList.remove('opacity-0'); modal.querySelector('div').classList.remove('translate-y-full', 'sm:translate-y-10'); }, 10); }
+      const qty = $('m-qty');
+      if (qty) qty.value = s.c[p.id] || 0;
+
+      // 更新USD价格 - 使用美金价格列 (L列)
+      document.getElementById('usdPriceValue').textContent = p.usdPrice ? p.usdPrice.toFixed(2) : p.pd.toFixed(2);
+      const badge = document.getElementById('usdPriceBadge');
+      if (badge) badge.classList.remove('show');
+      usdVisible = false;
+
+      const modal = $('modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+          modal.classList.remove('opacity-0');
+          modal.querySelector('div').classList.remove('translate-y-full', 'sm:translate-y-10');
+        }, 10);
+      }
     }
 
     function updateModalPrices() {
-      const p = s.p.find(x => x.id === s.mod); if (!p) return;
+      const p = s.p.find(x => x.id === s.mod);
+      if (!p) return;
       const priceGrid = $('m-price-grid');
       if (!priceGrid) return;
 
@@ -802,29 +922,79 @@
       if (label) label.textContent = s.cur === 'USD' ? 'VES' : 'USD';
     }
 
-    function closeM() { const modal = $('modal'); if (!modal) return; modal.classList.add('opacity-0'); modal.querySelector('div').classList.add('translate-y-full', 'sm:translate-y-10'); setTimeout(() => { modal.classList.add('hidden'); s.mod = null; }, 300); }
-    
-    function updMQ(delta) { if (!s.mod) return; const p = s.p.find(x=>x.id===s.mod); if(p && p.stock<=0) return; const q = $('m-qty'); if (!q) return; const n = sanitizeNumber(q.value) + delta; q.value = n < 0 ? 0 : n; updateCart(s.mod, delta, false); }
-    function manMQ(val) { if (!s.mod) return; const p = s.p.find(x=>x.id===s.mod); if(p && p.stock<=0) return; const n = sanitizeNumber(val); const q = $('m-qty'); if (q) q.value = n; manualUpdateCart(s.mod, n, false); }
+    function closeM() {
+      const modal = $('modal');
+      if (!modal) return;
+      modal.classList.add('opacity-0');
+      modal.querySelector('div').classList.add('translate-y-full', 'sm:translate-y-10');
+      setTimeout(() => { modal.classList.add('hidden'); s.mod = null; }, 300);
+    }
 
-    function updateCart(id, delta, reRender = true) { const current = s.c[id] || 0; const newQty = current + delta; if (newQty <= 0) delete s.c[id]; else s.c[id] = newQty; if (reRender) renderProductGrid(); updateCartUI(); }
-    function manualUpdateCart(id, value, reRender = true) { const newQty = sanitizeNumber(value); if (newQty <= 0) delete s.c[id]; else s.c[id] = newQty; if (reRender) renderProductGrid(); updateCartUI(); }
-    function clrC() { s.c = {}; renderProductGrid(); updateCartUI(); toast('Carrito vaciado'); }
+    function updMQ(delta) {
+      if (!s.mod) return;
+      const p = s.p.find(x => x.id === s.mod);
+      if (p && p.stock <= 0) return;
+      const q = $('m-qty');
+      if (!q) return;
+      const n = sanitizeNumber(q.value) + delta;
+      q.value = n < 0 ? 0 : n;
+      updateCart(s.mod, delta, false);
+    }
+
+    function manMQ(val) {
+      if (!s.mod) return;
+      const p = s.p.find(x => x.id === s.mod);
+      if (p && p.stock <= 0) return;
+      const n = sanitizeNumber(val);
+      const q = $('m-qty');
+      if (q) q.value = n;
+      manualUpdateCart(s.mod, n, false);
+    }
+
+    function updateCart(id, delta, reRender = true) {
+      const current = s.c[id] || 0;
+      const newQty = current + delta;
+      if (newQty <= 0) delete s.c[id];
+      else s.c[id] = newQty;
+      if (reRender) renderProductGrid();
+      updateCartUI();
+    }
+
+    function manualUpdateCart(id, value, reRender = true) {
+      const newQty = sanitizeNumber(value);
+      if (newQty <= 0) delete s.c[id];
+      else s.c[id] = newQty;
+      if (reRender) renderProductGrid();
+      updateCartUI();
+    }
+
+    function clrC() {
+      s.c = {};
+      renderProductGrid();
+      updateCartUI();
+      toast('Carrito vaciado');
+    }
 
     function updateCartUI() {
       let totalItems = 0, baseAmount = 0;
-      for (const [id, qty] of Object.entries(s.c)) { const p = s.p.find(x => x.id === id); if (p) baseAmount += qty * (qty >= 6 ? p.pm : p.pd); }
+      for (const [id, qty] of Object.entries(s.c)) {
+        const p = s.p.find(x => x.id === id);
+        if (p) baseAmount += qty * (qty >= 6 ? p.pm : p.pd);
+      }
       const isGlobalVip = baseAmount >= 500;
-      
+
       let finalAmount = 0, cartHTML = '';
       for (const [id, qty] of Object.entries(s.c)) {
-        const product = s.p.find(p => p.id === id); if (!product) continue;
+        const product = s.p.find(p => p.id === id);
+        if (!product) continue;
         totalItems += qty;
         let price = qty >= 6 ? product.pm : product.pd;
         let tierLabel = qty >= 6 ? '<span class="text-[8px] bg-blue-100 text-blue-600 px-1 rounded font-bold uppercase">Mayor</span>' : '<span class="text-[8px] bg-slate-100 text-slate-500 px-1 rounded font-bold uppercase">Detal</span>';
-        if (isGlobalVip) { price = product.pv; tierLabel = '<span class="text-[8px] bg-amber-100 text-amber-600 px-1 rounded font-bold uppercase">VIP</span>'; }
-        
-        const subtotal = qty * price; finalAmount += subtotal;
+        if (isGlobalVip) { price = product.pv;
+          tierLabel = '<span class="text-[8px] bg-amber-100 text-amber-600 px-1 rounded font-bold uppercase">VIP</span>'; }
+
+        const subtotal = qty * price;
+        finalAmount += subtotal;
         cartHTML += `<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex gap-3 fade-in">
           <div class="w-14 h-14 bg-slate-50 rounded-lg flex items-center justify-center p-1 shrink-0"><img src="${product.image ? product.image : SVG}" onerror="this.src='${SVG}'; this.classList.remove('mix-blend-multiply');" class="max-w-full max-h-full object-contain mix-blend-multiply"></div>
           <div class="flex-1 flex flex-col justify-between">
@@ -837,8 +1007,13 @@
         </div>`;
       }
 
-      const badge = $('c-badge'); if (badge) { badge.textContent = totalItems; if (totalItems > 0) { badge.classList.add('scale-110'); setTimeout(() => badge.classList.remove('scale-110'), 200); } }
-      const itemsContainer = $('c-items'); 
+      const badge = $('c-badge');
+      if (badge) {
+        badge.textContent = totalItems;
+        if (totalItems > 0) { badge.classList.add('scale-110');
+          setTimeout(() => badge.classList.remove('scale-110'), 200); }
+      }
+      const itemsContainer = $('c-items');
       if (itemsContainer) {
         if (totalItems === 0) {
           itemsContainer.innerHTML = `<div class="h-full flex flex-col items-center justify-center text-slate-400 py-10"><i class="ph-bold ph-shopping-cart text-5xl mb-3 text-slate-200"></i><p class="text-sm font-bold">Carrito Vacío</p></div>`;
@@ -849,18 +1024,18 @@
 
       const totalEl = $('c-tot'), refEl = $('c-ref');
       if (totalEl && refEl) {
-        if (s.pay.includes('bs')) { 
-          totalEl.textContent = `Bs. ${(finalAmount * CONFIG.TASA).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; 
-          totalEl.className = "block font-black text-2xl f-num leading-none mb-0.5 text-emerald-600"; 
-          refEl.textContent = `Ref USD: $${finalAmount.toFixed(2)}`; 
-        } else if (s.pay === 'binance_usdt') { 
-          totalEl.textContent = `${finalAmount.toFixed(2)} USDT`; 
-          totalEl.className = "block font-black text-2xl f-num leading-none mb-0.5 text-yellow-600"; 
-          refEl.textContent = `Ref BCV: Bs ${(finalAmount * CONFIG.TASA).toLocaleString('es-VE', { maximumFractionDigits: 2 })}`; 
-        } else { 
-          totalEl.textContent = `$${finalAmount.toFixed(2)}`; 
-          totalEl.className = "block font-black text-2xl f-num leading-none mb-0.5 text-blue-600"; 
-          refEl.textContent = `Ref BCV: Bs ${(finalAmount * CONFIG.TASA).toLocaleString('es-VE', { maximumFractionDigits: 2 })}`; 
+        if (s.pay.includes('bs')) {
+          totalEl.textContent = `Bs. ${(finalAmount * CONFIG.TASA).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          totalEl.className = "block font-black text-2xl f-num leading-none mb-0.5 text-emerald-600";
+          refEl.textContent = `Ref USD: $${finalAmount.toFixed(2)}`;
+        } else if (s.pay === 'binance_usdt') {
+          totalEl.textContent = `${finalAmount.toFixed(2)} USDT`;
+          totalEl.className = "block font-black text-2xl f-num leading-none mb-0.5 text-yellow-600";
+          refEl.textContent = `Ref BCV: Bs ${(finalAmount * CONFIG.TASA).toLocaleString('es-VE', { maximumFractionDigits: 2 })}`;
+        } else {
+          totalEl.textContent = `$${finalAmount.toFixed(2)}`;
+          totalEl.className = "block font-black text-2xl f-num leading-none mb-0.5 text-blue-600";
+          refEl.textContent = `Ref BCV: Bs ${(finalAmount * CONFIG.TASA).toLocaleString('es-VE', { maximumFractionDigits: 2 })}`;
         }
       }
 
@@ -868,107 +1043,214 @@
       if (vipContainer && vipBar && vipText) {
         if (totalItems > 0) {
           vipContainer.classList.remove('hidden');
-          const p = Math.min((baseAmount / 500) * 100, 100); vipBar.style.width = `${p}%`;
-          if (isGlobalVip) { 
-            vipText.textContent = `¡Precios VIP Aplicados!`; 
-            vipContainer.className = "mb-3 bg-emerald-50 p-2.5 rounded-xl border border-emerald-200"; 
-            vipBar.className = "h-full bg-gradient-to-r from-emerald-400 to-emerald-500 transition-all duration-500 rounded-full"; 
-          } else { 
-            vipText.textContent = `Faltan $${(500 - baseAmount).toFixed(2)}`; 
-            vipContainer.className = "mb-3 bg-gradient-to-r from-amber-50 to-yellow-50 p-2.5 rounded-xl border border-amber-200"; 
-            vipBar.className = "h-full bg-gradient-to-r from-amber-400 to-amber-500 transition-all duration-500 rounded-full"; 
+          const p = Math.min((baseAmount / 500) * 100, 100);
+          vipBar.style.width = `${p}%`;
+          if (isGlobalVip) {
+            vipText.textContent = `¡Precios VIP Aplicados!`;
+            vipContainer.className = "mb-3 bg-emerald-50 p-2.5 rounded-xl border border-emerald-200";
+            vipBar.className = "h-full bg-gradient-to-r from-emerald-400 to-emerald-500 transition-all duration-500 rounded-full";
+          } else {
+            vipText.textContent = `Faltan $${(500 - baseAmount).toFixed(2)}`;
+            vipContainer.className = "mb-3 bg-gradient-to-r from-amber-50 to-yellow-50 p-2.5 rounded-xl border border-amber-200";
+            vipBar.className = "h-full bg-gradient-to-r from-amber-400 to-amber-500 transition-all duration-500 rounded-full";
           }
         } else { vipContainer.classList.add('hidden'); }
       }
     }
 
-    function filterCategory(cat) { let selected = 'Todo'; s.p.forEach(p => { if (normalize(p.l1).includes(cat)) selected = p.l1; }); s.l1 = selected; s.l2 = s.l3 = s.sr = s.tg = s.br = ''; s.page = 1; setView('catalog'); renderCatalog(); }
+    function filterCategory(cat) {
+      let selected = 'Todo';
+      s.p.forEach(p => { if (normalize(p.l1).includes(cat)) selected = p.l1; });
+      s.l1 = selected;
+      s.l2 = s.l3 = s.sr = s.tg = s.br = '';
+      s.page = 1;
+      setView('catalog');
+      renderCatalog();
+    }
+
     function setB(brand) { s.br = s.br === brand ? '' : brand; s.page = 1; renderCatalog(); }
     function setT(tag) { s.tg = s.tg === tag ? '' : tag; s.page = 1; renderCatalog(); }
     function setL1(v) { s.l1 = v; s.l2 = s.l3 = ''; s.page = 1; renderCatalog(); }
     function setL2(v) { s.l2 = v; s.l3 = ''; s.page = 1; renderCatalog(); }
     function setL3(v) { s.l3 = v; s.page = 1; renderCatalog(); }
-    function updS(v) { 
-      s.sr = normalize(v); 
+    function updS(v) {
+      s.sr = normalize(v);
       const clearBtn = $('s-clear');
       if (clearBtn) clearBtn.classList.toggle('hidden', v.length === 0);
-      
-      if (v) { s.l1 = 'Todo'; s.l2 = s.l3 = ''; } 
+      if (v) { s.l1 = 'Todo';
+        s.l2 = s.l3 = ''; }
       s.page = 1;
-      renderCatalog(); 
+      renderCatalog();
     }
     function clrSearch() {
       const input = $('s-input');
-      if(input) { input.value = ''; input.focus(); }
+      if (input) { input.value = ''; input.focus(); }
       updS('');
     }
     function clrF() { s.sr = s.tg = s.br = s.l2 = s.l3 = ''; s.l1 = 'Todo'; s.page = 1; const i = $('s-input'); if (i) i.value = ''; updS(''); renderCatalog(); }
 
     function setView(view) {
-      s.v = view; window.scrollTo({ top: 0, behavior: 'smooth' });
+      s.v = view;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       const isHome = view === 'home';
-      ['v-home', 'v-home-bot'].forEach(id => { const el = $(id); if (el) el.classList.toggle('hidden', !isHome); });
-      const catalog = $('v-cat'); if (catalog) catalog.classList.toggle('hidden', isHome);
-      const social = $('h-social'); if (social) social.classList.toggle('hidden', !isHome);
-      const controls = $('h-ctrls'); if (controls) controls.classList.toggle('hidden', isHome);
-      const tasa = $('h-tasa'); if (tasa) tasa.classList.toggle('hidden', isHome);
-      const truck = $('h-truck'); if (truck) truck.classList.toggle('hidden', !isHome);
+      ['v-home', 'v-home-bot'].forEach(id => {
+        const el = $(id);
+        if (el) el.classList.toggle('hidden', !isHome);
+      });
+      const catalog = $('v-cat');
+      if (catalog) catalog.classList.toggle('hidden', isHome);
+      const social = $('h-social');
+      if (social) social.classList.toggle('hidden', !isHome);
+      const controls = $('h-ctrls');
+      if (controls) controls.classList.toggle('hidden', isHome);
+      const tasa = $('h-tasa');
+      if (tasa) tasa.classList.toggle('hidden', isHome);
+      const truck = $('h-truck');
+      if (truck) truck.classList.toggle('hidden', !isHome);
     }
-    
+
     function toggleCurrency() {
       s.cur = s.cur === 'USD' ? 'VES' : 'USD';
       const slider = $('cur-slider');
       const usdLbl = $('cur-usd-lbl');
       const vesLbl = $('cur-ves-lbl');
-      
+
       if (s.cur === 'VES') {
-        if(slider) slider.classList.replace('translate-x-0', 'translate-x-[100%]');
-        if(usdLbl) { usdLbl.classList.remove('text-white'); usdLbl.classList.add('text-slate-500'); }
-        if(vesLbl) { vesLbl.classList.remove('text-slate-500'); vesLbl.classList.add('text-white'); }
+        if (slider) slider.classList.replace('translate-x-0', 'translate-x-[100%]');
+        if (usdLbl) { usdLbl.classList.remove('text-white');
+          usdLbl.classList.add('text-slate-500'); }
+        if (vesLbl) { vesLbl.classList.remove('text-slate-500');
+          vesLbl.classList.add('text-white'); }
       } else {
-        if(slider) slider.classList.replace('translate-x-[100%]', 'translate-x-0');
-        if(usdLbl) { usdLbl.classList.remove('text-slate-500'); usdLbl.classList.add('text-white'); }
-        if(vesLbl) { vesLbl.classList.remove('text-white'); vesLbl.classList.add('text-slate-500'); }
+        if (slider) slider.classList.replace('translate-x-[100%]', 'translate-x-0');
+        if (usdLbl) { usdLbl.classList.remove('text-slate-500');
+          usdLbl.classList.add('text-white'); }
+        if (vesLbl) { vesLbl.classList.remove('text-white');
+          vesLbl.classList.add('text-slate-500'); }
       }
-      
-      renderProductGrid(); 
-      updateCartUI(); 
+
+      renderProductGrid();
+      updateCartUI();
       if (s.mod) updateModalPrices();
     }
 
     function setDel(m) {
-      s.del = m; ['nacional', 'delivery', 'pickup'].forEach(x => {
-        const btn = $(`d-${x}`); if (!btn) return;
-        if (x === m) { btn.classList.add('border-blue-500', 'bg-blue-50', 'ring-1', 'ring-blue-500'); btn.classList.remove('hover:bg-slate-50'); const icon = btn.querySelector('i'); if (icon) { icon.classList.remove('text-slate-400'); icon.classList.add('text-blue-500'); } }
-        else { btn.classList.remove('border-blue-500', 'bg-blue-50', 'ring-1', 'ring-blue-500'); btn.classList.add('hover:bg-slate-50'); const icon = btn.querySelector('i'); if (icon) { icon.classList.remove('text-blue-500'); icon.classList.add('text-slate-400'); } }
+      s.del = m;
+      ['nacional', 'delivery', 'pickup'].forEach(x => {
+        const btn = $(`d-${x}`);
+        if (!btn) return;
+        if (x === m) {
+          btn.classList.add('border-blue-500', 'bg-blue-50', 'ring-1', 'ring-blue-500');
+          btn.classList.remove('hover:bg-slate-50');
+          const icon = btn.querySelector('i');
+          if (icon) { icon.classList.remove('text-slate-400');
+            icon.classList.add('text-blue-500'); }
+        } else {
+          btn.classList.remove('border-blue-500', 'bg-blue-50', 'ring-1', 'ring-blue-500');
+          btn.classList.add('hover:bg-slate-50');
+          const icon = btn.querySelector('i');
+          if (icon) { icon.classList.remove('text-blue-500');
+            icon.classList.add('text-slate-400'); }
+        }
       });
     }
 
     function setPay(m) {
-      s.pay = m; const base = "flex-1 py-2.5 border rounded-xl text-[10px] font-bold shadow-sm transition-all";
-      ['pm', 'tr', 'ebs', 'eusd', 'bin'].forEach(x => { const btn = $(`p-${x}`); if (btn) btn.className = `${base} bg-white border-slate-200 text-slate-600 hover:bg-slate-50 text-center`; });
-      const eBtn = $('p-eusd'); if (eBtn) eBtn.innerHTML = `<i class="ph-fill ph-currency-dollar text-base"></i> Efectivo $`;
-      const bBtn = $('p-bin'); if (bBtn) bBtn.innerHTML = `<i class="ph-fill ph-currency-btc text-base"></i> Binance`;
-      
-      const st = { 'pago_movil_bs': { id: 'pm', cls: 'border-emerald-500 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-500' }, 'transferencia_bs': { id: 'tr', cls: 'border-emerald-500 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-500' }, 'efectivo_bs': { id: 'ebs', cls: 'border-emerald-500 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-500' }, 'efectivo_usd': { id: 'eusd', cls: 'border-blue-500 bg-blue-50 text-blue-700 ring-1 ring-blue-500' }, 'binance_usdt': { id: 'bin', cls: 'border-yellow-400 bg-yellow-50 text-yellow-700 ring-1 ring-yellow-400' } }[m];
-      if (st) { const btn = $(`p-${st.id}`); if (btn) { btn.className = `${base} ${st.cls} ${m.includes('usd') || m.includes('bin') ? 'flex items-center justify-center gap-1.5' : ''}`; if (m === 'efectivo_usd') btn.innerHTML = `<i class="ph-fill ph-currency-dollar text-base"></i> Efectivo $`; if (m === 'binance_usdt') btn.innerHTML = `<i class="ph-fill ph-currency-btc text-base"></i> Binance`; } }
+      s.pay = m;
+      const base = "flex-1 py-2.5 border rounded-xl text-[10px] font-bold shadow-sm transition-all";
+      ['pm', 'tr', 'ebs', 'eusd', 'bin'].forEach(x => {
+        const btn = $(`p-${x}`);
+        if (btn) btn.className = `${base} bg-white border-slate-200 text-slate-600 hover:bg-slate-50 text-center`;
+      });
+      const eBtn = $('p-eusd');
+      if (eBtn) eBtn.innerHTML = `<i class="ph-fill ph-currency-dollar text-base"></i> Efectivo $`;
+      const bBtn = $('p-bin');
+      if (bBtn) bBtn.innerHTML = `<i class="ph-fill ph-currency-btc text-base"></i> Binance`;
+
+      const st = { 'pago_movil_bs': { id: 'pm', cls: 'border-emerald-500 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-500' }, 'transferencia_bs': { id: 'tr', cls: 'border-emerald-500 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-500' }, 'efectivo_bs': { id: 'ebs', cls: 'border-emerald-500 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-500' }, 'efectivo_usd': { id: 'eusd', cls: 'border-blue-500 bg-blue-50 text-blue-700 ring-1 ring-blue-500' }, 'binance_usdt': { id: 'bin', cls: 'border-yellow-400 bg-yellow-50 text-yellow-700 ring-1 ring-yellow-400' } } [m];
+      if (st) {
+        const btn = $(`p-${st.id}`);
+        if (btn) {
+          btn.className = `${base} ${st.cls} ${m.includes('usd') || m.includes('bin') ? 'flex items-center justify-center gap-1.5' : ''}`;
+          if (m === 'efectivo_usd') btn.innerHTML = `<i class="ph-fill ph-currency-dollar text-base"></i> Efectivo $`;
+          if (m === 'binance_usdt') btn.innerHTML = `<i class="ph-fill ph-currency-btc text-base"></i> Binance`;
+        }
+      }
       updateCartUI();
     }
 
-    function toggCart() { const d = $('drawer'), o = $('overlay'); if (!d || !o) return; if (d.classList.contains('translate-x-full')) { o.classList.remove('hidden'); setTimeout(() => o.classList.remove('opacity-0'), 10); d.classList.remove('translate-x-full'); } else { o.classList.add('opacity-0'); d.classList.add('translate-x-full'); setTimeout(() => o.classList.add('hidden'), 300); } }
+    function toggCart() {
+      const d = $('drawer'), o = $('overlay');
+      if (!d || !o) return;
+      if (d.classList.contains('translate-x-full')) {
+        o.classList.remove('hidden');
+        setTimeout(() => o.classList.remove('opacity-0'), 10);
+        d.classList.remove('translate-x-full');
+      } else {
+        o.classList.add('opacity-0');
+        d.classList.add('translate-x-full');
+        setTimeout(() => o.classList.add('hidden'), 300);
+      }
+    }
 
     function sendWA() {
-      let tQ = 0, bA = 0; for (const [id, qty] of Object.entries(s.c)) { const p = s.p.find(x => x.id === id); if (p) bA += qty * (qty >= 6 ? p.pm : p.pd); tQ += qty; }
+      let tQ = 0, bA = 0;
+      for (const [id, qty] of Object.entries(s.c)) {
+        const p = s.p.find(x => x.id === id);
+        if (p) bA += qty * (qty >= 6 ? p.pm : p.pd);
+        tQ += qty;
+      }
       if (tQ === 0) { toast('El carrito está vacío.', true); return; }
       const isVip = bA >= 500;
       let fA = 0, lines = [];
-      for (const [id, qty] of Object.entries(s.c)) { const p = s.p.find(x => x.id === id); if (!p) continue; const pr = isVip ? p.pv : (qty >= 6 ? p.pm : p.pd); fA += qty * pr; lines.push(`- ${qty}x [${id}] ${p.name} ($${pr.toFixed(2)})`); }
-      const br = "%0A"; let msg = `*NUEVO PEDIDO ELECTROLUZ PV*${br}${br}*Productos:*${br}${lines.join(br)}${br}${br}---------------------------${br}*Entrega:* ${{nacional:'Envío Nacional', delivery:'Delivery Caracas', pickup:'PickUp en Tienda'}[s.del] || s.del}${br}*Pago:* ${{pago_movil_bs:'Pago Móvil Bs', transferencia_bs:'Transferencia Bs', efectivo_bs:'Efectivo Bs', efectivo_usd:'Efectivo USD', binance_usdt:'Binance USDT'}[s.pay] || s.pay}${br}${br}`;
+      for (const [id, qty] of Object.entries(s.c)) {
+        const p = s.p.find(x => x.id === id);
+        if (!p) continue;
+        const pr = isVip ? p.pv : (qty >= 6 ? p.pm : p.pd);
+        fA += qty * pr;
+        lines.push(`- ${qty}x [${id}] ${p.name} ($${pr.toFixed(2)})`);
+      }
+      const br = "%0A";
+      let msg = `*NUEVO PEDIDO ELECTROLUZ PV*${br}${br}*Productos:*${br}${lines.join(br)}${br}${br}---------------------------${br}*Entrega:* ${{nacional:'Envío Nacional', delivery:'Delivery Caracas', pickup:'PickUp en Tienda'}[s.del] || s.del}${br}*Pago:* ${{pago_movil_bs:'Pago Móvil Bs', transferencia_bs:'Transferencia Bs', efectivo_bs:'Efectivo Bs', efectivo_usd:'Efectivo USD', binance_usdt:'Binance USDT'}[s.pay] || s.pay}${br}${br}`;
       if (s.pay.includes('bs')) msg += `*Subtotal USD:* $${fA.toFixed(2)}${br}*Tasa BCV:* ${CONFIG.TASA} VES/USD${br}*TOTAL BS:* Bs. ${(fA * CONFIG.TASA).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      else if (s.pay === 'binance_usdt') msg += `*TOTAL USDT:* ${fA.toFixed(2)}`; else msg += `*TOTAL USD:* $${fA.toFixed(2)}`;
+      else if (s.pay === 'binance_usdt') msg += `*TOTAL USDT:* ${fA.toFixed(2)}`;
+      else msg += `*TOTAL USD:* $${fA.toFixed(2)}`;
       window.open(`https://wa.me/${CONFIG.WHATSAPP}?text=${msg}`, '_blank');
     }
-    window.onload = function() { fetchCSV(); setDel(s.del); setPay(s.pay); };
+
+    // Expose to window
+    window.setView = setView;
+    window.toggleCurrency = toggleCurrency;
+    window.toggleModalCurrency = toggleModalCurrency;
+    window.updateModalPrices = updateModalPrices;
+    window.closeM = closeM;
+    window.updMQ = updMQ;
+    window.manMQ = manMQ;
+    window.updateCart = updateCart;
+    window.manualUpdateCart = manualUpdateCart;
+    window.clrC = clrC;
+    window.setDel = setDel;
+    window.setPay = setPay;
+    window.toggCart = toggCart;
+    window.sendWA = sendWA;
+    window.filterCategory = filterCategory;
+    window.setB = setB;
+    window.setT = setT;
+    window.setL1 = setL1;
+    window.setL2 = setL2;
+    window.setL3 = setL3;
+    window.updS = updS;
+    window.clrSearch = clrSearch;
+    window.clrF = clrF;
+    window.openModal = openModal;
+    window.toggleUsdPrice = toggleUsdPrice;
+    window.changePage = changePage;
+
+    window.onload = function() {
+      fetchCSV();
+      setDel(s.del);
+      setPay(s.pay);
+    };
   </script>
 </body>
 </html>
