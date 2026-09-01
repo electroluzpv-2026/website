@@ -403,7 +403,7 @@
   <!-- CART -->
   <div id="drawer" class="fixed inset-y-0 right-0 w-full sm:w-[420px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col border-l border-slate-200">
     <div class="cart-header p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-shrink-0">
-      <h3 class="font-black text-lg text-slate-900 tracking-tight">📦 Tu Pedido </h3>
+      <h3 class="font-black text-lg text-slate-900 tracking-tight">📦 Tu Pedido</h3>
       <button onclick="toggCart()" class="w-8 h-8 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-rose-500 shadow-sm transition-colors flex items-center justify-center">
         <i class="ph-bold ph-x"></i>
       </button>
@@ -536,15 +536,34 @@
         if (!response.ok) throw new Error('HTTP ' + response.status);
         const data = await response.json();
         
-        // 根据截图API返回格式: { fuente, nombre, compra, venta, promedio, fechaActualizacion }
-        if (data && typeof data.venta === 'number' && data.venta > 0) {
-          currentTasa = data.venta;
-          // 支持两种字段名：fechaActualizacion (带tilde) 或 fechaActualizacion (不带)
+        console.log('📊 Datos de API:', data);
+        
+        // 🔥 根据实际API返回格式: 
+        // { moneda, fuente, nombre, compra, venta, promedio, fechaActualizacion }
+        // 使用 promedio 字段 (venta y compra son null)
+        let tasaValue = null;
+        
+        // 优先使用 promedio
+        if (data && typeof data.promedio === 'number' && data.promedio > 0) {
+          tasaValue = data.promedio;
+        } 
+        // 备用: 如果 promedio 无效，尝试 venta
+        else if (data && typeof data.venta === 'number' && data.venta > 0) {
+          tasaValue = data.venta;
+        }
+        // 备用: 尝试 compra
+        else if (data && typeof data.compra === 'number' && data.compra > 0) {
+          tasaValue = data.compra;
+        }
+        
+        if (tasaValue && tasaValue > 0) {
+          currentTasa = tasaValue;
           lastUpdateTime = data.fechaActualizacion ? new Date(data.fechaActualizacion) : new Date();
           updateTasaDisplay();
           console.log('✅ Tasa BCV actualizada:', currentTasa, 'a las', lastUpdateTime.toLocaleString('es-VE'));
           return true;
         }
+        
         console.warn('⚠️ Respuesta de API sin datos válidos:', data);
         return false;
       } catch (error) {
