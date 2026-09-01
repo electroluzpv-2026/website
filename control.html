@@ -26,24 +26,36 @@
         .fade-in { animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Modal para ampliar imagen */
+        .thumb { width: 48px; height: 48px; object-fit: contain; background: #f8fafc; border-radius: 0.5rem; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.2s; }
+        .thumb:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
         .image-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 2rem; }
         .image-modal.active { display: flex; }
         .image-modal img { max-width: 90vw; max-height: 85vh; border-radius: 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.5); object-fit: contain; background: white; padding: 0.5rem; }
 
-        /* Tabla responsive */
-        .inventory-table th, .inventory-table td { padding: 0.5rem 0.75rem; vertical-align: middle; }
-        .inventory-table .thumb { width: 48px; height: 48px; object-fit: contain; background: #f8fafc; border-radius: 0.5rem; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.2s; }
-        .inventory-table .thumb:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-
         .admin-only { display: none; }
         .admin-mode .admin-only { display: table-cell; }
-        .admin-mode .admin-only-inline { display: inline-block; }
-        .admin-only-inline { display: none; }
 
         .stock-ok { background: #dcfce7; color: #166534; }
         .stock-warn { background: #fee2e2; color: #991b1b; }
         .stock-diff { background: #fef3c7; color: #92400e; }
+
+        .btn-add { background: #2563eb; color: white; padding: 0.2rem 0.8rem; border-radius: 0.5rem; font-size: 0.7rem; font-weight: 700; transition: 0.2s; border: none; cursor: pointer; }
+        .btn-add:hover { background: #1d4ed8; transform: scale(1.05); }
+        .btn-add:active { transform: scale(0.95); }
+
+        .cart-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem; background: white; border-radius: 0.75rem; border: 1px solid #e2e8f0; margin-bottom: 0.5rem; }
+        .cart-item img { width: 40px; height: 40px; object-fit: contain; border-radius: 0.5rem; background: #f8fafc; border: 1px solid #e2e8f0; }
+        .cart-item .info { flex: 1; font-size: 0.8rem; }
+        .cart-item .info .name { font-weight: 600; color: #0f172a; }
+        .cart-item .info .code { font-size: 0.65rem; color: #64748b; }
+        .cart-item .qty { display: flex; align-items: center; gap: 0.3rem; }
+        .cart-item .qty input { width: 48px; text-align: center; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.2rem; font-weight: 700; }
+        .cart-item .remove { color: #ef4444; cursor: pointer; font-size: 1.2rem; padding: 0 0.3rem; }
+        .cart-item .remove:hover { color: #dc2626; }
+        
+        .save-btn { background: #10b981; color: white; padding: 0.4rem 1.2rem; border-radius: 0.75rem; font-weight: 700; font-size: 0.85rem; transition: 0.2s; border: none; cursor: pointer; }
+        .save-btn:hover { background: #059669; transform: scale(1.02); }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
@@ -63,11 +75,9 @@
                 <button onclick="toggleAdmin()" class="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 border border-white/10 transition">
                     <i class="ph-bold ph-lock-key"></i> <span id="admin-label">Admin</span>
                 </button>
-                <button onclick="exportCSV()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition">
-                    <i class="ph-bold ph-download"></i> CSV
-                </button>
-                <button onclick="exportPDF()" class="bg-rose-600 hover:bg-rose-500 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition">
-                    <i class="ph-bold ph-file-pdf"></i> PDF
+                <button onclick="toggleCart()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition relative">
+                    <i class="ph-bold ph-clipboard-text"></i> Inventario
+                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-rose-500 text-white text-[9px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#242629]">0</span>
                 </button>
             </div>
         </div>
@@ -81,10 +91,38 @@
         <img id="modalImage" src="" alt="Producto" />
     </div>
 
+    <!-- PANEL DE INVENTARIO -->
+    <div id="cartPanel" class="fixed inset-y-0 right-0 w-full sm:w-[480px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col border-l border-slate-200">
+        <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-shrink-0">
+            <h3 class="font-black text-lg text-slate-900 tracking-tight">📋 Inventario en Progreso</h3>
+            <button onclick="toggleCart()" class="w-8 h-8 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-rose-500 shadow-sm transition-colors flex items-center justify-center">
+                <i class="ph-bold ph-x"></i>
+            </button>
+        </div>
+        <div id="cartItems" class="flex-1 overflow-y-auto p-4 space-y-2 bg-slate-50/50 hide-sc">
+            <div class="text-center text-slate-400 py-8 text-sm font-bold">No hay productos agregados</div>
+        </div>
+        <div class="p-4 bg-white border-t border-slate-200 flex-shrink-0 flex flex-wrap gap-2">
+            <button onclick="clearCart()" class="px-4 py-2 bg-slate-100 border border-slate-200 rounded-xl text-slate-600 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 transition shadow-sm shrink-0 text-sm font-bold">
+                <i class="ph-bold ph-trash"></i> Vaciar
+            </button>
+            <button onclick="saveInventory()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl transition shadow-md flex items-center justify-center gap-1.5 py-2 save-btn">
+                <i class="ph-bold ph-floppy-disk"></i> Guardar Inventario
+            </button>
+            <button onclick="exportCartCSV()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm rounded-xl transition shadow-md flex items-center justify-center gap-1.5 py-2">
+                <i class="ph-bold ph-download"></i> CSV
+            </button>
+            <button onclick="exportCartPDF()" class="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm rounded-xl transition shadow-md flex items-center justify-center gap-1.5 py-2">
+                <i class="ph-bold ph-file-pdf"></i> PDF
+            </button>
+        </div>
+    </div>
+    <div id="cartOverlay" onclick="toggleCart()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-40 opacity-0 transition-opacity duration-300"></div>
+
     <!-- MAIN -->
     <main class="flex-1 w-full max-w-7xl mx-auto px-4 py-6">
 
-        <!-- Panel Admin (solo visible con admin activo) -->
+        <!-- Panel Admin -->
         <div id="admin-panel" class="hidden bg-white p-4 rounded-2xl shadow-lg border border-slate-200 mb-6 fade-in">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
@@ -96,6 +134,8 @@
                     <span>Productos: <span id="total-prod" class="text-slate-800">0</span></span>
                     <span class="w-px h-4 bg-slate-300"></span>
                     <span>Discrepancias: <span id="total-disc" class="text-rose-600">0</span></span>
+                    <span class="w-px h-4 bg-slate-300"></span>
+                    <span>Última actualización: <span id="last-save" class="text-slate-800">—</span></span>
                 </div>
                 <button onclick="checkStock()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded-lg font-bold text-xs flex items-center gap-2 transition shadow-sm">
                     <i class="ph-bold ph-arrows-clockwise"></i> Verificar Stock
@@ -104,7 +144,7 @@
             <div id="admin-msg" class="mt-2 text-xs text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-100 min-h-[2rem]"></div>
         </div>
 
-        <!-- Barra de búsqueda y filtros -->
+        <!-- Barra de búsqueda -->
         <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-200 flex flex-col lg:flex-row gap-3 justify-between items-center mb-4">
             <div class="w-full lg:w-1/2 relative">
                 <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
@@ -119,24 +159,24 @@
             </div>
         </div>
 
-        <!-- Tabla de inventario -->
+        <!-- Tabla -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden" id="table-container">
             <div class="overflow-x-auto">
-                <table class="inventory-table w-full text-sm">
+                <table class="w-full text-sm">
                     <thead class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
                         <tr>
-                            <th class="text-left">Imagen</th>
+                            <th class="text-left w-12">Img</th>
                             <th class="text-left">Código</th>
                             <th class="text-left">Descripción</th>
                             <th class="text-left">Marca</th>
-                            <th class="text-center w-20">Cantidad</th>
-                            <!-- Solo admin -->
+                            <th class="text-center w-20">Stock</th>
+                            <th class="text-center w-24">Acción</th>
                             <th class="text-center w-20 admin-only">Real</th>
                             <th class="text-center w-24 admin-only">Estado</th>
                         </tr>
                     </thead>
-                    <tbody id="inventory-body" class="divide-y divide-slate-100">
-                        <!-- renderizado dinámico -->
+                    <tbody id="inventory-body">
+                        <tr><td colspan="8" class="text-center py-8 text-slate-400">Cargando productos...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -158,7 +198,8 @@
         // ========== CONFIG ==========
         const CONFIG = {
             TASA: 791.67,
-            CSV_URL: 'https://docs.google.com/spreadsheets/d/11P_SClE2hNTn5g-Eq2GRpQBA83q71RityFaAkFNB554/export?format=csv'
+            CSV_URL: 'https://docs.google.com/spreadsheets/d/11P_SClE2hNTn5g-Eq2GRpQBA83q71RityFaAkFNB554/export?format=csv',
+            ADMIN_PASSWORD: '200404030040403'
         };
 
         // ========== ESTADO ==========
@@ -169,9 +210,9 @@
         let adminMode = false;
         let brandFilter = '';
         let searchTerm = '';
+        let cart = {};
+        let savedInventory = {};
 
-        // Almacén de cantidades reales (ingresadas por usuarios o admin)
-        // En producción esto se guardaría en una base de datos
         window._realStock = {};
 
         // ========== UTILIDADES ==========
@@ -188,28 +229,43 @@
             setTimeout(() => el.className = 'hidden', 2800);
         }
 
-        // ========== CARGAR DATOS DESDE CSV ==========
+        // ========== CARGAR DATOS ==========
         async function fetchCSV() {
             try {
                 const res = await fetch(CONFIG.CSV_URL);
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 const text = await res.text();
-                if (text.toLowerCase().includes('<html')) { toast('Error: Google Sheet no publicado', true); return; }
+                if (text.toLowerCase().includes('<html')) { 
+                    toast('Error: Google Sheet no publicado correctamente', true);
+                    document.getElementById('inventory-body').innerHTML = '<tr><td colspan="8" class="text-center py-8 text-rose-500 font-bold">Error: El archivo CSV no está disponible.</td></tr>';
+                    return;
+                }
                 parseCSV(text);
-            } catch (e) { toast('Error cargando catálogo: ' + e.message, true); }
+            } catch (e) { 
+                toast('Error cargando catálogo: ' + e.message, true);
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="8" class="text-center py-8 text-rose-500 font-bold">Error cargando datos: ' + e.message + '</td></tr>';
+            }
         }
 
         function parseCSV(text) {
             const lines = text.split(/\r?\n/);
-            if (lines.length < 2) return;
+            if (lines.length < 2) {
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="8" class="text-center py-8 text-rose-500 font-bold">El archivo CSV está vacío</td></tr>';
+                return;
+            }
+            
             const headers = lines[0].split(',').map(normalize);
             const findIdx = (...names) => { const n = names.map(normalize); return headers.findIndex(h => n.some(x => h.includes(x))); };
 
             const idxCode = findIdx('cod', 'codigo', 'id');
             const idxName = findIdx('desc', 'nombre', 'producto');
             const idxBrand = findIdx('marc', 'brand');
-            const idxStock = findIdx('stock', 'cant', 'inv', 'disp', 'cantidad');
             const idxImage = findIdx('images', 'img', 'url', 'imagen');
+
+            if (idxCode === -1) {
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="8" class="text-center py-8 text-rose-500 font-bold">No se encontró columna de código en el CSV</td></tr>';
+                return;
+            }
 
             products = [];
             for (let i = 1; i < lines.length; i++) {
@@ -228,27 +284,34 @@
                 if (!code) continue;
                 const name = idxName !== -1 ? values[idxName] : 'Sin nombre';
                 const brand = idxBrand !== -1 ? values[idxBrand] : '';
-                const stock = idxStock !== -1 ? parseNumber(values[idxStock]) : 0;
                 const image = idxImage !== -1 ? values[idxImage] : '';
 
                 products.push({
                     id: sanitize(code),
                     name: sanitize(name),
                     brand: sanitize(brand).toUpperCase(),
-                    stock: stock,
+                    stock: 0,  // <-- TODOS LOS STOCK INICIAN EN 0
                     image: sanitize(image)
                 });
             }
+            
+            if (products.length === 0) {
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="8" class="text-center py-8 text-amber-500 font-bold">No se encontraron productos en el CSV</td></tr>';
+                return;
+            }
+
             products.sort((a, b) => a.id.localeCompare(b.id));
-            // Inicializar realStock con stock actual
+
+            // INICIALIZAR REAL STOCK EN 0
             products.forEach(p => {
-                if (window._realStock[p.id] === undefined) {
-                    window._realStock[p.id] = p.stock;
-                }
+                window._realStock[p.id] = 0;
+                savedInventory[p.id] = 0;
             });
+
             filtered = [...products];
             renderInventory();
             updateAdminStats();
+            updateCartBadge();
         }
 
         // ========== RENDER TABLA ==========
@@ -257,6 +320,11 @@
             const noRes = document.getElementById('no-results');
             const container = document.getElementById('table-container');
             if (!tbody) return;
+
+            if (products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center py-8 text-slate-400">Cargando productos...</td></tr>';
+                return;
+            }
 
             let data = [...products];
             if (brandFilter) data = data.filter(p => p.brand === brandFilter);
@@ -285,7 +353,9 @@
 
             let html = '';
             pageItems.forEach(p => {
-                const realQty = window._realStock[p.id] !== undefined ? window._realStock[p.id] : p.stock;
+                // realQty = lo que el usuario ha guardado (inicialmente 0)
+                const realQty = (savedInventory[p.id] !== undefined) ? savedInventory[p.id] : 0;
+                // diff = real - stock (stock siempre es 0, así que diff = real)
                 const diff = realQty - p.stock;
                 let status = '', statusClass = '';
                 if (diff === 0) { status = '✓ OK'; statusClass = 'stock-ok'; }
@@ -300,8 +370,11 @@
                         <td><span class="code-pill">${p.id}</span></td>
                         <td class="font-medium text-slate-800 text-sm">${p.name}</td>
                         <td class="text-xs font-black italic text-slate-600">${p.brand || '—'}</td>
+                        <td class="text-center font-bold f-num">${p.stock}</td>
                         <td class="text-center">
-                            <input type="number" value="${realQty}" min="0" class="w-16 bg-transparent text-center border-0 border-b-2 border-slate-200 focus:border-blue-500 outline-none font-bold f-num" onchange="updateRealStock('${p.id}', this.value)" />
+                            <button class="btn-add" onclick="addToCart('${p.id}')">
+                                <i class="ph-bold ph-plus"></i> Agregar
+                            </button>
                         </td>
                         <td class="text-center font-bold f-num admin-only">${realQty}</td>
                         <td class="text-center admin-only"><span class="text-[10px] font-bold px-2.5 py-1 rounded-full ${statusClass}">${status}</span></td>
@@ -338,7 +411,7 @@
             renderInventory();
         }
 
-        // ========== IMAGEN MODAL ==========
+        // ========== IMAGEN ==========
         function openImageModal(src) {
             const modal = document.getElementById('imageModal');
             const img = document.getElementById('modalImage');
@@ -350,24 +423,115 @@
             document.getElementById('imageModal').classList.remove('active');
         }
 
-        // ========== STOCK ==========
-        function updateRealStock(id, val) {
-            const num = parseInt(val);
-            if (isNaN(num) || num < 0) return;
-            window._realStock[id] = num;
-            if (adminMode) updateAdminStats();
-            // Re-render para actualizar estado en la tabla (solo si admin visible)
-            if (adminMode) renderInventory();
+        // ========== INVENTARIO ==========
+        function addToCart(id) {
+            if (!cart[id]) cart[id] = 0;
+            cart[id] += 1;
+            updateCartBadge();
+            toast(`Agregado: ${products.find(p => p.id === id)?.name || id}`);
         }
 
-        // ========== ADMIN MODE ==========
+        function removeFromCart(id) {
+            delete cart[id];
+            updateCartBadge();
+            renderCart();
+        }
+
+        function updateCartQty(id, val) {
+            const num = parseInt(val);
+            if (isNaN(num) || num <= 0) { delete cart[id]; }
+            else { cart[id] = num; }
+            updateCartBadge();
+            renderCart();
+        }
+
+        function updateCartBadge() {
+            const total = Object.values(cart).reduce((a, b) => a + b, 0);
+            document.getElementById('cart-badge').textContent = total;
+        }
+
+        function toggleCart() {
+            const panel = document.getElementById('cartPanel');
+            const overlay = document.getElementById('cartOverlay');
+            if (panel.classList.contains('translate-x-full')) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+                panel.classList.remove('translate-x-full');
+                renderCart();
+            } else {
+                overlay.classList.add('opacity-0');
+                panel.classList.add('translate-x-full');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            const ids = Object.keys(cart);
+            if (ids.length === 0) {
+                container.innerHTML = '<div class="text-center text-slate-400 py-8 text-sm font-bold">No hay productos agregados</div>';
+                return;
+            }
+            let html = '';
+            ids.forEach(id => {
+                const p = products.find(x => x.id === id);
+                if (!p) return;
+                const qty = cart[id] || 1;
+                const imgSrc = p.image && p.image.trim() !== '' ? p.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"%3e%3crect width="40" height="40" fill="%23f1f5f9"/%3e%3ctext x="20" y="20" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="6" fill="%2394a3b8"%3eSin imagen%3c/text%3e%3c/svg%3e';
+                html += `
+                    <div class="cart-item fade-in">
+                        <img src="${imgSrc}" onclick="openImageModal('${imgSrc}')" onerror="this.src='data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 40 40\'%3e%3crect width=\'40\' height=\'40\' fill=\'%23f1f5f9\'/%3e%3ctext x=\'20\' y=\'20\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'6\' fill=\'%2394a3b8\'%3eSin imagen%3c/text%3e%3c/svg%3e'" />
+                        <div class="info">
+                            <div class="name">${p.name}</div>
+                            <div class="code">${p.id} · ${p.brand || '—'}</div>
+                        </div>
+                        <div class="qty">
+                            <input type="number" value="${qty}" min="1" onchange="updateCartQty('${p.id}', this.value)" />
+                        </div>
+                        <span class="remove" onclick="removeFromCart('${p.id}')"><i class="ph-bold ph-x"></i></span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function clearCart() {
+            cart = {};
+            updateCartBadge();
+            renderCart();
+            toast('Inventario vaciado');
+        }
+
+        // ========== GUARDAR INVENTARIO ==========
+        function saveInventory() {
+            const ids = Object.keys(cart);
+            if (ids.length === 0) { 
+                toast('No hay productos para guardar', true); 
+                return; 
+            }
+            
+            ids.forEach(id => {
+                savedInventory[id] = cart[id];
+                window._realStock[id] = cart[id];
+            });
+            
+            if (adminMode) {
+                renderInventory();
+                updateAdminStats();
+            }
+            
+            document.getElementById('last-save').textContent = new Date().toLocaleString();
+            toast(`✅ Inventario guardado correctamente (${ids.length} productos)`);
+        }
+
+        // ========== ADMIN ==========
         function toggleAdmin() {
             adminMode = !adminMode;
             const panel = document.getElementById('admin-panel');
             const label = document.getElementById('admin-label');
             if (adminMode) {
                 const pwd = prompt('🔐 Ingrese contraseña de administrador:');
-                if (pwd !== 'admin123') {
+                if (pwd !== CONFIG.ADMIN_PASSWORD) {
                     adminMode = false;
                     toast('Contraseña incorrecta', true);
                     return;
@@ -389,8 +553,8 @@
             document.getElementById('total-prod').textContent = products.length;
             let disc = 0;
             products.forEach(p => {
-                const real = window._realStock[p.id];
-                if (real !== undefined && real !== p.stock) disc++;
+                const real = window._realStock[p.id] || 0;
+                if (real !== p.stock) disc++;
             });
             document.getElementById('total-disc').textContent = disc;
         }
@@ -399,8 +563,8 @@
             let mismatches = 0;
             let msg = '';
             products.forEach(p => {
-                const real = window._realStock[p.id];
-                if (real !== undefined && real !== p.stock) {
+                const real = window._realStock[p.id] || 0;
+                if (real !== p.stock) {
                     mismatches++;
                     const diff = real - p.stock;
                     msg += `• ${p.id} : ${p.name} — inventario ${p.stock} → real ${real} (${diff > 0 ? '+' : ''}${diff})\n`;
@@ -415,16 +579,15 @@
             toast(`Verificación completa: ${mismatches} discrepancias`, mismatches > 0);
         }
 
-        // ========== EXPORTAR CSV ==========
-        function exportCSV() {
-            let csv = 'Código,Descripción,Marca,Cantidad Inventario,Cantidad Real,Estado,Diferencia\n';
-            products.forEach(p => {
-                const real = window._realStock[p.id] !== undefined ? window._realStock[p.id] : p.stock;
-                const diff = real - p.stock;
-                let estado = 'OK';
-                if (diff > 0) estado = 'EXTRA';
-                else if (diff < 0) estado = 'FALTANTE';
-                csv += `"${p.id}","${p.name}","${p.brand}",${p.stock},${real},${estado},${diff}\n`;
+        // ========== EXPORTAR INVENTARIO A CSV ==========
+        function exportCartCSV() {
+            const ids = Object.keys(cart);
+            if (ids.length === 0) { toast('El inventario está vacío', true); return; }
+            let csv = 'Código,Descripción,Marca,Cantidad\n';
+            ids.forEach(id => {
+                const p = products.find(x => x.id === id);
+                if (!p) return;
+                csv += `"${p.id}","${p.name}","${p.brand}",${cart[id]}\n`;
             });
             const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
@@ -433,21 +596,20 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            toast('CSV descargado');
+            toast('CSV del inventario descargado');
         }
 
-        // ========== EXPORTAR PDF (con imágenes) ==========
-        async function exportPDF() {
-            toast('Generando PDF...');
+        // ========== EXPORTAR INVENTARIO A PDF ==========
+        async function exportCartPDF() {
+            const ids = Object.keys(cart);
+            if (ids.length === 0) { toast('El inventario está vacío', true); return; }
 
-            // Construir HTML para el PDF
+            toast('Generando PDF del inventario...');
+
             let rows = '';
-            products.forEach(p => {
-                const real = window._realStock[p.id] !== undefined ? window._realStock[p.id] : p.stock;
-                const diff = real - p.stock;
-                let estado = 'OK';
-                if (diff > 0) estado = 'EXTRA';
-                else if (diff < 0) estado = 'FALTANTE';
+            ids.forEach(id => {
+                const p = products.find(x => x.id === id);
+                if (!p) return;
                 const imgSrc = p.image && p.image.trim() !== '' ? p.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"%3e%3crect width="60" height="60" fill="%23f1f5f9"/%3e%3ctext x="30" y="30" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="8" fill="%2394a3b8"%3eSin imagen%3c/text%3e%3c/svg%3e';
                 rows += `
                     <tr>
@@ -455,9 +617,7 @@
                         <td style="padding:6px 8px;border:1px solid #ddd;font-weight:600;font-size:12px;">${p.id}</td>
                         <td style="padding:6px 8px;border:1px solid #ddd;font-size:12px;">${p.name}</td>
                         <td style="padding:6px 8px;border:1px solid #ddd;font-size:12px;">${p.brand || '—'}</td>
-                        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;font-size:12px;">${p.stock}</td>
-                        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;font-size:12px;">${real}</td>
-                        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;font-size:12px;font-weight:bold;color:${diff === 0 ? '#166534' : diff > 0 ? '#92400e' : '#991b1b'};">${estado}</td>
+                        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;font-size:12px;">${cart[id]}</td>
                     </tr>
                 `;
             });
@@ -480,23 +640,23 @@
                     <div class="sub">Reporte generado el ${new Date().toLocaleString()} · RIF J507436055</div>
                     <table>
                         <thead><tr>
-                            <th>Imagen</th><th>Código</th><th>Descripción</th><th>Marca</th><th>Inv.</th><th>Real</th><th>Estado</th>
+                            <th>Imagen</th><th>Código</th><th>Descripción</th><th>Marca</th><th>Cantidad</th>
                         </tr></thead>
                         <tbody>${rows}</tbody>
                     </table>
-                    <div class="footer">Total de productos: ${products.length} · Discrepancias: ${products.filter(p => window._realStock[p.id] !== p.stock).length}</div>
+                    <div class="footer">Total de productos: ${ids.length} · Total de unidades: ${Object.values(cart).reduce((a,b) => a+b, 0)}</div>
                 </body>
                 </html>
             `;
 
-            // Usar html2canvas + jsPDF
             const container = document.createElement('div');
             container.innerHTML = htmlContent;
             container.style.position = 'fixed';
             container.style.left = '-9999px';
             container.style.top = '0';
-            container.style.width = '1000px';
+            container.style.width = '800px';
             container.style.background = 'white';
+            container.style.padding = '20px';
             document.body.appendChild(container);
 
             try {
@@ -516,6 +676,7 @@
                 toast('PDF descargado');
             } catch (err) {
                 toast('Error generando PDF: ' + err.message, true);
+                console.error(err);
             }
             document.body.removeChild(container);
         }
@@ -525,6 +686,5 @@
             fetchCSV();
         };
     </script>
-
 </body>
 </html>
