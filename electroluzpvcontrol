@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Electroluz PV · Control de Inventario</title>
+
+    <!-- Tailwind + Google Fonts + Phosphor Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+
+    <!-- Librerías para PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: #f1f5f9; color: #0f172a; }
+        .f-int { font-family: 'Inter', sans-serif; }
+        .f-num { font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; }
+        .hide-sc::-webkit-scrollbar { display: none; }
+        .hide-sc { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .badge-admin { background: #1e293b; color: #facc15; font-weight: 700; padding: 0.2rem 0.8rem; border-radius: 9999px; font-size: 0.65rem; letter-spacing: 0.05em; border: 1px solid #facc15; }
+        .code-pill { display: inline-block; padding: 0.1rem 0.6rem; border-radius: 9999px; border: 2px solid #3b82f6; background: white; color: #1e293b; font-size: 0.65rem; font-weight: 600; white-space: nowrap; }
+        .fade-in { animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Modal para ampliar imagen */
+        .image-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 2rem; }
+        .image-modal.active { display: flex; }
+        .image-modal img { max-width: 90vw; max-height: 85vh; border-radius: 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.5); object-fit: contain; background: white; padding: 0.5rem; }
+
+        /* Tabla responsive */
+        .inventory-table th, .inventory-table td { padding: 0.5rem 0.75rem; vertical-align: middle; }
+        .inventory-table .thumb { width: 48px; height: 48px; object-fit: contain; background: #f8fafc; border-radius: 0.5rem; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.2s; }
+        .inventory-table .thumb:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        .admin-only { display: none; }
+        .admin-mode .admin-only { display: table-cell; }
+        .admin-mode .admin-only-inline { display: inline-block; }
+        .admin-only-inline { display: none; }
+
+        .stock-ok { background: #dcfce7; color: #166534; }
+        .stock-warn { background: #fee2e2; color: #991b1b; }
+        .stock-diff { background: #fef3c7; color: #92400e; }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <!-- HEADER -->
+    <header class="bg-[#242629] sticky top-0 z-40 shadow-md border-b border-white/5">
+        <div class="border-b border-white/5 bg-[#191a1d] px-4 py-1.5 flex justify-between text-[10px] font-bold text-slate-400 f-int">
+            <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span> TASA BCV: 1 USD = 791.67 VES</span>
+            <span>RIF J507436055</span>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="location.reload()">
+                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center p-0.5 shadow-lg"><img src="https://pub-db6d95a9369746c6ae9e956ab6f6ebe7.r2.dev/logo%20pv.png" class="w-full h-full object-cover" alt="logo"></div>
+                <div><h1 class="text-white font-black text-lg">Electroluz PV</h1><p class="text-slate-400 text-[8px] font-black tracking-[0.2em] uppercase">INVENTARIO · CONTROL</p></div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="toggleAdmin()" class="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 border border-white/10 transition">
+                    <i class="ph-bold ph-lock-key"></i> <span id="admin-label">Admin</span>
+                </button>
+                <button onclick="exportCSV()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition">
+                    <i class="ph-bold ph-download"></i> CSV
+                </button>
+                <button onclick="exportPDF()" class="bg-rose-600 hover:bg-rose-500 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition">
+                    <i class="ph-bold ph-file-pdf"></i> PDF
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- TOAST -->
+    <div id="toast" class="hidden fixed top-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-white font-bold text-sm shadow-2xl z-50 flex items-center gap-2 transition-all duration-300"></div>
+
+    <!-- MODAL PARA IMAGEN -->
+    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+        <img id="modalImage" src="" alt="Producto" />
+    </div>
+
+    <!-- MAIN -->
+    <main class="flex-1 w-full max-w-7xl mx-auto px-4 py-6">
+
+        <!-- Panel Admin (solo visible con admin activo) -->
+        <div id="admin-panel" class="hidden bg-white p-4 rounded-2xl shadow-lg border border-slate-200 mb-6 fade-in">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <i class="ph-fill ph-shield-check text-2xl text-blue-600"></i>
+                    <span class="font-black text-slate-800 text-sm tracking-widest">MODO ADMINISTRADOR</span>
+                    <span class="badge-admin">ACTIVO</span>
+                </div>
+                <div class="flex items-center gap-3 text-xs font-bold text-slate-500">
+                    <span>Productos: <span id="total-prod" class="text-slate-800">0</span></span>
+                    <span class="w-px h-4 bg-slate-300"></span>
+                    <span>Discrepancias: <span id="total-disc" class="text-rose-600">0</span></span>
+                </div>
+                <button onclick="checkStock()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded-lg font-bold text-xs flex items-center gap-2 transition shadow-sm">
+                    <i class="ph-bold ph-arrows-clockwise"></i> Verificar Stock
+                </button>
+            </div>
+            <div id="admin-msg" class="mt-2 text-xs text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-100 min-h-[2rem]"></div>
+        </div>
+
+        <!-- Barra de búsqueda y filtros -->
+        <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-200 flex flex-col lg:flex-row gap-3 justify-between items-center mb-4">
+            <div class="w-full lg:w-1/2 relative">
+                <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="search-input" placeholder="Buscar por código, descripción o marca..." oninput="filterProducts()" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 outline-none focus:ring-2 focus:ring-blue-500 text-sm f-int">
+            </div>
+            <div class="flex items-center gap-2 overflow-x-auto hide-sc w-full lg:w-auto">
+                <span class="text-[10px] font-black text-slate-400 uppercase">Marca:</span>
+                <button onclick="setBrand('')" class="px-3 py-1 rounded-xl text-xs font-bold bg-slate-900 text-white transition-all">Todas</button>
+                <button onclick="setBrand('INGCO')" class="px-3 py-1 rounded-xl text-xs font-black italic bg-white border border-slate-200 text-[#FFCC00] hover:bg-[#FFCC00] hover:text-black transition">INGCO</button>
+                <button onclick="setBrand('WADFOW')" class="px-3 py-1 rounded-xl text-xs font-black italic bg-white border border-slate-200 text-[#2563EB] hover:bg-[#2563EB] hover:text-white transition">WADFOW</button>
+                <button onclick="setBrand('VERT')" class="px-3 py-1 rounded-xl text-xs font-black italic bg-white border border-slate-200 text-[#10B981] hover:bg-[#10B981] hover:text-white transition">VERT</button>
+            </div>
+        </div>
+
+        <!-- Tabla de inventario -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden" id="table-container">
+            <div class="overflow-x-auto">
+                <table class="inventory-table w-full text-sm">
+                    <thead class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        <tr>
+                            <th class="text-left">Imagen</th>
+                            <th class="text-left">Código</th>
+                            <th class="text-left">Descripción</th>
+                            <th class="text-left">Marca</th>
+                            <th class="text-center w-20">Cantidad</th>
+                            <!-- Solo admin -->
+                            <th class="text-center w-20 admin-only">Real</th>
+                            <th class="text-center w-24 admin-only">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-body" class="divide-y divide-slate-100">
+                        <!-- renderizado dinámico -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="no-results" class="hidden py-12 text-center text-slate-400">
+                <i class="ph-bold ph-magnifying-glass text-3xl block mb-2"></i>
+                <span class="font-bold">No se encontraron productos</span>
+            </div>
+        </div>
+
+        <!-- Paginación -->
+        <div id="pagination" class="flex justify-center items-center gap-4 mt-6 text-sm font-bold text-slate-600">
+            <button id="prev-page" onclick="changePage(-1)" class="w-8 h-8 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center"><i class="ph-bold ph-caret-left"></i></button>
+            <span id="page-info">Página 1 de 1</span>
+            <button id="next-page" onclick="changePage(1)" class="w-8 h-8 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center"><i class="ph-bold ph-caret-right"></i></button>
+        </div>
+    </main>
+
+    <script>
+        // ========== CONFIG ==========
+        const CONFIG = {
+            TASA: 791.67,
+            CSV_URL: 'https://docs.google.com/spreadsheets/d/11P_SClE2hNTn5g-Eq2GRpQBA83q71RityFaAkFNB554/export?format=csv'
+        };
+
+        // ========== ESTADO ==========
+        let products = [];
+        let filtered = [];
+        let currentPage = 1;
+        const perPage = 15;
+        let adminMode = false;
+        let brandFilter = '';
+        let searchTerm = '';
+
+        // Almacén de cantidades reales (ingresadas por usuarios o admin)
+        // En producción esto se guardaría en una base de datos
+        window._realStock = {};
+
+        // ========== UTILIDADES ==========
+        function sanitize(str) { if (!str) return ''; const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }; return str.toString().replace(/[&<>"']/g, m => map[m]); }
+        function normalize(str) { return str ? str.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase() : ''; }
+        function parseNumber(str) { if (!str) return 0; const cleaned = str.toString().replace(/[$]/g, '').replace(/,/g, '.').trim(); return parseFloat(cleaned) || 0; }
+
+        function toast(msg, isErr = false) {
+            const el = document.getElementById('toast');
+            if (!el) return;
+            el.innerHTML = `<i class="ph-fill ${isErr ? 'ph-warning-circle' : 'ph-check-circle'} text-lg"></i> ${sanitize(msg)}`;
+            el.className = `fixed top-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-white font-bold text-sm shadow-2xl z-50 flex items-center gap-2 transition-all duration-300 ${isErr ? 'bg-rose-500' : 'bg-slate-800'}`;
+            setTimeout(() => el.classList.add('-translate-y-24', 'opacity-0'), 2500);
+            setTimeout(() => el.className = 'hidden', 2800);
+        }
+
+        // ========== CARGAR DATOS DESDE CSV ==========
+        async function fetchCSV() {
+            try {
+                const res = await fetch(CONFIG.CSV_URL);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const text = await res.text();
+                if (text.toLowerCase().includes('<html')) { toast('Error: Google Sheet no publicado', true); return; }
+                parseCSV(text);
+            } catch (e) { toast('Error cargando catálogo: ' + e.message, true); }
+        }
+
+        function parseCSV(text) {
+            const lines = text.split(/\r?\n/);
+            if (lines.length < 2) return;
+            const headers = lines[0].split(',').map(normalize);
+            const findIdx = (...names) => { const n = names.map(normalize); return headers.findIndex(h => n.some(x => h.includes(x))); };
+
+            const idxCode = findIdx('cod', 'codigo', 'id');
+            const idxName = findIdx('desc', 'nombre', 'producto');
+            const idxBrand = findIdx('marc', 'brand');
+            const idxStock = findIdx('stock', 'cant', 'inv', 'disp', 'cantidad');
+            const idxImage = findIdx('images', 'img', 'url', 'imagen');
+
+            products = [];
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                let row = lines[i];
+                while ((row.match(/"/g) || []).length % 2 !== 0 && i < lines.length - 1) row += " " + lines[++i];
+                const values = []; let cur = '', inside = false;
+                for (let ch of row) {
+                    if (ch === '"') inside = !inside;
+                    else if (ch === ',' && !inside) { values.push(cur.trim()); cur = ''; }
+                    else cur += ch;
+                }
+                values.push(cur.trim());
+
+                const code = idxCode !== -1 ? values[idxCode] : '';
+                if (!code) continue;
+                const name = idxName !== -1 ? values[idxName] : 'Sin nombre';
+                const brand = idxBrand !== -1 ? values[idxBrand] : '';
+                const stock = idxStock !== -1 ? parseNumber(values[idxStock]) : 0;
+                const image = idxImage !== -1 ? values[idxImage] : '';
+
+                products.push({
+                    id: sanitize(code),
+                    name: sanitize(name),
+                    brand: sanitize(brand).toUpperCase(),
+                    stock: stock,
+                    image: sanitize(image)
+                });
+            }
+            products.sort((a, b) => a.id.localeCompare(b.id));
+            // Inicializar realStock con stock actual
+            products.forEach(p => {
+                if (window._realStock[p.id] === undefined) {
+                    window._realStock[p.id] = p.stock;
+                }
+            });
+            filtered = [...products];
+            renderInventory();
+            updateAdminStats();
+        }
+
+        // ========== RENDER TABLA ==========
+        function renderInventory() {
+            const tbody = document.getElementById('inventory-body');
+            const noRes = document.getElementById('no-results');
+            const container = document.getElementById('table-container');
+            if (!tbody) return;
+
+            let data = [...products];
+            if (brandFilter) data = data.filter(p => p.brand === brandFilter);
+            if (searchTerm) {
+                const term = normalize(searchTerm);
+                data = data.filter(p => normalize(p.id).includes(term) || normalize(p.name).includes(term) || normalize(p.brand).includes(term));
+            }
+            filtered = data;
+
+            const total = data.length;
+            const totalPages = Math.ceil(total / perPage);
+            if (currentPage > totalPages) currentPage = totalPages || 1;
+            const start = (currentPage - 1) * perPage;
+            const pageItems = data.slice(start, start + perPage);
+
+            if (total === 0) {
+                tbody.innerHTML = '';
+                noRes.classList.remove('hidden');
+                document.getElementById('pagination').classList.add('hidden');
+                return;
+            }
+            noRes.classList.add('hidden');
+            document.getElementById('pagination').classList.remove('hidden');
+
+            container.classList.toggle('admin-mode', adminMode);
+
+            let html = '';
+            pageItems.forEach(p => {
+                const realQty = window._realStock[p.id] !== undefined ? window._realStock[p.id] : p.stock;
+                const diff = realQty - p.stock;
+                let status = '', statusClass = '';
+                if (diff === 0) { status = '✓ OK'; statusClass = 'stock-ok'; }
+                else if (diff > 0) { status = `+${diff}`; statusClass = 'stock-diff'; }
+                else { status = `${diff}`; statusClass = 'stock-warn'; }
+
+                const imgSrc = p.image && p.image.trim() !== '' ? p.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"%3e%3crect width="48" height="48" fill="%23f1f5f9"/%3e%3ctext x="24" y="24" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="6" fill="%2394a3b8"%3eSin imagen%3c/text%3e%3c/svg%3e';
+
+                html += `
+                    <tr>
+                        <td><img src="${imgSrc}" class="thumb" onclick="openImageModal('${imgSrc}')" loading="lazy" onerror="this.src='data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 48 48\'%3e%3crect width=\'48\' height=\'48\' fill=\'%23f1f5f9\'/%3e%3ctext x=\'24\' y=\'24\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'6\' fill=\'%2394a3b8\'%3eSin imagen%3c/text%3e%3c/svg%3e'" /></td>
+                        <td><span class="code-pill">${p.id}</span></td>
+                        <td class="font-medium text-slate-800 text-sm">${p.name}</td>
+                        <td class="text-xs font-black italic text-slate-600">${p.brand || '—'}</td>
+                        <td class="text-center">
+                            <input type="number" value="${realQty}" min="0" class="w-16 bg-transparent text-center border-0 border-b-2 border-slate-200 focus:border-blue-500 outline-none font-bold f-num" onchange="updateRealStock('${p.id}', this.value)" />
+                        </td>
+                        <td class="text-center font-bold f-num admin-only">${realQty}</td>
+                        <td class="text-center admin-only"><span class="text-[10px] font-bold px-2.5 py-1 rounded-full ${statusClass}">${status}</span></td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+
+            document.getElementById('page-info').textContent = `Página ${currentPage} de ${totalPages || 1}`;
+            document.getElementById('prev-page').disabled = currentPage <= 1;
+            document.getElementById('next-page').disabled = currentPage >= totalPages;
+        }
+
+        // ========== FILTROS ==========
+        function filterProducts() {
+            const input = document.getElementById('search-input');
+            searchTerm = input ? input.value : '';
+            currentPage = 1;
+            renderInventory();
+        }
+
+        function setBrand(b) {
+            brandFilter = b;
+            currentPage = 1;
+            renderInventory();
+        }
+
+        function changePage(delta) {
+            const total = filtered.length;
+            const totalPages = Math.ceil(total / perPage);
+            const newPage = currentPage + delta;
+            if (newPage < 1 || newPage > totalPages) return;
+            currentPage = newPage;
+            renderInventory();
+        }
+
+        // ========== IMAGEN MODAL ==========
+        function openImageModal(src) {
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('modalImage');
+            img.src = src;
+            modal.classList.add('active');
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        // ========== STOCK ==========
+        function updateRealStock(id, val) {
+            const num = parseInt(val);
+            if (isNaN(num) || num < 0) return;
+            window._realStock[id] = num;
+            if (adminMode) updateAdminStats();
+            // Re-render para actualizar estado en la tabla (solo si admin visible)
+            if (adminMode) renderInventory();
+        }
+
+        // ========== ADMIN MODE ==========
+        function toggleAdmin() {
+            adminMode = !adminMode;
+            const panel = document.getElementById('admin-panel');
+            const label = document.getElementById('admin-label');
+            if (adminMode) {
+                const pwd = prompt('🔐 Ingrese contraseña de administrador:');
+                if (pwd !== 'admin123') {
+                    adminMode = false;
+                    toast('Contraseña incorrecta', true);
+                    return;
+                }
+                panel.classList.remove('hidden');
+                label.textContent = 'Admin ✓';
+                toast('Modo administrador activado');
+                renderInventory();
+                updateAdminStats();
+            } else {
+                panel.classList.add('hidden');
+                label.textContent = 'Admin';
+                renderInventory();
+                toast('Modo administrador desactivado');
+            }
+        }
+
+        function updateAdminStats() {
+            document.getElementById('total-prod').textContent = products.length;
+            let disc = 0;
+            products.forEach(p => {
+                const real = window._realStock[p.id];
+                if (real !== undefined && real !== p.stock) disc++;
+            });
+            document.getElementById('total-disc').textContent = disc;
+        }
+
+        function checkStock() {
+            let mismatches = 0;
+            let msg = '';
+            products.forEach(p => {
+                const real = window._realStock[p.id];
+                if (real !== undefined && real !== p.stock) {
+                    mismatches++;
+                    const diff = real - p.stock;
+                    msg += `• ${p.id} : ${p.name} — inventario ${p.stock} → real ${real} (${diff > 0 ? '+' : ''}${diff})\n`;
+                }
+            });
+            const el = document.getElementById('admin-msg');
+            if (mismatches === 0) {
+                el.innerHTML = '<span class="text-emerald-600 font-bold">✅ Todos los productos coinciden con el inventario.</span>';
+            } else {
+                el.innerHTML = `<span class="text-rose-600 font-bold">⚠️ ${mismatches} producto(s) con discrepancia:</span><br><pre class="text-xs text-slate-700 whitespace-pre-wrap mt-1">${msg}</pre>`;
+            }
+            toast(`Verificación completa: ${mismatches} discrepancias`, mismatches > 0);
+        }
+
+        // ========== EXPORTAR CSV ==========
+        function exportCSV() {
+            let csv = 'Código,Descripción,Marca,Cantidad Inventario,Cantidad Real,Estado,Diferencia\n';
+            products.forEach(p => {
+                const real = window._realStock[p.id] !== undefined ? window._realStock[p.id] : p.stock;
+                const diff = real - p.stock;
+                let estado = 'OK';
+                if (diff > 0) estado = 'EXTRA';
+                else if (diff < 0) estado = 'FALTANTE';
+                csv += `"${p.id}","${p.name}","${p.brand}",${p.stock},${real},${estado},${diff}\n`;
+            });
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'inventario_electroluz.csv';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            toast('CSV descargado');
+        }
+
+        // ========== EXPORTAR PDF (con imágenes) ==========
+        async function exportPDF() {
+            toast('Generando PDF...');
+
+            // Construir HTML para el PDF
+            let rows = '';
+            products.forEach(p => {
+                const real = window._realStock[p.id] !== undefined ? window._realStock[p.id] : p.stock;
+                const diff = real - p.stock;
+                let estado = 'OK';
+                if (diff > 0) estado = 'EXTRA';
+                else if (diff < 0) estado = 'FALTANTE';
+                const imgSrc = p.image && p.image.trim() !== '' ? p.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"%3e%3crect width="60" height="60" fill="%23f1f5f9"/%3e%3ctext x="30" y="30" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="8" fill="%2394a3b8"%3eSin imagen%3c/text%3e%3c/svg%3e';
+                rows += `
+                    <tr>
+                        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;"><img src="${imgSrc}" style="width:48px;height:48px;object-fit:contain;background:#f8fafc;border-radius:6px;" /></td>
+                        <td style="padding:6px 8px;border:1px solid #ddd;font-weight:600;font-size:12px;">${p.id}</td>
+                        <td style="padding:6px 8px;border:1px solid #ddd;font-size:12px;">${p.name}</td>
+                        <td style="padding:6px 8px;border:1px solid #ddd;font-size:12px;">${p.brand || '—'}</td>
+                        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;font-size:12px;">${p.stock}</td>
+                        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;font-size:12px;">${real}</td>
+                        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;font-size:12px;font-weight:bold;color:${diff === 0 ? '#166534' : diff > 0 ? '#92400e' : '#991b1b'};">${estado}</td>
+                    </tr>
+                `;
+            });
+
+            const htmlContent = `
+                <html>
+                <head><meta charset="UTF-8"><title>Inventario Electroluz PV</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding:20px; }
+                    h1 { color:#1e293b; font-size:20px; margin-bottom:4px; }
+                    .sub { color:#64748b; font-size:12px; margin-bottom:20px; }
+                    table { width:100%; border-collapse:collapse; font-size:11px; }
+                    th { background:#f1f5f9; padding:8px; border:1px solid #ddd; text-align:left; font-weight:700; text-transform:uppercase; font-size:10px; }
+                    td { padding:6px 8px; border:1px solid #ddd; }
+                    .footer { margin-top:20px; font-size:10px; color:#94a3b8; text-align:center; border-top:1px solid #e2e8f0; padding-top:12px; }
+                </style>
+                </head>
+                <body>
+                    <h1>📦 Inventario Electroluz PV C.A.</h1>
+                    <div class="sub">Reporte generado el ${new Date().toLocaleString()} · RIF J507436055</div>
+                    <table>
+                        <thead><tr>
+                            <th>Imagen</th><th>Código</th><th>Descripción</th><th>Marca</th><th>Inv.</th><th>Real</th><th>Estado</th>
+                        </tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                    <div class="footer">Total de productos: ${products.length} · Discrepancias: ${products.filter(p => window._realStock[p.id] !== p.stock).length}</div>
+                </body>
+                </html>
+            `;
+
+            // Usar html2canvas + jsPDF
+            const container = document.createElement('div');
+            container.innerHTML = htmlContent;
+            container.style.position = 'fixed';
+            container.style.left = '-9999px';
+            container.style.top = '0';
+            container.style.width = '1000px';
+            container.style.background = 'white';
+            document.body.appendChild(container);
+
+            try {
+                const canvas = await html2canvas(container, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff'
+                });
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save('inventario_electroluz.pdf');
+                toast('PDF descargado');
+            } catch (err) {
+                toast('Error generando PDF: ' + err.message, true);
+            }
+            document.body.removeChild(container);
+        }
+
+        // ========== INICIO ==========
+        window.onload = function() {
+            fetchCSV();
+        };
+    </script>
+
+</body>
+</html>
