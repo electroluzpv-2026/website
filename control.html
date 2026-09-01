@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         body { font-family: 'Poppins', sans-serif; background: #f1f5f9; color: #0f172a; }
@@ -61,6 +63,19 @@
             .inventory-table td { font-size: 0.85rem; padding: 0.5rem 0.75rem; }
         }
 
+        /* 手机端数量输入 + 箭头 */
+        .qty-wrapper { display: flex; align-items: center; gap: 0.15rem; justify-content: center; }
+        .qty-wrapper .qty-btn { width: 22px; height: 22px; border-radius: 0.3rem; border: 1px solid #e2e8f0; background: white; color: #475569; font-weight: 700; font-size: 0.6rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; touch-action: manipulation; user-select: none; }
+        .qty-wrapper .qty-btn:active { background: #e2e8f0; transform: scale(0.9); }
+        .qty-wrapper .qty-btn:hover { background: #f1f5f9; }
+        .qty-wrapper .qty-input-mobile { width: 32px; text-align: center; border: 1px solid #e2e8f0; border-radius: 0.3rem; padding: 0.1rem 0; font-weight: 700; font-size: 0.6rem; background: white; }
+        .qty-wrapper .qty-input-mobile:focus { outline: none; border-color: #3b82f6; ring: 2px solid #3b82f6; }
+
+        @media (min-width: 640px) {
+            .qty-wrapper .qty-btn { width: 28px; height: 28px; font-size: 0.8rem; }
+            .qty-wrapper .qty-input-mobile { width: 44px; font-size: 0.85rem; padding: 0.15rem 0; }
+        }
+
         .qty-input { width: 40px; text-align: center; border: 1px solid #e2e8f0; border-radius: 0.4rem; padding: 0.1rem; font-weight: 700; font-size: 0.65rem; }
         .qty-input:focus { outline: none; border-color: #3b82f6; ring: 2px solid #3b82f6; }
         @media (min-width: 640px) {
@@ -89,7 +104,6 @@
             .cart-badge { font-size: 0.65rem; width: 20px; height: 20px; }
         }
 
-        /* Report Preview */
         .report-preview { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); z-index: 200; align-items: center; justify-content: center; padding: 0.5rem; overflow-y: auto; }
         .report-preview.active { display: flex; }
         .report-preview .report-content { background: white; border-radius: 1rem; max-width: 900px; width: 100%; max-height: 92vh; overflow-y: auto; padding: 1.2rem; position: relative; }
@@ -133,6 +147,25 @@
         }
         .admin-logged { background: #10b981; color: white; border: 1px solid #10b981; }
         .admin-logged:hover { background: #059669; color: white; }
+
+        .pdf-export-wrap { 
+            position: fixed; 
+            left: -9999px; 
+            top: 0; 
+            background: white; 
+            padding: 25px; 
+            width: 750px; 
+            z-index: 9999;
+            font-family: Arial, sans-serif;
+        }
+        .pdf-export-wrap table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .pdf-export-wrap th { background: #f1f5f9; padding: 5px 6px; border: 1px solid #ddd; text-align: left; font-size: 9px; text-transform: uppercase; }
+        .pdf-export-wrap td { padding: 4px 6px; border: 1px solid #ddd; font-size: 10px; }
+        .pdf-export-wrap .r-img { width: 28px; height: 28px; object-fit: contain; border-radius: 3px; background: #f8fafc; }
+        .pdf-export-wrap .pdf-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 6px; }
+        .pdf-export-wrap .pdf-title { font-size: 16px; font-weight: 700; color: #1e293b; margin: 0; }
+        .pdf-export-wrap .pdf-sub { font-size: 10px; color: #64748b; margin: 2px 0 0; }
+        .pdf-export-wrap .pdf-summary { margin-top: 10px; padding-top: 10px; border-top: 2px solid #e2e8f0; font-size: 9px; color: #64748b; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px; }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
@@ -166,7 +199,7 @@
         <img id="modalImage" src="" alt="Producto" />
     </div>
 
-    <!-- REPORT PREVIEW (todo en uno: vista + PDF + imagen + CSV) -->
+    <!-- REPORT PREVIEW -->
     <div id="reportPreview" class="report-preview" onclick="if(event.target===this) closeReport()">
         <div class="report-content" id="reportContent">
             <div class="report-header">
@@ -192,7 +225,6 @@
             </button>
         </div>
 
-        <!-- Admin status inside panel -->
         <div class="px-2 sm:px-4 py-1 sm:py-2 border-b border-slate-100 flex items-center justify-between bg-amber-50/50">
             <span class="text-[0.5rem] sm:text-xs font-bold text-slate-600">🔐 Admin:</span>
             <button id="adminToggleBtn" onclick="toggleAdminInPanel()" class="admin-login-btn">
@@ -220,7 +252,6 @@
     <!-- MAIN -->
     <main class="flex-1 w-full max-w-7xl mx-auto px-1.5 sm:px-4 py-1.5 sm:py-6">
 
-        <!-- Barra de búsqueda -->
         <div class="bg-white p-1.5 sm:p-3 rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 flex flex-col lg:flex-row gap-1.5 sm:gap-3 justify-between items-center mb-1.5 sm:mb-4">
             <div class="w-full lg:w-1/2 relative">
                 <i class="ph-bold ph-magnifying-glass absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[0.6rem] sm:text-base"></i>
@@ -235,7 +266,6 @@
             </div>
         </div>
 
-        <!-- Tabla -->
         <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="inventory-table w-full text-[0.5rem] sm:text-sm">
@@ -260,7 +290,6 @@
             </div>
         </div>
 
-        <!-- Paginación -->
         <div id="pagination" class="flex justify-center items-center gap-2 sm:gap-4 mt-2 sm:mt-6 text-[0.6rem] sm:text-sm font-bold text-slate-600">
             <button id="prev-page" onclick="changePage(-1)" class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center"><i class="ph-bold ph-caret-left text-[0.5rem] sm:text-base"></i></button>
             <span id="page-info">Página 1 de 1</span>
@@ -280,12 +309,12 @@
         let filtered = [];
         let currentPage = 1;
         const perPage = 15;
-        let adminMode = false;
+        let adminLoggedIn = false;
         let brandFilter = '';
         let searchTerm = '';
         let cart = {};
         let savedInventory = {};
-        let reportData = null;
+        let reportData = [];
 
         // ========== UTILIDADES ==========
         function sanitize(str) { if (!str) return ''; const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }; return str.toString().replace(/[&<>"']/g, m => map[m]); }
@@ -385,7 +414,7 @@
             updateCartBadge();
         }
 
-        // ========== RENDER TABLA ==========
+        // ========== RENDER TABLA (con arrow buttons) ==========
         function renderInventory() {
             const tbody = document.getElementById('inventory-body');
             const noRes = document.getElementById('no-results');
@@ -421,6 +450,7 @@
 
             let html = '';
             pageItems.forEach(p => {
+                const currentQty = cart[p.id] || 0;
                 const imgSrc = p.image && p.image.trim() !== '' ? p.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"%3e%3crect width="48" height="48" fill="%23f1f5f9"/%3e%3ctext x="24" y="24" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="6" fill="%2394a3b8"%3eSin%3c/text%3e%3c/svg%3e';
 
                 html += `
@@ -430,7 +460,15 @@
                         <td class="font-medium text-slate-800 text-[0.5rem] sm:text-sm">${p.name}</td>
                         <td class="text-[0.5rem] sm:text-xs font-black italic text-slate-600">${p.brand || '—'}</td>
                         <td class="text-center">
-                            <input type="number" class="qty-input" id="qty_${p.id}" value="${cart[p.id] || 0}" min="0" onchange="updateCartQtyFromTable('${p.id}', this.value)" />
+                            <div class="qty-wrapper">
+                                <button class="qty-btn" onclick="adjustQty('${p.id}', -1)" type="button">−</button>
+                                <input type="number" class="qty-input-mobile" id="qty_${p.id}" value="${currentQty}" min="0" 
+                                    onchange="updateCartQtyFromTable('${p.id}', this.value)" 
+                                    onfocus="this.select()"
+                                    inputmode="numeric"
+                                    pattern="[0-9]*" />
+                                <button class="qty-btn" onclick="adjustQty('${p.id}', 1)" type="button">+</button>
+                            </div>
                         </td>
                         <td class="text-center">
                             <button class="btn-add" onclick="addToCartFromTable('${p.id}')">
@@ -445,6 +483,19 @@
             document.getElementById('page-info').textContent = `Página ${currentPage} de ${totalPages || 1}`;
             document.getElementById('prev-page').disabled = currentPage <= 1;
             document.getElementById('next-page').disabled = currentPage >= totalPages;
+        }
+
+        // ========== AJUSTAR CANTIDAD (arrow buttons) ==========
+        function adjustQty(id, delta) {
+            const input = document.getElementById(`qty_${id}`);
+            if (!input) return;
+            let val = parseInt(input.value) || 0;
+            val = Math.max(0, val + delta);
+            input.value = val;
+            updateCartQtyFromTable(id, val);
+            // 触发变更事件
+            const event = new Event('change', { bubbles: true });
+            input.dispatchEvent(event);
         }
 
         // ========== FILTROS ==========
@@ -564,7 +615,7 @@
                             <div class="code">${p.id} · ${p.brand || '—'}</div>
                         </div>
                         <div class="qty">
-                            <input type="number" value="${qty}" min="0" onchange="updateCartQty('${p.id}', this.value)" />
+                            <input type="number" value="${qty}" min="0" onchange="updateCartQty('${p.id}', this.value)" onfocus="this.select()" />
                         </div>
                         <span class="remove" onclick="removeFromCart('${p.id}')"><i class="ph-bold ph-x"></i></span>
                     </div>
@@ -584,24 +635,19 @@
             toast('Inventario vaciado');
         }
 
-        // ========== GUARDAR ==========
         function saveInventory() {
             const ids = Object.keys(cart).filter(id => cart[id] > 0);
             if (ids.length === 0) { 
                 toast('No hay productos para guardar', true); 
                 return; 
             }
-            
             ids.forEach(id => {
                 savedInventory[id] = cart[id];
             });
-            
             toast(`✅ Guardado (${ids.length} productos)`);
         }
 
-        // ========== ADMIN EN PANEL ==========
-        let adminLoggedIn = false;
-
+        // ========== ADMIN ==========
         function toggleAdminInPanel() {
             if (adminLoggedIn) {
                 adminLoggedIn = false;
@@ -610,7 +656,6 @@
                 toast('Sesión de admin cerrada');
                 return;
             }
-
             const pwd = prompt('🔐 Ingrese contraseña de administrador:');
             if (pwd === CONFIG.ADMIN_PASSWORD) {
                 adminLoggedIn = true;
@@ -622,7 +667,7 @@
             }
         }
 
-        // ========== REPORTE (Vista previa con todos los datos) ==========
+        // ========== REPORTE ==========
         function showReport() {
             const ids = Object.keys(cart).filter(id => cart[id] > 0);
             if (ids.length === 0) { 
@@ -630,7 +675,6 @@
                 return; 
             }
 
-            // Construir datos del reporte
             reportData = [];
             let totalUnits = 0;
             let discrepancies = 0;
@@ -644,9 +688,6 @@
                 totalUnits += real;
                 if (diff !== 0) discrepancies++;
                 
-                // Solo mostrar stock y diff si admin está logueado
-                const showStock = adminLoggedIn;
-                
                 reportData.push({
                     id: p.id,
                     name: p.name,
@@ -655,12 +696,10 @@
                     real: real,
                     stock: stock,
                     diff: diff,
-                    showStock: showStock,
                     status: diff === 0 ? 'OK' : (diff > 0 ? 'EXTRA' : 'FALTANTE')
                 });
             });
 
-            // Generar HTML del reporte
             let rows = '';
             reportData.forEach(d => {
                 const imgSrc = d.image && d.image.trim() !== '' ? d.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"%3e%3crect width="60" height="60" fill="%23f1f5f9"/%3e%3ctext x="30" y="30" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="8" fill="%2394a3b8"%3eSin%3c/text%3e%3c/svg%3e';
@@ -674,14 +713,13 @@
                         <td>${d.name}</td>
                         <td>${d.brand || '—'}</td>
                         <td style="text-align:center;font-weight:bold;">${d.real}</td>
-                        ${d.showStock ? `<td style="text-align:center;">${d.stock}</td>` : ''}
-                        ${d.showStock ? `<td style="text-align:center;font-weight:bold;color:${d.diff === 0 ? '#166534' : (d.diff > 0 ? '#92400e' : '#991b1b')};">${statusText}</td>` : ''}
+                        ${adminLoggedIn ? `<td style="text-align:center;">${d.stock}</td>` : ''}
+                        ${adminLoggedIn ? `<td style="text-align:center;font-weight:bold;color:${d.diff === 0 ? '#166534' : (d.diff > 0 ? '#92400e' : '#991b1b')};">${statusText}</td>` : ''}
                     </tr>
                 `;
             });
 
-            const showStock = adminLoggedIn;
-            const stockHeaders = showStock ? `
+            const stockHeaders = adminLoggedIn ? `
                 <th style="text-align:center;">Stock</th>
                 <th style="text-align:center;">Estado</th>
             ` : '';
@@ -695,11 +733,11 @@
                         </div>
                         <div style="background:#f1f5f9;padding:4px 10px;border-radius:6px;font-size:10px;font-weight:bold;">
                             ${reportData.length} productos · ${totalUnits} unidades
-                            ${showStock ? ` · ⚠️ ${discrepancies} discrepancia(s)` : ''}
-                            ${!showStock ? ' · 🔒 Admin inactivo' : ''}
+                            ${adminLoggedIn ? ` · ⚠️ ${discrepancies} discrepancia(s)` : ''}
+                            ${!adminLoggedIn ? ' · 🔒 Admin inactivo' : ''}
                         </div>
                     </div>
-                    <table style="width:100%;border-collapse:collapse;font-size:11px;">
+                    <table>
                         <thead>
                             <tr style="background:#f1f5f9;">
                                 <th style="padding:5px 6px;border:1px solid #ddd;text-align:left;font-size:9px;text-transform:uppercase;">Img</th>
@@ -713,8 +751,7 @@
                         <tbody>${rows}</tbody>
                     </table>
                     <div style="margin-top:10px;font-size:9px;color:#94a3b8;text-align:center;border-top:1px solid #e2e8f0;padding-top:8px;">
-                        Electroluz PV C.A. · ${showStock ? 'Reporte con verificación de stock' : 'Reporte de inventario (sin verificación)'}
-                        ${showStock ? ` · Discrepancias: ${discrepancies}` : ' · Inicia sesión como admin para verificar stock'}
+                        Electroluz PV C.A. · ${adminLoggedIn ? 'Reporte con verificación de stock' : 'Reporte de inventario (sin verificación)'}
                     </div>
                 </div>
             `;
@@ -724,7 +761,7 @@
             document.getElementById('reportSummary').innerHTML = `
                 <span>Total productos: ${reportData.length}</span>
                 <span>Unidades: ${totalUnits}</span>
-                ${showStock ? `<span style="color:${discrepancies > 0 ? '#991b1b' : '#166534'};">Discrepancias: ${discrepancies}</span>` : '<span style="color:#f59e0b;">🔒 Admin inactivo - Stock no verificado</span>'}
+                ${adminLoggedIn ? `<span style="color:${discrepancies > 0 ? '#991b1b' : '#166534'};">Discrepancias: ${discrepancies}</span>` : '<span style="color:#f59e0b;">🔒 Admin inactivo</span>'}
             `;
             document.getElementById('reportPreview').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -735,171 +772,233 @@
             document.body.style.overflow = '';
         }
 
-        // ========== EXPORTAR REPORTE ==========
-        function getReportHTML() {
-            const body = document.getElementById('reportBody');
-            if (!body) return '';
-            return body.innerHTML;
+        // ========== EXPORTAR PDF ==========
+        function exportReportPDF() {
+            if (reportData.length === 0) { toast('No hay datos para exportar', true); return; }
+            toast('Generando PDF...');
+
+            let rows = '';
+            let totalUnits = 0;
+            let discrepancies = 0;
+            reportData.forEach(d => {
+                totalUnits += d.real;
+                if (d.diff !== 0) discrepancies++;
+                const imgSrc = d.image && d.image.trim() !== '' ? d.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"%3e%3crect width="60" height="60" fill="%23f1f5f9"/%3e%3ctext x="30" y="30" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="8" fill="%2394a3b8"%3eSin%3c/text%3e%3c/svg%3e';
+                const diffColor = d.diff === 0 ? '#166534' : (d.diff > 0 ? '#92400e' : '#991b1b');
+                const diffText = d.diff === 0 ? '✓ OK' : (d.diff > 0 ? `+${d.diff}` : `${d.diff}`);
+                rows += `
+                    <tr>
+                        <td style="padding:4px 6px;border:1px solid #ddd;text-align:center;"><img src="${imgSrc}" style="width:28px;height:28px;object-fit:contain;background:#f8fafc;border-radius:3px;" /></td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;font-weight:600;font-size:10px;">${d.id}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;font-size:10px;">${d.name}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;font-size:10px;">${d.brand || '—'}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;text-align:center;font-size:10px;font-weight:bold;">${d.real}</td>
+                        ${adminLoggedIn ? `<td style="padding:4px 6px;border:1px solid #ddd;text-align:center;font-size:10px;">${d.stock}</td>` : ''}
+                        ${adminLoggedIn ? `<td style="padding:4px 6px;border:1px solid #ddd;text-align:center;font-size:10px;font-weight:bold;color:${diffColor};">${diffText}</td>` : ''}
+                    </tr>
+                `;
+            });
+
+            const stockHeaders = adminLoggedIn ? `
+                <th style="padding:5px 6px;border:1px solid #ddd;text-align:center;font-size:9px;text-transform:uppercase;">Stock</th>
+                <th style="padding:5px 6px;border:1px solid #ddd;text-align:center;font-size:9px;text-transform:uppercase;">Estado</th>
+            ` : '';
+
+            const htmlContent = `
+                <html>
+                <head><meta charset="UTF-8"><title>Inventario Electroluz PV</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding:20px; }
+                    table { width:100%; border-collapse:collapse; font-size:11px; }
+                    th { background:#f1f5f9; padding:5px 6px; border:1px solid #ddd; text-align:left; font-size:9px; text-transform:uppercase; }
+                    td { padding:4px 6px; border:1px solid #ddd; font-size:10px; }
+                    .header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+                    .title { font-size:18px; font-weight:700; color:#1e293b; margin:0; }
+                    .sub { font-size:10px; color:#64748b; margin:2px 0 0; }
+                    .badge { background:#f1f5f9; padding:3px 10px; border-radius:6px; font-size:10px; font-weight:bold; }
+                    .footer { margin-top:12px; padding-top:10px; border-top:2px solid #e2e8f0; font-size:9px; color:#94a3b8; text-align:center; }
+                </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div><h1 class="title">📦 Inventario Electroluz PV</h1><p class="sub">${new Date().toLocaleString()} · RIF J507436055</p></div>
+                        <div class="badge">${reportData.length} productos · ${totalUnits} unidades${adminLoggedIn ? ` · ⚠️ ${discrepancies} diff` : ''}</div>
+                    </div>
+                    <table>
+                        <thead><tr>
+                            <th>Img</th><th>Código</th><th>Descripción</th><th>Marca</th><th style="text-align:center;">Cantidad</th>
+                            ${stockHeaders}
+                        </tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                    <div class="footer">Electroluz PV C.A. · ${adminLoggedIn ? 'Reporte con verificación de stock' : 'Reporte de inventario'}</div>
+                </body>
+                </html>
+            `;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'pdf-export-wrap';
+            wrapper.innerHTML = htmlContent;
+            document.body.appendChild(wrapper);
+
+            const imgs = wrapper.querySelectorAll('img');
+            let loaded = 0;
+            const total = imgs.length;
+
+            function doPdfCapture() {
+                html2canvas(wrapper, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff',
+                    width: 750,
+                    height: wrapper.scrollHeight
+                }).then(canvas => {
+                    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                    
+                    if (pdfHeight > pdf.internal.pageSize.getHeight()) {
+                        let remainingHeight = canvas.height;
+                        let sourceY = 0;
+                        const pageHeight = (pdf.internal.pageSize.getHeight() / pdfWidth) * canvas.width;
+                        let page = 0;
+                        while (remainingHeight > 0) {
+                            const currentPageHeight = Math.min(remainingHeight, pageHeight);
+                            const pageCanvas = document.createElement('canvas');
+                            pageCanvas.width = canvas.width;
+                            pageCanvas.height = currentPageHeight;
+                            const ctx = pageCanvas.getContext('2d');
+                            ctx.drawImage(canvas, 0, sourceY, canvas.width, currentPageHeight, 0, 0, canvas.width, currentPageHeight);
+                            const pageImgData = pageCanvas.toDataURL('image/jpeg', 0.95);
+                            if (page > 0) pdf.addPage();
+                            const pagePdfHeight = (currentPageHeight * pdfWidth) / canvas.width;
+                            pdf.addImage(pageImgData, 'JPEG', 0, 0, pdfWidth, pagePdfHeight);
+                            remainingHeight -= currentPageHeight;
+                            sourceY += currentPageHeight;
+                            page++;
+                        }
+                    } else {
+                        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+                    }
+                    
+                    pdf.save('inventario_electroluz.pdf');
+                    document.body.removeChild(wrapper);
+                    toast('PDF descargado');
+                }).catch(err => {
+                    toast('Error generando PDF: ' + err.message, true);
+                    document.body.removeChild(wrapper);
+                });
+            }
+
+            if (total === 0) { doPdfCapture(); return; }
+            imgs.forEach(img => {
+                if (img.complete) { loaded++; if (loaded === total) doPdfCapture(); }
+                else { img.onload = () => { loaded++; if (loaded === total) doPdfCapture(); }; img.onerror = () => { loaded++; if (loaded === total) doPdfCapture(); }; }
+            });
+            setTimeout(doPdfCapture, 5000);
         }
 
-        function getReportCSV() {
-            if (!reportData || reportData.length === 0) return '';
+        // ========== EXPORTAR IMAGEN ==========
+        function exportReportImage() {
+            if (reportData.length === 0) { toast('No hay datos para exportar', true); return; }
+            toast('Capturando imagen...');
+
+            let rows = '';
+            reportData.forEach(d => {
+                const imgSrc = d.image && d.image.trim() !== '' ? d.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"%3e%3crect width="60" height="60" fill="%23f1f5f9"/%3e%3ctext x="30" y="30" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="8" fill="%2394a3b8"%3eSin%3c/text%3e%3c/svg%3e';
+                const diffColor = d.diff === 0 ? '#166534' : (d.diff > 0 ? '#92400e' : '#991b1b');
+                const diffText = d.diff === 0 ? '✓ OK' : (d.diff > 0 ? `+${d.diff}` : `${d.diff}`);
+                rows += `
+                    <tr>
+                        <td style="padding:4px 6px;border:1px solid #ddd;text-align:center;"><img src="${imgSrc}" style="width:28px;height:28px;object-fit:contain;background:#f8fafc;border-radius:3px;" /></td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;font-weight:600;font-size:10px;">${d.id}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;font-size:10px;">${d.name}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;font-size:10px;">${d.brand || '—'}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;text-align:center;font-size:10px;font-weight:bold;">${d.real}</td>
+                        ${adminLoggedIn ? `<td style="padding:4px 6px;border:1px solid #ddd;text-align:center;font-size:10px;">${d.stock}</td>` : ''}
+                        ${adminLoggedIn ? `<td style="padding:4px 6px;border:1px solid #ddd;text-align:center;font-size:10px;font-weight:bold;color:${diffColor};">${diffText}</td>` : ''}
+                    </tr>
+                `;
+            });
+
+            const stockHeaders = adminLoggedIn ? `
+                <th style="padding:5px 6px;border:1px solid #ddd;text-align:center;font-size:9px;text-transform:uppercase;">Stock</th>
+                <th style="padding:5px 6px;border:1px solid #ddd;text-align:center;font-size:9px;text-transform:uppercase;">Estado</th>
+            ` : '';
+
+            const htmlContent = `
+                <div style="font-family:Arial,sans-serif;padding:20px;background:white;width:750px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                        <div><h1 style="font-size:18px;font-weight:700;color:#1e293b;margin:0;">📦 Inventario Electroluz PV</h1><p style="font-size:10px;color:#64748b;margin:2px 0 0;">${new Date().toLocaleString()} · RIF J507436055</p></div>
+                        <div style="background:#f1f5f9;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:bold;">${reportData.length} productos</div>
+                    </div>
+                    <table style="width:100%;border-collapse:collapse;font-size:11px;">
+                        <thead><tr style="background:#f1f5f9;">
+                            <th style="padding:5px 6px;border:1px solid #ddd;text-align:left;font-size:9px;text-transform:uppercase;">Img</th>
+                            <th style="padding:5px 6px;border:1px solid #ddd;text-align:left;font-size:9px;text-transform:uppercase;">Código</th>
+                            <th style="padding:5px 6px;border:1px solid #ddd;text-align:left;font-size:9px;text-transform:uppercase;">Descripción</th>
+                            <th style="padding:5px 6px;border:1px solid #ddd;text-align:left;font-size:9px;text-transform:uppercase;">Marca</th>
+                            <th style="padding:5px 6px;border:1px solid #ddd;text-align:center;font-size:9px;text-transform:uppercase;">Cantidad</th>
+                            ${stockHeaders}
+                        </tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                    <div style="margin-top:10px;padding-top:10px;border-top:2px solid #e2e8f0;font-size:9px;color:#94a3b8;text-align:center;">Electroluz PV C.A. · ${adminLoggedIn ? 'Reporte con verificación de stock' : 'Reporte de inventario'}</div>
+                </div>
+            `;
+
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'position:fixed;left:-9999px;top:0;background:white;padding:20px;width:750px;z-index:9999;';
+            wrapper.innerHTML = htmlContent;
+            document.body.appendChild(wrapper);
+
+            const imgs = wrapper.querySelectorAll('img');
+            let loaded = 0;
+            const total = imgs.length;
+
+            function doCapture() {
+                html2canvas(wrapper, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff',
+                    width: 750,
+                    height: wrapper.scrollHeight
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'inventario_electroluz.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    document.body.removeChild(wrapper);
+                    toast('Imagen descargada');
+                }).catch(err => {
+                    toast('Error capturando: ' + err.message, true);
+                    document.body.removeChild(wrapper);
+                });
+            }
+
+            if (total === 0) { doCapture(); return; }
+            imgs.forEach(img => {
+                if (img.complete) { loaded++; if (loaded === total) doCapture(); }
+                else { img.onload = () => { loaded++; if (loaded === total) doCapture(); }; img.onerror = () => { loaded++; if (loaded === total) doCapture(); }; }
+            });
+            setTimeout(doCapture, 5000);
+        }
+
+        // ========== EXPORTAR CSV ==========
+        function exportReportCSV() {
+            if (reportData.length === 0) { toast('No hay datos para exportar', true); return; }
             let csv = 'Código,Descripción,Marca,Cantidad';
             if (adminLoggedIn) csv += ',Stock,Diferencia,Estado';
             csv += '\n';
             reportData.forEach(d => {
                 csv += `"${d.id}","${d.name}","${d.brand}",${d.real}`;
-                if (adminLoggedIn) {
-                    csv += `,${d.stock},${d.diff},"${d.status}"`;
-                }
+                if (adminLoggedIn) csv += `,${d.stock},${d.diff},"${d.status}"`;
                 csv += '\n';
             });
-            return csv;
-        }
-
-        function exportReportPDF() {
-            const content = document.getElementById('reportContent');
-            if (!content) { toast('No hay reporte para exportar', true); return; }
-
-            toast('Generando PDF...');
-
-            // Usar html2canvas para generar imagen y luego PDF
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-            script.onload = function() {
-                const clone = content.cloneNode(true);
-                clone.style.cssText = 'position:fixed;left:-9999px;top:0;background:white;padding:20px;width:800px;z-index:9999;';
-                document.body.appendChild(clone);
-
-                // Asegurar que las imágenes se carguen
-                const imgs = clone.querySelectorAll('img');
-                let loaded = 0;
-                const total = imgs.length;
-
-                function doCapture() {
-                    html2canvas(clone, {
-                        scale: 2,
-                        useCORS: true,
-                        logging: false,
-                        backgroundColor: '#ffffff',
-                        width: 800,
-                        height: clone.scrollHeight
-                    }).then(canvas => {
-                        const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                        const { jsPDF } = window.jspdf;
-                        const pdf = new jsPDF('p', 'mm', 'a4');
-                        const pdfWidth = pdf.internal.pageSize.getWidth();
-                        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                        pdf.save('inventario_electroluz.pdf');
-                        document.body.removeChild(clone);
-                        toast('PDF descargado');
-                    }).catch(err => {
-                        toast('Error generando PDF: ' + err.message, true);
-                        document.body.removeChild(clone);
-                    });
-                }
-
-                if (total === 0) {
-                    doCapture();
-                    return;
-                }
-
-                imgs.forEach(img => {
-                    if (img.complete) {
-                        loaded++;
-                        if (loaded === total) doCapture();
-                    } else {
-                        img.onload = () => {
-                            loaded++;
-                            if (loaded === total) doCapture();
-                        };
-                        img.onerror = () => {
-                            loaded++;
-                            if (loaded === total) doCapture();
-                        };
-                    }
-                });
-                setTimeout(doCapture, 3000);
-            };
-            document.head.appendChild(script);
-            
-            // Si jspdf no está cargado, cargarlo
-            if (typeof window.jspdf === 'undefined') {
-                const jsPDFScript = document.createElement('script');
-                jsPDFScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-                document.head.appendChild(jsPDFScript);
-            }
-        }
-
-        function exportReportImage() {
-            const content = document.getElementById('reportContent');
-            if (!content) { toast('No hay reporte para exportar', true); return; }
-
-            toast('Capturando imagen...');
-
-            // Usar html2canvas
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-            script.onload = function() {
-                const clone = content.cloneNode(true);
-                clone.style.cssText = 'position:fixed;left:-9999px;top:0;background:white;padding:20px;width:800px;z-index:9999;';
-                document.body.appendChild(clone);
-
-                const imgs = clone.querySelectorAll('img');
-                let loaded = 0;
-                const total = imgs.length;
-
-                function doCapture() {
-                    html2canvas(clone, {
-                        scale: 2,
-                        useCORS: true,
-                        logging: false,
-                        backgroundColor: '#ffffff',
-                        width: 800,
-                        height: clone.scrollHeight
-                    }).then(canvas => {
-                        const link = document.createElement('a');
-                        link.download = 'inventario_electroluz.png';
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                        document.body.removeChild(clone);
-                        toast('Imagen descargada');
-                    }).catch(err => {
-                        toast('Error capturando: ' + err.message, true);
-                        document.body.removeChild(clone);
-                    });
-                }
-
-                if (total === 0) {
-                    doCapture();
-                    return;
-                }
-
-                imgs.forEach(img => {
-                    if (img.complete) {
-                        loaded++;
-                        if (loaded === total) doCapture();
-                    } else {
-                        img.onload = () => {
-                            loaded++;
-                            if (loaded === total) doCapture();
-                        };
-                        img.onerror = () => {
-                            loaded++;
-                            if (loaded === total) doCapture();
-                        };
-                    }
-                });
-                setTimeout(doCapture, 3000);
-            };
-            document.head.appendChild(script);
-        }
-
-        function exportReportCSV() {
-            const csv = getReportCSV();
-            if (!csv) { toast('No hay datos para exportar', true); return; }
-            
             const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
