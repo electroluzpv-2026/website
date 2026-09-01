@@ -18,17 +18,20 @@
         .hide-sc::-webkit-scrollbar { display: none; }
         .hide-sc { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .badge-admin { background: #1e293b; color: #facc15; font-weight: 700; padding: 0.2rem 0.8rem; border-radius: 9999px; font-size: 0.65rem; letter-spacing: 0.05em; border: 1px solid #facc15; }
-        .code-pill { display: inline-block; padding: 0.1rem 0.6rem; border-radius: 9999px; border: 2px solid #3b82f6; background: white; color: #1e293b; font-size: 0.65rem; font-weight: 600; white-space: nowrap; }
+        .badge-admin { background: #1e293b; color: #facc15; font-weight: 700; padding: 0.15rem 0.6rem; border-radius: 9999px; font-size: 0.55rem; letter-spacing: 0.05em; border: 1px solid #facc15; }
+        .code-pill { display: inline-block; padding: 0.05rem 0.4rem; border-radius: 9999px; border: 1.5px solid #3b82f6; background: white; color: #1e293b; font-size: 0.55rem; font-weight: 600; white-space: nowrap; }
         .fade-in { animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-        .thumb { width: 48px; height: 48px; object-fit: contain; background: #f8fafc; border-radius: 0.5rem; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.2s; }
+        .thumb { width: 36px; height: 36px; object-fit: contain; background: #f8fafc; border-radius: 0.4rem; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.2s; }
         .thumb:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        @media (min-width: 640px) {
+            .thumb { width: 48px; height: 48px; }
+        }
 
-        .image-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 2rem; }
+        .image-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 1rem; }
         .image-modal.active { display: flex; }
-        .image-modal img { max-width: 90vw; max-height: 85vh; border-radius: 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.5); object-fit: contain; background: white; padding: 0.5rem; }
+        .image-modal img { max-width: 95vw; max-height: 85vh; border-radius: 1rem; box-shadow: 0 20px 60px rgba(0,0,0,0.5); object-fit: contain; background: white; padding: 0.5rem; }
 
         .stock-col { display: none; }
         .admin-mode .stock-col { display: table-cell; }
@@ -39,58 +42,129 @@
         .stock-warn { background: #fee2e2; color: #991b1b; }
         .stock-diff { background: #fef3c7; color: #92400e; }
 
-        .btn-add { background: #2563eb; color: white; padding: 0.2rem 0.6rem; border-radius: 0.5rem; font-size: 0.7rem; font-weight: 700; transition: 0.2s; border: none; cursor: pointer; }
+        .btn-add { background: #2563eb; color: white; padding: 0.1rem 0.4rem; border-radius: 0.4rem; font-size: 0.6rem; font-weight: 700; transition: 0.2s; border: none; cursor: pointer; white-space: nowrap; }
         .btn-add:hover { background: #1d4ed8; transform: scale(1.05); }
         .btn-add:active { transform: scale(0.95); }
+        @media (min-width: 640px) {
+            .btn-add { padding: 0.2rem 0.6rem; font-size: 0.7rem; }
+        }
 
-        .cart-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem; background: white; border-radius: 0.75rem; border: 1px solid #e2e8f0; margin-bottom: 0.5rem; }
-        .cart-item img { width: 40px; height: 40px; object-fit: contain; border-radius: 0.5rem; background: #f8fafc; border: 1px solid #e2e8f0; }
-        .cart-item .info { flex: 1; font-size: 0.8rem; }
+        .cart-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem; background: white; border-radius: 0.5rem; border: 1px solid #e2e8f0; margin-bottom: 0.4rem; }
+        .cart-item img { width: 32px; height: 32px; object-fit: contain; border-radius: 0.4rem; background: #f8fafc; border: 1px solid #e2e8f0; }
+        .cart-item .info { flex: 1; font-size: 0.65rem; }
         .cart-item .info .name { font-weight: 600; color: #0f172a; }
-        .cart-item .info .code { font-size: 0.65rem; color: #64748b; }
-        .cart-item .qty { display: flex; align-items: center; gap: 0.3rem; }
-        .cart-item .qty input { width: 48px; text-align: center; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.2rem; font-weight: 700; }
-        .cart-item .remove { color: #ef4444; cursor: pointer; font-size: 1.2rem; padding: 0 0.3rem; }
+        .cart-item .info .code { font-size: 0.55rem; color: #64748b; }
+        .cart-item .qty { display: flex; align-items: center; gap: 0.2rem; }
+        .cart-item .qty input { width: 36px; text-align: center; border: 1px solid #e2e8f0; border-radius: 0.4rem; padding: 0.1rem; font-weight: 700; font-size: 0.7rem; }
+        .cart-item .remove { color: #ef4444; cursor: pointer; font-size: 1rem; padding: 0 0.2rem; }
         .cart-item .remove:hover { color: #dc2626; }
+        @media (min-width: 640px) {
+            .cart-item { padding: 0.5rem; gap: 0.75rem; }
+            .cart-item img { width: 40px; height: 40px; }
+            .cart-item .info { font-size: 0.8rem; }
+            .cart-item .qty input { width: 48px; font-size: 0.85rem; }
+        }
         
-        .save-btn { background: #10b981; color: white; padding: 0.4rem 1.2rem; border-radius: 0.75rem; font-weight: 700; font-size: 0.85rem; transition: 0.2s; border: none; cursor: pointer; }
+        .save-btn { background: #10b981; color: white; padding: 0.3rem 0.8rem; border-radius: 0.5rem; font-weight: 700; font-size: 0.7rem; transition: 0.2s; border: none; cursor: pointer; }
         .save-btn:hover { background: #059669; transform: scale(1.02); }
+        @media (min-width: 640px) {
+            .save-btn { padding: 0.4rem 1.2rem; font-size: 0.85rem; }
+        }
 
-        .inventory-table th { background: #f1f5f9; border-bottom: 2px solid #e2e8f0; }
-        .inventory-table td { border-bottom: 1px solid #e2e8f0; padding: 0.5rem 0.75rem; }
+        .inventory-table th { background: #f1f5f9; border-bottom: 2px solid #e2e8f0; font-size: 0.55rem; padding: 0.3rem 0.3rem; }
+        .inventory-table td { border-bottom: 1px solid #e2e8f0; padding: 0.25rem 0.25rem; font-size: 0.6rem; }
         .inventory-table tr:hover td { background: #f8fafc; }
+        @media (min-width: 640px) {
+            .inventory-table th { font-size: 0.7rem; padding: 0.5rem 0.75rem; }
+            .inventory-table td { font-size: 0.85rem; padding: 0.5rem 0.75rem; }
+        }
 
-        .qty-input { width: 56px; text-align: center; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.2rem; font-weight: 700; font-size: 0.85rem; }
+        .qty-input { width: 40px; text-align: center; border: 1px solid #e2e8f0; border-radius: 0.4rem; padding: 0.1rem; font-weight: 700; font-size: 0.65rem; }
         .qty-input:focus { outline: none; border-color: #3b82f6; ring: 2px solid #3b82f6; }
+        @media (min-width: 640px) {
+            .qty-input { width: 56px; font-size: 0.85rem; padding: 0.2rem; }
+        }
+
+        .mobile-brand-filter { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+        .mobile-brand-filter button { font-size: 0.55rem; padding: 0.15rem 0.4rem; }
+        @media (min-width: 640px) {
+            .mobile-brand-filter button { font-size: 0.7rem; padding: 0.2rem 0.6rem; }
+        }
+
+        .search-input { font-size: 0.7rem; padding: 0.4rem 0.6rem; }
+        @media (min-width: 640px) {
+            .search-input { font-size: 0.9rem; padding: 0.6rem 0.8rem; }
+        }
+
+        .header-title { font-size: 0.8rem; }
+        .header-sub { font-size: 0.45rem; }
+        @media (min-width: 640px) {
+            .header-title { font-size: 1.1rem; }
+            .header-sub { font-size: 0.6rem; }
+        }
+
+        .admin-btn { font-size: 0.55rem; padding: 0.2rem 0.4rem; }
+        .cart-btn { font-size: 0.55rem; padding: 0.2rem 0.4rem; }
+        @media (min-width: 640px) {
+            .admin-btn { font-size: 0.7rem; padding: 0.3rem 0.6rem; }
+            .cart-btn { font-size: 0.7rem; padding: 0.3rem 0.6rem; }
+        }
+
+        .cart-badge { font-size: 0.5rem; width: 16px; height: 16px; }
+        @media (min-width: 640px) {
+            .cart-badge { font-size: 0.65rem; width: 20px; height: 20px; }
+        }
+
+        .pagination-btn { width: 24px; height: 24px; font-size: 0.6rem; }
+        @media (min-width: 640px) {
+            .pagination-btn { width: 32px; height: 32px; font-size: 0.8rem; }
+        }
+
+        .admin-panel-text { font-size: 0.6rem; }
+        @media (min-width: 640px) {
+            .admin-panel-text { font-size: 0.75rem; }
+        }
+
+        /* 移动端表格优化 - 固定列宽 */
+        .mobile-table td:nth-child(1) { width: 10%; }
+        .mobile-table td:nth-child(2) { width: 15%; }
+        .mobile-table td:nth-child(3) { width: 30%; }
+        .mobile-table td:nth-child(4) { width: 10%; }
+        .mobile-table td:nth-child(5) { width: 10%; }
+        .mobile-table td:nth-child(6) { width: 15%; }
+        .mobile-table td:nth-child(7) { width: 10%; }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
 
     <!-- HEADER -->
     <header class="bg-[#242629] sticky top-0 z-40 shadow-md border-b border-white/5">
-        <div class="border-b border-white/5 bg-[#191a1d] px-4 py-1.5 flex justify-between text-[10px] font-bold text-slate-400 f-int">
+        <div class="border-b border-white/5 bg-[#191a1d] px-2 py-0.5 flex justify-between text-[0.45rem] sm:text-[0.6rem] font-bold text-slate-400 f-int">
             <span>RIF J507436055</span>
             <span>Electroluz PV</span>
         </div>
-        <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="location.reload()">
-                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center p-0.5 shadow-lg"><img src="https://pub-db6d95a9369746c6ae9e956ab6f6ebe7.r2.dev/logo%20pv.png" class="w-full h-full object-cover" alt="logo"></div>
-                <div><h1 class="text-white font-black text-lg">Electroluz PV</h1><p class="text-slate-400 text-[8px] font-black tracking-[0.2em] uppercase">INVENTARIO · CONTROL</p></div>
+        <div class="max-w-7xl mx-auto px-2 py-1.5 flex justify-between items-center">
+            <div class="flex items-center gap-1.5 cursor-pointer" onclick="location.reload()">
+                <div class="w-7 h-7 sm:w-10 sm:h-10 bg-white rounded-lg flex items-center justify-center p-0.5 shadow-lg"><img src="https://pub-db6d95a9369746c6ae9e956ab6f6ebe7.r2.dev/logo%20pv.png" class="w-full h-full object-cover" alt="logo"></div>
+                <div>
+                    <h1 class="text-white font-black header-title leading-tight">Electroluz PV</h1>
+                    <p class="text-slate-400 header-sub font-black tracking-[0.15em] uppercase mt-0">INVENTARIO · CONTROL</p>
+                </div>
             </div>
-            <div class="flex items-center gap-2">
-                <button onclick="toggleAdmin()" class="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 border border-white/10 transition">
-                    <i class="ph-bold ph-lock-key"></i> <span id="admin-label">Admin</span>
+            <div class="flex items-center gap-1">
+                <button onclick="toggleAdmin()" class="bg-white/10 hover:bg-white/20 text-white admin-btn rounded-lg font-bold border border-white/10 transition flex items-center gap-0.5">
+                    <i class="ph-bold ph-lock-key text-[0.5rem] sm:text-xs"></i> <span id="admin-label" class="text-[0.45rem] sm:text-[0.6rem]">Admin</span>
                 </button>
-                <button onclick="toggleCart()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition relative">
-                    <i class="ph-bold ph-clipboard-text"></i> Inventario
-                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-rose-500 text-white text-[9px] w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#242629]">0</span>
+                <button onclick="toggleCart()" class="bg-emerald-600 hover:bg-emerald-500 text-white cart-btn rounded-lg font-bold transition relative flex items-center gap-0.5">
+                    <i class="ph-bold ph-clipboard-text text-[0.5rem] sm:text-xs"></i> <span class="hidden sm:inline text-[0.45rem] sm:text-[0.6rem]">Inventario</span>
+                    <span id="cart-badge" class="cart-badge absolute -top-1 -right-1 bg-rose-500 text-white flex items-center justify-center rounded-full border-2 border-[#242629]">0</span>
                 </button>
             </div>
         </div>
     </header>
 
     <!-- TOAST -->
-    <div id="toast" class="hidden fixed top-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-white font-bold text-sm shadow-2xl z-50 flex items-center gap-2 transition-all duration-300"></div>
+    <div id="toast" class="hidden fixed top-6 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full text-white font-bold text-[0.6rem] sm:text-sm shadow-2xl z-50 flex items-center gap-1.5 transition-all duration-300"></div>
 
     <!-- MODAL PARA IMAGEN -->
     <div id="imageModal" class="image-modal" onclick="closeImageModal()">
@@ -98,114 +172,114 @@
     </div>
 
     <!-- PANEL DE INVENTARIO -->
-    <div id="cartPanel" class="fixed inset-y-0 right-0 w-full sm:w-[480px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col border-l border-slate-200">
-        <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-shrink-0">
-            <h3 class="font-black text-lg text-slate-900 tracking-tight">📋 Productos Agregados</h3>
-            <button onclick="toggleCart()" class="w-8 h-8 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-rose-500 shadow-sm transition-colors flex items-center justify-center">
-                <i class="ph-bold ph-x"></i>
+    <div id="cartPanel" class="fixed inset-y-0 right-0 w-[280px] sm:w-[420px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col border-l border-slate-200">
+        <div class="p-2 sm:p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-shrink-0">
+            <h3 class="font-black text-sm sm:text-lg text-slate-900 tracking-tight">📋 Productos Agregados</h3>
+            <button onclick="toggleCart()" class="w-6 h-6 sm:w-8 sm:h-8 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-rose-500 shadow-sm transition-colors flex items-center justify-center">
+                <i class="ph-bold ph-x text-xs sm:text-base"></i>
             </button>
         </div>
-        <div id="cartItems" class="flex-1 overflow-y-auto p-4 space-y-2 bg-slate-50/50 hide-sc">
-            <div class="text-center text-slate-400 py-8 text-sm font-bold">No hay productos agregados</div>
+        <div id="cartItems" class="flex-1 overflow-y-auto p-2 sm:p-4 space-y-1.5 sm:space-y-2 bg-slate-50/50 hide-sc">
+            <div class="text-center text-slate-400 py-6 text-[0.6rem] sm:text-sm font-bold">No hay productos agregados</div>
         </div>
-        <div class="p-4 bg-white border-t border-slate-200 flex-shrink-0 flex flex-wrap gap-2">
-            <button onclick="clearCart()" class="px-4 py-2 bg-slate-100 border border-slate-200 rounded-xl text-slate-600 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 transition shadow-sm shrink-0 text-sm font-bold">
-                <i class="ph-bold ph-trash"></i> Vaciar
+        <div class="p-2 sm:p-4 bg-white border-t border-slate-200 flex-shrink-0 flex flex-wrap gap-1 sm:gap-2">
+            <button onclick="clearCart()" class="px-2 sm:px-4 py-1 sm:py-2 bg-slate-100 border border-slate-200 rounded-lg text-slate-600 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 transition shadow-sm shrink-0 text-[0.55rem] sm:text-sm font-bold flex items-center gap-0.5">
+                <i class="ph-bold ph-trash text-[0.5rem] sm:text-base"></i> <span class="hidden xs:inline">Vaciar</span>
             </button>
-            <button onclick="saveInventory()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl transition shadow-md flex items-center justify-center gap-1.5 py-2 save-btn">
-                <i class="ph-bold ph-floppy-disk"></i> Guardar
+            <button onclick="saveInventory()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[0.55rem] sm:text-sm rounded-lg transition shadow-md flex items-center justify-center gap-0.5 sm:gap-1.5 py-1 sm:py-2 save-btn">
+                <i class="ph-bold ph-floppy-disk text-[0.5rem] sm:text-base"></i> Guardar
             </button>
-            <button onclick="exportCartCSV()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm rounded-xl transition shadow-md flex items-center justify-center gap-1.5 py-2">
-                <i class="ph-bold ph-download"></i> CSV
+            <button onclick="exportCartCSV()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold text-[0.55rem] sm:text-sm rounded-lg transition shadow-md flex items-center justify-center gap-0.5 sm:gap-1.5 py-1 sm:py-2">
+                <i class="ph-bold ph-download text-[0.5rem] sm:text-base"></i> CSV
             </button>
-            <button onclick="exportCartPDF()" class="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm rounded-xl transition shadow-md flex items-center justify-center gap-1.5 py-2">
-                <i class="ph-bold ph-file-pdf"></i> PDF
+            <button onclick="exportCartPDF()" class="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-bold text-[0.55rem] sm:text-sm rounded-lg transition shadow-md flex items-center justify-center gap-0.5 sm:gap-1.5 py-1 sm:py-2">
+                <i class="ph-bold ph-file-pdf text-[0.5rem] sm:text-base"></i> PDF
             </button>
         </div>
     </div>
     <div id="cartOverlay" onclick="toggleCart()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-40 opacity-0 transition-opacity duration-300"></div>
 
     <!-- MAIN -->
-    <main class="flex-1 w-full max-w-7xl mx-auto px-4 py-6">
+    <main class="flex-1 w-full max-w-7xl mx-auto px-1.5 sm:px-4 py-1.5 sm:py-6">
 
         <!-- Panel Admin -->
-        <div id="admin-panel" class="hidden bg-white p-4 rounded-2xl shadow-lg border border-slate-200 mb-6 fade-in">
-            <div class="flex flex-wrap items-center justify-between gap-4">
-                <div class="flex items-center gap-3">
-                    <i class="ph-fill ph-shield-check text-2xl text-blue-600"></i>
-                    <span class="font-black text-slate-800 text-sm tracking-widest">MODO ADMINISTRADOR</span>
+        <div id="admin-panel" class="hidden bg-white p-2 sm:p-4 rounded-xl sm:rounded-2xl shadow-lg border border-slate-200 mb-2 sm:mb-6 fade-in">
+            <div class="flex flex-wrap items-center justify-between gap-1 sm:gap-4">
+                <div class="flex items-center gap-1.5 sm:gap-3">
+                    <i class="ph-fill ph-shield-check text-base sm:text-2xl text-blue-600"></i>
+                    <span class="font-black text-[0.6rem] sm:text-sm text-slate-800 tracking-widest">MODO ADMIN</span>
                     <span class="badge-admin">ACTIVO</span>
                 </div>
-                <div class="flex items-center gap-3 text-xs font-bold text-slate-500">
-                    <span>Productos: <span id="total-prod" class="text-slate-800">0</span></span>
-                    <span class="w-px h-4 bg-slate-300"></span>
-                    <span>Discrepancias: <span id="total-disc" class="text-rose-600">0</span></span>
-                    <span class="w-px h-4 bg-slate-300"></span>
-                    <span>Última actualización: <span id="last-save" class="text-slate-800">—</span></span>
+                <div class="flex items-center gap-1 sm:gap-3 text-[0.5rem] sm:text-xs font-bold text-slate-500">
+                    <span>Prod: <span id="total-prod" class="text-slate-800">0</span></span>
+                    <span class="w-px h-3 bg-slate-300"></span>
+                    <span>Diff: <span id="total-disc" class="text-rose-600">0</span></span>
+                    <span class="w-px h-3 bg-slate-300 hidden sm:inline"></span>
+                    <span class="hidden sm:inline">Actual: <span id="last-save" class="text-slate-800">—</span></span>
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="exportDiscrepanciasCSV()" class="bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition shadow-sm">
-                        <i class="ph-bold ph-download"></i> CSV Diff
+                <div class="flex gap-1 sm:gap-2">
+                    <button onclick="exportDiscrepanciasCSV()" class="bg-amber-600 hover:bg-amber-500 text-white px-1.5 sm:px-3 py-0.5 sm:py-1.5 rounded-lg font-bold text-[0.45rem] sm:text-xs flex items-center gap-0.5 sm:gap-1.5 transition shadow-sm">
+                        <i class="ph-bold ph-download text-[0.4rem] sm:text-sm"></i> <span class="hidden xs:inline">CSV</span> Diff
                     </button>
-                    <button onclick="exportDiscrepanciasPDF()" class="bg-rose-600 hover:bg-rose-500 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition shadow-sm">
-                        <i class="ph-bold ph-file-pdf"></i> PDF Diff
+                    <button onclick="exportDiscrepanciasPDF()" class="bg-rose-600 hover:bg-rose-500 text-white px-1.5 sm:px-3 py-0.5 sm:py-1.5 rounded-lg font-bold text-[0.45rem] sm:text-xs flex items-center gap-0.5 sm:gap-1.5 transition shadow-sm">
+                        <i class="ph-bold ph-file-pdf text-[0.4rem] sm:text-sm"></i> <span class="hidden xs:inline">PDF</span> Diff
                     </button>
-                    <button onclick="checkStock()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded-lg font-bold text-xs flex items-center gap-2 transition shadow-sm">
-                        <i class="ph-bold ph-arrows-clockwise"></i> Verificar
+                    <button onclick="checkStock()" class="bg-blue-600 hover:bg-blue-500 text-white px-1.5 sm:px-4 py-0.5 sm:py-1.5 rounded-lg font-bold text-[0.45rem] sm:text-xs flex items-center gap-0.5 sm:gap-2 transition shadow-sm">
+                        <i class="ph-bold ph-arrows-clockwise text-[0.4rem] sm:text-sm"></i> <span class="hidden xs:inline">Verificar</span>
                     </button>
                 </div>
             </div>
-            <div id="admin-msg" class="mt-2 text-xs text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-100 min-h-[2rem]"></div>
+            <div id="admin-msg" class="mt-1 sm:mt-2 text-[0.5rem] sm:text-xs text-slate-500 bg-slate-50 p-1 sm:p-2 rounded-lg border border-slate-100 min-h-[1.5rem] sm:min-h-[2rem]"></div>
         </div>
 
         <!-- Barra de búsqueda -->
-        <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-200 flex flex-col lg:flex-row gap-3 justify-between items-center mb-4">
+        <div class="bg-white p-1.5 sm:p-3 rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 flex flex-col lg:flex-row gap-1.5 sm:gap-3 justify-between items-center mb-1.5 sm:mb-4">
             <div class="w-full lg:w-1/2 relative">
-                <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" id="search-input" placeholder="Buscar por código, descripción o marca..." oninput="filterProducts()" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 outline-none focus:ring-2 focus:ring-blue-500 text-sm f-int">
+                <i class="ph-bold ph-magnifying-glass absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[0.6rem] sm:text-base"></i>
+                <input type="text" id="search-input" placeholder="Buscar..." oninput="filterProducts()" class="search-input w-full bg-slate-50 border border-slate-200 rounded-lg pl-6 sm:pl-9 pr-2 sm:pr-4 py-1 sm:py-2.5 outline-none focus:ring-2 focus:ring-blue-500 f-int">
             </div>
-            <div class="flex items-center gap-2 overflow-x-auto hide-sc w-full lg:w-auto">
-                <span class="text-[10px] font-black text-slate-400 uppercase">Marca:</span>
-                <button onclick="setBrand('')" class="px-3 py-1 rounded-xl text-xs font-bold bg-slate-900 text-white transition-all">Todas</button>
-                <button onclick="setBrand('INGCO')" class="px-3 py-1 rounded-xl text-xs font-black italic bg-white border border-slate-200 text-[#FFCC00] hover:bg-[#FFCC00] hover:text-black transition">INGCO</button>
-                <button onclick="setBrand('WADFOW')" class="px-3 py-1 rounded-xl text-xs font-black italic bg-white border border-slate-200 text-[#2563EB] hover:bg-[#2563EB] hover:text-white transition">WADFOW</button>
-                <button onclick="setBrand('VERT')" class="px-3 py-1 rounded-xl text-xs font-black italic bg-white border border-slate-200 text-[#10B981] hover:bg-[#10B981] hover:text-white transition">VERT</button>
+            <div class="flex items-center gap-1 overflow-x-auto hide-sc w-full lg:w-auto mobile-brand-filter">
+                <span class="text-[0.45rem] sm:text-[0.6rem] font-black text-slate-400 uppercase mr-0.5">Marca:</span>
+                <button onclick="setBrand('')" class="px-1.5 sm:px-3 py-0.5 rounded-lg text-[0.5rem] sm:text-xs font-bold bg-slate-900 text-white transition-all">Todas</button>
+                <button onclick="setBrand('INGCO')" class="px-1.5 sm:px-3 py-0.5 rounded-lg text-[0.5rem] sm:text-xs font-black italic bg-white border border-slate-200 text-[#FFCC00] hover:bg-[#FFCC00] hover:text-black transition">INGCO</button>
+                <button onclick="setBrand('WADFOW')" class="px-1.5 sm:px-3 py-0.5 rounded-lg text-[0.5rem] sm:text-xs font-black italic bg-white border border-slate-200 text-[#2563EB] hover:bg-[#2563EB] hover:text-white transition">WADFOW</button>
+                <button onclick="setBrand('VERT')" class="px-1.5 sm:px-3 py-0.5 rounded-lg text-[0.5rem] sm:text-xs font-black italic bg-white border border-slate-200 text-[#10B981] hover:bg-[#10B981] hover:text-white transition">VERT</button>
             </div>
         </div>
 
         <!-- Tabla -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden" id="table-container">
+        <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 overflow-hidden" id="table-container">
             <div class="overflow-x-auto">
-                <table class="inventory-table w-full text-sm">
+                <table class="inventory-table mobile-table w-full text-[0.5rem] sm:text-sm">
                     <thead>
                         <tr>
-                            <th class="text-left w-12">IMG</th>
-                            <th class="text-left">CÓDIGO</th>
+                            <th class="text-left">IMG</th>
+                            <th class="text-left">CÓD</th>
                             <th class="text-left">DESCRIPCIÓN</th>
-                            <th class="text-left">MARCA</th>
-                            <th class="text-center w-20 stock-col">STOCK</th>
-                            <th class="text-center w-20">CANTIDAD</th>
-                            <th class="text-center w-24">ACCIÓN</th>
-                            <th class="text-center w-20 admin-only">REAL</th>
-                            <th class="text-center w-24 admin-only">ESTADO</th>
+                            <th class="text-left">M</th>
+                            <th class="text-center stock-col">S</th>
+                            <th class="text-center">CANT</th>
+                            <th class="text-center">+</th>
+                            <th class="text-center admin-only">R</th>
+                            <th class="text-center admin-only">EST</th>
                         </tr>
                     </thead>
                     <tbody id="inventory-body">
-                        <tr><td colspan="9" class="text-center py-8 text-slate-400">Cargando productos...</td></tr>
+                        <tr><td colspan="9" class="text-center py-4 sm:py-8 text-[0.5rem] sm:text-sm text-slate-400">Cargando productos...</td></tr>
                     </tbody>
                 </table>
             </div>
-            <div id="no-results" class="hidden py-12 text-center text-slate-400">
-                <i class="ph-bold ph-magnifying-glass text-3xl block mb-2"></i>
-                <span class="font-bold">No se encontraron productos</span>
+            <div id="no-results" class="hidden py-6 sm:py-12 text-center text-slate-400">
+                <i class="ph-bold ph-magnifying-glass text-2xl sm:text-3xl block mb-1 sm:mb-2"></i>
+                <span class="font-bold text-[0.6rem] sm:text-sm">No se encontraron productos</span>
             </div>
         </div>
 
         <!-- Paginación -->
-        <div id="pagination" class="flex justify-center items-center gap-4 mt-6 text-sm font-bold text-slate-600">
-            <button id="prev-page" onclick="changePage(-1)" class="w-8 h-8 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center"><i class="ph-bold ph-caret-left"></i></button>
+        <div id="pagination" class="flex justify-center items-center gap-2 sm:gap-4 mt-2 sm:mt-6 text-[0.6rem] sm:text-sm font-bold text-slate-600">
+            <button id="prev-page" onclick="changePage(-1)" class="pagination-btn rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center"><i class="ph-bold ph-caret-left"></i></button>
             <span id="page-info">Página 1 de 1</span>
-            <button id="next-page" onclick="changePage(1)" class="w-8 h-8 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center"><i class="ph-bold ph-caret-right"></i></button>
+            <button id="next-page" onclick="changePage(1)" class="pagination-btn rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center"><i class="ph-bold ph-caret-right"></i></button>
         </div>
     </main>
 
@@ -235,9 +309,9 @@
         function toast(msg, isErr = false) {
             const el = document.getElementById('toast');
             if (!el) return;
-            el.innerHTML = `<i class="ph-fill ${isErr ? 'ph-warning-circle' : 'ph-check-circle'} text-lg"></i> ${sanitize(msg)}`;
-            el.className = `fixed top-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-white font-bold text-sm shadow-2xl z-50 flex items-center gap-2 transition-all duration-300 ${isErr ? 'bg-rose-500' : 'bg-slate-800'}`;
-            setTimeout(() => el.classList.add('-translate-y-24', 'opacity-0'), 2500);
+            el.innerHTML = `<i class="ph-fill ${isErr ? 'ph-warning-circle' : 'ph-check-circle'} text-[0.5rem] sm:text-base"></i> ${sanitize(msg)}`;
+            el.className = `fixed top-6 left-1/2 -translate-x-1/2 px-3 sm:px-6 py-1.5 sm:py-3 rounded-full text-white font-bold text-[0.6rem] sm:text-sm shadow-2xl z-50 flex items-center gap-1.5 sm:gap-2 transition-all duration-300 ${isErr ? 'bg-rose-500' : 'bg-slate-800'}`;
+            setTimeout(() => el.classList.add('-translate-y-12', 'opacity-0'), 2500);
             setTimeout(() => el.className = 'hidden', 2800);
         }
 
@@ -248,21 +322,21 @@
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 const text = await res.text();
                 if (text.toLowerCase().includes('<html')) { 
-                    toast('Error: Google Sheet no publicado correctamente', true);
-                    document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-8 text-rose-500 font-bold">Error: El archivo CSV no está disponible.</td></tr>';
+                    toast('Error: Google Sheet no disponible', true);
+                    document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">Error: CSV no disponible</td></tr>';
                     return;
                 }
                 parseCSV(text);
             } catch (e) { 
-                toast('Error cargando catálogo: ' + e.message, true);
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-8 text-rose-500 font-bold">Error cargando datos: ' + e.message + '</td></tr>';
+                toast('Error cargando: ' + e.message, true);
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">Error: ' + e.message + '</td></tr>';
             }
         }
 
         function parseCSV(text) {
             const lines = text.split(/\r?\n/);
             if (lines.length < 2) {
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-8 text-rose-500 font-bold">El archivo CSV está vacío</td></tr>';
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">CSV vacío</td></tr>';
                 return;
             }
             
@@ -276,7 +350,7 @@
             const idxImage = findIdx('images', 'img', 'url', 'imagen');
 
             if (idxCode === -1) {
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-8 text-rose-500 font-bold">No se encontró columna de código en el CSV</td></tr>';
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">No se encontró columna de código</td></tr>';
                 return;
             }
 
@@ -310,7 +384,7 @@
             }
             
             if (products.length === 0) {
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-8 text-amber-500 font-bold">No se encontraron productos en el CSV</td></tr>';
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-amber-500 font-bold text-[0.5rem] sm:text-sm">No se encontraron productos</td></tr>';
                 return;
             }
 
@@ -334,7 +408,7 @@
             if (!tbody) return;
 
             if (products.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" class="text-center py-8 text-slate-400">Cargando productos...</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-slate-400 text-[0.5rem] sm:text-sm">Cargando productos...</td></tr>';
                 return;
             }
 
@@ -368,29 +442,29 @@
                 const realQty = savedInventory[p.id] || 0;
                 const diff = realQty - p.stock;
                 let status = '', statusClass = '';
-                if (diff === 0) { status = '✓ OK'; statusClass = 'stock-ok'; }
+                if (diff === 0) { status = '✓'; statusClass = 'stock-ok'; }
                 else if (diff > 0) { status = `+${diff}`; statusClass = 'stock-diff'; }
                 else { status = `${diff}`; statusClass = 'stock-warn'; }
 
-                const imgSrc = p.image && p.image.trim() !== '' ? p.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"%3e%3crect width="48" height="48" fill="%23f1f5f9"/%3e%3ctext x="24" y="24" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="6" fill="%2394a3b8"%3eSin imagen%3c/text%3e%3c/svg%3e';
+                const imgSrc = p.image && p.image.trim() !== '' ? p.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"%3e%3crect width="48" height="48" fill="%23f1f5f9"/%3e%3ctext x="24" y="24" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="6" fill="%2394a3b8"%3eSin%3c/text%3e%3c/svg%3e';
 
                 html += `
                     <tr>
-                        <td><img src="${imgSrc}" class="thumb" onclick="openImageModal('${imgSrc}')" loading="lazy" onerror="this.src='data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 48 48\'%3e%3crect width=\'48\' height=\'48\' fill=\'%23f1f5f9\'/%3e%3ctext x=\'24\' y=\'24\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'6\' fill=\'%2394a3b8\'%3eSin imagen%3c/text%3e%3c/svg%3e'" /></td>
+                        <td><img src="${imgSrc}" class="thumb" onclick="openImageModal('${imgSrc}')" loading="lazy" onerror="this.src='data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 48 48\'%3e%3crect width=\'48\' height=\'48\' fill=\'%23f1f5f9\'/%3e%3ctext x=\'24\' y=\'24\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'6\' fill=\'%2394a3b8\'%3eSin%3c/text%3e%3c/svg%3e'" /></td>
                         <td><span class="code-pill">${p.id}</span></td>
-                        <td class="font-medium text-slate-800 text-sm">${p.name}</td>
-                        <td class="text-xs font-black italic text-slate-600">${p.brand || '—'}</td>
-                        <td class="text-center font-bold f-num stock-col">${p.stock}</td>
+                        <td class="font-medium text-slate-800 text-[0.5rem] sm:text-sm">${p.name}</td>
+                        <td class="text-[0.5rem] sm:text-xs font-black italic text-slate-600">${p.brand || '—'}</td>
+                        <td class="text-center font-bold f-num stock-col text-[0.5rem] sm:text-sm">${p.stock}</td>
                         <td class="text-center">
                             <input type="number" class="qty-input" id="qty_${p.id}" value="${cart[p.id] || 0}" min="0" onchange="updateCartQtyFromTable('${p.id}', this.value)" />
                         </td>
                         <td class="text-center">
                             <button class="btn-add" onclick="addToCartFromTable('${p.id}')">
-                                <i class="ph-bold ph-plus"></i> Agregar
+                                <i class="ph-bold ph-plus text-[0.4rem] sm:text-xs"></i>
                             </button>
                         </td>
-                        <td class="text-center font-bold f-num admin-only">${realQty}</td>
-                        <td class="text-center admin-only"><span class="text-[10px] font-bold px-2.5 py-1 rounded-full ${statusClass}">${status}</span></td>
+                        <td class="text-center font-bold f-num admin-only text-[0.5rem] sm:text-sm">${realQty}</td>
+                        <td class="text-center admin-only"><span class="text-[0.45rem] sm:text-[0.6rem] font-bold px-1 sm:px-2.5 py-0.5 rounded-full ${statusClass}">${status}</span></td>
                     </tr>
                 `;
             });
@@ -436,7 +510,7 @@
             document.getElementById('imageModal').classList.remove('active');
         }
 
-        // ========== INVENTARIO - desde tabla ==========
+        // ========== INVENTARIO ==========
         function updateCartQtyFromTable(id, val) {
             const num = parseInt(val);
             if (isNaN(num) || num < 0) { 
@@ -452,15 +526,15 @@
             if (!input) return;
             const val = parseInt(input.value);
             if (isNaN(val) || val <= 0) {
-                toast('Ingrese una cantidad válida', true);
+                toast('Ingrese cantidad válida', true);
                 return;
             }
             cart[id] = val;
             updateCartBadge();
-            toast(`Agregado: ${val}x ${products.find(p => p.id === id)?.name || id}`);
+            const p = products.find(x => x.id === id);
+            toast(`Agregado: ${val}x ${p?.name || id}`);
         }
 
-        // ========== PANEL DE INVENTARIO ==========
         function removeFromCart(id) {
             delete cart[id];
             updateCartBadge();
@@ -478,7 +552,6 @@
         }
 
         function updateCartBadge() {
-            // Mostrar número de productos diferentes (no la suma total)
             const count = Object.keys(cart).filter(id => cart[id] > 0).length;
             document.getElementById('cart-badge').textContent = count;
         }
@@ -502,7 +575,7 @@
             const container = document.getElementById('cartItems');
             const ids = Object.keys(cart).filter(id => cart[id] > 0);
             if (ids.length === 0) {
-                container.innerHTML = '<div class="text-center text-slate-400 py-8 text-sm font-bold">No hay productos agregados</div>';
+                container.innerHTML = '<div class="text-center text-slate-400 py-6 text-[0.6rem] sm:text-sm font-bold">No hay productos agregados</div>';
                 return;
             }
             let html = '';
@@ -510,10 +583,10 @@
                 const p = products.find(x => x.id === id);
                 if (!p) return;
                 const qty = cart[id] || 0;
-                const imgSrc = p.image && p.image.trim() !== '' ? p.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"%3e%3crect width="40" height="40" fill="%23f1f5f9"/%3e%3ctext x="20" y="20" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="6" fill="%2394a3b8"%3eSin imagen%3c/text%3e%3c/svg%3e';
+                const imgSrc = p.image && p.image.trim() !== '' ? p.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"%3e%3crect width="40" height="40" fill="%23f1f5f9"/%3e%3ctext x="20" y="20" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="6" fill="%2394a3b8"%3eSin%3c/text%3e%3c/svg%3e';
                 html += `
                     <div class="cart-item fade-in">
-                        <img src="${imgSrc}" onclick="openImageModal('${imgSrc}')" onerror="this.src='data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 40 40\'%3e%3crect width=\'40\' height=\'40\' fill=\'%23f1f5f9\'/%3e%3ctext x=\'20\' y=\'20\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'6\' fill=\'%2394a3b8\'%3eSin imagen%3c/text%3e%3c/svg%3e'" />
+                        <img src="${imgSrc}" onclick="openImageModal('${imgSrc}')" onerror="this.src='data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 40 40\'%3e%3crect width=\'40\' height=\'40\' fill=\'%23f1f5f9\'/%3e%3ctext x=\'20\' y=\'20\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'6\' fill=\'%2394a3b8\'%3eSin%3c/text%3e%3c/svg%3e'" />
                         <div class="info">
                             <div class="name">${p.name}</div>
                             <div class="code">${p.id} · ${p.brand || '—'}</div>
@@ -539,7 +612,7 @@
             toast('Inventario vaciado');
         }
 
-        // ========== GUARDAR INVENTARIO ==========
+        // ========== GUARDAR ==========
         function saveInventory() {
             const ids = Object.keys(cart).filter(id => cart[id] > 0);
             if (ids.length === 0) { 
@@ -557,7 +630,7 @@
             }
             
             document.getElementById('last-save').textContent = new Date().toLocaleString();
-            toast(`✅ Inventario guardado correctamente (${ids.length} productos)`);
+            toast(`✅ Guardado (${ids.length} productos)`);
         }
 
         // ========== ADMIN ==========
@@ -566,7 +639,7 @@
             const panel = document.getElementById('admin-panel');
             const label = document.getElementById('admin-label');
             if (adminMode) {
-                const pwd = prompt('🔐 Ingrese contraseña de administrador:');
+                const pwd = prompt('🔐 Contraseña:');
                 if (pwd !== CONFIG.ADMIN_PASSWORD) {
                     adminMode = false;
                     toast('Contraseña incorrecta', true);
@@ -574,20 +647,19 @@
                 }
                 panel.classList.remove('hidden');
                 label.textContent = 'Admin ✓';
-                toast('Modo administrador activado');
+                toast('Modo admin activado');
                 renderInventory();
                 updateAdminStats();
             } else {
                 panel.classList.add('hidden');
                 label.textContent = 'Admin';
                 renderInventory();
-                toast('Modo administrador desactivado');
+                toast('Modo admin desactivado');
             }
         }
 
         function updateAdminStats() {
             document.getElementById('total-prod').textContent = products.length;
-            // Solo contar discrepancias en productos que han sido agregados
             let disc = 0;
             const addedIds = Object.keys(cart).filter(id => cart[id] > 0);
             addedIds.forEach(id => {
@@ -606,8 +678,8 @@
             const addedIds = Object.keys(cart).filter(id => cart[id] > 0);
             
             if (addedIds.length === 0) {
-                document.getElementById('admin-msg').innerHTML = '<span class="text-amber-600 font-bold">⚠️ No hay productos agregados para verificar.</span>';
-                toast('No hay productos agregados', true);
+                document.getElementById('admin-msg').innerHTML = '<span class="text-amber-600 font-bold">⚠️ No hay productos agregados.</span>';
+                toast('No hay productos', true);
                 return;
             }
             
@@ -618,20 +690,20 @@
                 if (real !== p.stock) {
                     mismatches++;
                     const diff = real - p.stock;
-                    msg += `• ${p.id} : ${p.name} — inventario ${p.stock} → real ${real} (${diff > 0 ? '+' : ''}${diff})\n`;
+                    msg += `• ${p.id} : ${p.name} — inv ${p.stock} → real ${real} (${diff > 0 ? '+' : ''}${diff})\n`;
                 }
             });
             
             const el = document.getElementById('admin-msg');
             if (mismatches === 0) {
-                el.innerHTML = '<span class="text-emerald-600 font-bold">✅ Todos los productos agregados coinciden con el inventario.</span>';
+                el.innerHTML = '<span class="text-emerald-600 font-bold">✅ Todos coinciden.</span>';
             } else {
-                el.innerHTML = `<span class="text-rose-600 font-bold">⚠️ ${mismatches} producto(s) con discrepancia:</span><br><pre class="text-xs text-slate-700 whitespace-pre-wrap mt-1">${msg}</pre>`;
+                el.innerHTML = `<span class="text-rose-600 font-bold">⚠️ ${mismatches} discrepancia(s):</span><br><pre class="text-[0.5rem] sm:text-xs text-slate-700 whitespace-pre-wrap mt-1">${msg}</pre>`;
             }
-            toast(`Verificación completa: ${mismatches} discrepancias`, mismatches > 0);
+            toast(`Verificación: ${mismatches} discrepancias`, mismatches > 0);
         }
 
-        // ========== EXPORTAR DISCREPANCIAS ==========
+        // ========== DISCREPANCIAS ==========
         function getDiscrepancias() {
             const result = [];
             const addedIds = Object.keys(cart).filter(id => cart[id] > 0);
@@ -655,65 +727,65 @@
 
         function exportDiscrepanciasCSV() {
             const disc = getDiscrepancias();
-            if (disc.length === 0) { toast('No hay discrepancias para exportar', true); return; }
+            if (disc.length === 0) { toast('No hay discrepancias', true); return; }
             
-            let csv = 'Código,Descripción,Marca,Stock (Google),Real (Usuario),Diferencia\n';
+            let csv = 'Código,Descripción,Marca,Stock,Real,Diferencia\n';
             disc.forEach(d => {
                 csv += `"${d.id}","${d.name}","${d.brand}",${d.stock},${d.real},${d.diff}\n`;
             });
             const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = 'discrepancias_inventario.csv';
+            link.download = 'discrepancias.csv';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            toast('CSV de discrepancias descargado');
+            toast('CSV descargado');
         }
 
         async function exportDiscrepanciasPDF() {
             const disc = getDiscrepancias();
-            if (disc.length === 0) { toast('No hay discrepancias para exportar', true); return; }
+            if (disc.length === 0) { toast('No hay discrepancias', true); return; }
 
-            toast('Generando PDF de discrepancias...');
+            toast('Generando PDF...');
 
             let rows = '';
             disc.forEach(d => {
                 rows += `
                     <tr>
-                        <td style="padding:6px 8px;border:1px solid #ddd;font-weight:600;font-size:12px;">${d.id}</td>
-                        <td style="padding:6px 8px;border:1px solid #ddd;font-size:12px;">${d.name}</td>
-                        <td style="padding:6px 8px;border:1px solid #ddd;font-size:12px;">${d.brand || '—'}</td>
-                        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;font-size:12px;">${d.stock}</td>
-                        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;font-size:12px;">${d.real}</td>
-                        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;font-size:12px;font-weight:bold;color:${d.diff > 0 ? '#92400e' : '#991b1b'};">${d.diff > 0 ? '+' : ''}${d.diff}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;font-weight:600;font-size:10px;">${d.id}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;font-size:10px;">${d.name}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;font-size:10px;">${d.brand || '—'}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;text-align:center;font-size:10px;">${d.stock}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;text-align:center;font-size:10px;">${d.real}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;text-align:center;font-size:10px;font-weight:bold;color:${d.diff > 0 ? '#92400e' : '#991b1b'};">${d.diff > 0 ? '+' : ''}${d.diff}</td>
                     </tr>
                 `;
             });
 
             const htmlContent = `
                 <html>
-                <head><meta charset="UTF-8"><title>Discrepancias Inventario</title>
+                <head><meta charset="UTF-8"><title>Discrepancias</title>
                 <style>
-                    body { font-family: Arial, sans-serif; padding:20px; }
-                    h1 { color:#1e293b; font-size:20px; margin-bottom:4px; }
-                    .sub { color:#64748b; font-size:12px; margin-bottom:20px; }
-                    table { width:100%; border-collapse:collapse; font-size:11px; }
-                    th { background:#f1f5f9; padding:8px; border:1px solid #ddd; text-align:left; font-weight:700; text-transform:uppercase; font-size:10px; }
-                    td { padding:6px 8px; border:1px solid #ddd; }
-                    .footer { margin-top:20px; font-size:10px; color:#94a3b8; text-align:center; border-top:1px solid #e2e8f0; padding-top:12px; }
+                    body { font-family: Arial, sans-serif; padding:15px; }
+                    h1 { color:#1e293b; font-size:16px; margin-bottom:2px; }
+                    .sub { color:#64748b; font-size:10px; margin-bottom:15px; }
+                    table { width:100%; border-collapse:collapse; font-size:10px; }
+                    th { background:#f1f5f9; padding:5px 6px; border:1px solid #ddd; text-align:left; font-weight:700; text-transform:uppercase; font-size:8px; }
+                    td { padding:4px 6px; border:1px solid #ddd; }
+                    .footer { margin-top:15px; font-size:9px; color:#94a3b8; text-align:center; border-top:1px solid #e2e8f0; padding-top:10px; }
                 </style>
                 </head>
                 <body>
                     <h1>⚠️ Discrepancias de Inventario</h1>
-                    <div class="sub">Reporte generado el ${new Date().toLocaleString()} · RIF J507436055</div>
+                    <div class="sub">${new Date().toLocaleString()} · RIF J507436055</div>
                     <table>
                         <thead><tr>
-                            <th>Código</th><th>Descripción</th><th>Marca</th><th>Stock (Google)</th><th>Real (Usuario)</th><th>Diferencia</th>
+                            <th>Código</th><th>Descripción</th><th>Marca</th><th>Stock</th><th>Real</th><th>Diff</th>
                         </tr></thead>
                         <tbody>${rows}</tbody>
                     </table>
-                    <div class="footer">Total de discrepancias: ${disc.length}</div>
+                    <div class="footer">Total: ${disc.length}</div>
                 </body>
                 </html>
             `;
@@ -723,9 +795,9 @@
             container.style.position = 'fixed';
             container.style.left = '-9999px';
             container.style.top = '0';
-            container.style.width = '800px';
+            container.style.width = '600px';
             container.style.background = 'white';
-            container.style.padding = '20px';
+            container.style.padding = '15px';
             document.body.appendChild(container);
 
             try {
@@ -735,8 +807,7 @@
                     useCORS: true,
                     logging: false,
                     backgroundColor: '#ffffff',
-                    width: 800,
-                    height: container.scrollHeight
+                    width: 600
                 });
                 const imgData = canvas.toDataURL('image/jpeg', 0.95);
                 const { jsPDF } = window.jspdf;
@@ -744,16 +815,16 @@
                 const pdfWidth = pdf.internal.pageSize.getWidth();
                 const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
                 pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save('discrepancias_inventario.pdf');
-                toast('PDF de discrepancias descargado');
+                pdf.save('discrepancias.pdf');
+                toast('PDF descargado');
             } catch (err) {
-                toast('Error generando PDF: ' + err.message, true);
+                toast('Error PDF: ' + err.message, true);
                 console.error(err);
             }
             document.body.removeChild(container);
         }
 
-        // ========== EXPORTAR INVENTARIO COMPLETO ==========
+        // ========== EXPORTAR INVENTARIO ==========
         function exportCartCSV() {
             const ids = Object.keys(cart).filter(id => cart[id] > 0);
             if (ids.length === 0) { toast('El inventario está vacío', true); return; }
@@ -766,58 +837,58 @@
             const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = 'inventario_electroluz.csv';
+            link.download = 'inventario.csv';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            toast('CSV del inventario descargado');
+            toast('CSV descargado');
         }
 
         async function exportCartPDF() {
             const ids = Object.keys(cart).filter(id => cart[id] > 0);
             if (ids.length === 0) { toast('El inventario está vacío', true); return; }
 
-            toast('Generando PDF del inventario...');
+            toast('Generando PDF...');
 
             let rows = '';
             ids.forEach(id => {
                 const p = products.find(x => x.id === id);
                 if (!p) return;
-                const imgSrc = p.image && p.image.trim() !== '' ? p.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"%3e%3crect width="60" height="60" fill="%23f1f5f9"/%3e%3ctext x="30" y="30" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="8" fill="%2394a3b8"%3eSin imagen%3c/text%3e%3c/svg%3e';
+                const imgSrc = p.image && p.image.trim() !== '' ? p.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"%3e%3crect width="60" height="60" fill="%23f1f5f9"/%3e%3ctext x="30" y="30" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="8" fill="%2394a3b8"%3eSin%3c/text%3e%3c/svg%3e';
                 rows += `
                     <tr>
-                        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;"><img src="${imgSrc}" style="width:48px;height:48px;object-fit:contain;background:#f8fafc;border-radius:6px;" /></td>
-                        <td style="padding:6px 8px;border:1px solid #ddd;font-weight:600;font-size:12px;">${p.id}</td>
-                        <td style="padding:6px 8px;border:1px solid #ddd;font-size:12px;">${p.name}</td>
-                        <td style="padding:6px 8px;border:1px solid #ddd;font-size:12px;">${p.brand || '—'}</td>
-                        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;font-size:12px;">${cart[id]}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;text-align:center;"><img src="${imgSrc}" style="width:36px;height:36px;object-fit:contain;background:#f8fafc;border-radius:4px;" /></td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;font-weight:600;font-size:10px;">${p.id}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;font-size:10px;">${p.name}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;font-size:10px;">${p.brand || '—'}</td>
+                        <td style="padding:4px 6px;border:1px solid #ddd;text-align:center;font-size:10px;">${cart[id]}</td>
                     </tr>
                 `;
             });
 
             const htmlContent = `
                 <html>
-                <head><meta charset="UTF-8"><title>Inventario Electroluz PV</title>
+                <head><meta charset="UTF-8"><title>Inventario</title>
                 <style>
-                    body { font-family: Arial, sans-serif; padding:20px; }
-                    h1 { color:#1e293b; font-size:20px; margin-bottom:4px; }
-                    .sub { color:#64748b; font-size:12px; margin-bottom:20px; }
-                    table { width:100%; border-collapse:collapse; font-size:11px; }
-                    th { background:#f1f5f9; padding:8px; border:1px solid #ddd; text-align:left; font-weight:700; text-transform:uppercase; font-size:10px; }
-                    td { padding:6px 8px; border:1px solid #ddd; }
-                    .footer { margin-top:20px; font-size:10px; color:#94a3b8; text-align:center; border-top:1px solid #e2e8f0; padding-top:12px; }
+                    body { font-family: Arial, sans-serif; padding:15px; }
+                    h1 { color:#1e293b; font-size:16px; margin-bottom:2px; }
+                    .sub { color:#64748b; font-size:10px; margin-bottom:15px; }
+                    table { width:100%; border-collapse:collapse; font-size:10px; }
+                    th { background:#f1f5f9; padding:5px 6px; border:1px solid #ddd; text-align:left; font-weight:700; text-transform:uppercase; font-size:8px; }
+                    td { padding:4px 6px; border:1px solid #ddd; }
+                    .footer { margin-top:15px; font-size:9px; color:#94a3b8; text-align:center; border-top:1px solid #e2e8f0; padding-top:10px; }
                 </style>
                 </head>
                 <body>
-                    <h1>📦 Inventario Electroluz PV C.A.</h1>
-                    <div class="sub">Reporte generado el ${new Date().toLocaleString()} · RIF J507436055</div>
+                    <h1>📦 Inventario Electroluz PV</h1>
+                    <div class="sub">${new Date().toLocaleString()} · RIF J507436055</div>
                     <table>
                         <thead><tr>
-                            <th>Imagen</th><th>Código</th><th>Descripción</th><th>Marca</th><th>Cantidad</th>
+                            <th>Img</th><th>Código</th><th>Descripción</th><th>Marca</th><th>Cant</th>
                         </tr></thead>
                         <tbody>${rows}</tbody>
                     </table>
-                    <div class="footer">Total de productos: ${ids.length} · Total de unidades: ${Object.values(cart).reduce((a,b) => a+b, 0)}</div>
+                    <div class="footer">Productos: ${ids.length} · Unidades: ${Object.values(cart).reduce((a,b) => a+b, 0)}</div>
                 </body>
                 </html>
             `;
@@ -827,9 +898,9 @@
             container.style.position = 'fixed';
             container.style.left = '-9999px';
             container.style.top = '0';
-            container.style.width = '800px';
+            container.style.width = '600px';
             container.style.background = 'white';
-            container.style.padding = '20px';
+            container.style.padding = '15px';
             document.body.appendChild(container);
 
             try {
@@ -839,8 +910,7 @@
                     useCORS: true,
                     logging: false,
                     backgroundColor: '#ffffff',
-                    width: 800,
-                    height: container.scrollHeight
+                    width: 600
                 });
                 const imgData = canvas.toDataURL('image/jpeg', 0.95);
                 const { jsPDF } = window.jspdf;
@@ -848,10 +918,10 @@
                 const pdfWidth = pdf.internal.pageSize.getWidth();
                 const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
                 pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save('inventario_electroluz.pdf');
+                pdf.save('inventario.pdf');
                 toast('PDF descargado');
             } catch (err) {
-                toast('Error generando PDF: ' + err.message, true);
+                toast('Error PDF: ' + err.message, true);
                 console.error(err);
             }
             document.body.removeChild(container);
