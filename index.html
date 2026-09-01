@@ -47,39 +47,43 @@
     #drawer .cart-header { flex-shrink: 0; }
     #drawer #c-items { flex: 1; overflow-y: auto; min-height: 0; }
     #drawer .cart-footer { flex-shrink: 0; padding: 0.75rem; }
-    .usd-reveal-btn {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      z-index: 25;
-      width: 54px;
-      height: 54px;
+    .usd-reveal-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+    .usd-reveal-btn-sm {
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       background: #1e3a8a;
       border: none;
-      box-shadow: 0 6px 20px rgba(30, 58, 138, 0.45);
+      box-shadow: 0 3px 12px rgba(30, 58, 138, 0.4);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: transform 0.2s ease;
+      flex-shrink: 0;
+      position: relative;
     }
-    .usd-reveal-btn:active { transform: scale(0.92); }
-    .usd-ring {
+    .usd-reveal-btn-sm:active { transform: scale(0.92); }
+    .usd-ring-sm {
       position: absolute;
-      inset: -4px;
+      inset: -2px;
       border-radius: 50%;
-      border: 3px solid transparent;
+      border: 2px solid transparent;
       border-top-color: #60a5fa;
       border-right-color: #3b82f6;
       animation: spinGlow 1.6s linear infinite;
       pointer-events: none;
-      box-shadow: 0 0 12px rgba(59,130,246,0.3);
     }
-    .usd-ring::after {
+    .usd-ring-sm::after {
       content: '';
       position: absolute;
-      inset: -2px;
+      inset: -1px;
       border-radius: 50%;
       border: 2px solid transparent;
       border-bottom-color: #93c5fd;
@@ -88,44 +92,78 @@
       opacity: 0.6;
     }
     @keyframes spinGlow { to { transform: rotate(360deg); } }
-    .usd-icon {
-      font-size: 24px;
+    .usd-icon-sm {
+      font-size: 16px;
       color: white;
       font-weight: 700;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      line-height: 1;
       z-index: 2;
       background: #1e3a8a;
-      width: 44px;
-      height: 44px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       border: 1px solid rgba(255,255,255,0.15);
     }
-    .usd-icon i { font-size: 26px; }
-    .usd-price-badge {
-      position: absolute;
-      bottom: 82px;
-      right: 20px;
+    .usd-icon-sm i { font-size: 17px; }
+    .usd-price-badge-sm {
       background: rgba(15, 23, 42, 0.88);
       backdrop-filter: blur(8px);
-      padding: 8px 16px;
-      border-radius: 40px;
+      padding: 3px 10px;
+      border-radius: 30px;
       border: 1px solid rgba(255,255,255,0.15);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
       color: #facc15;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 12px;
       letter-spacing: 0.3px;
       display: none;
-      z-index: 26;
       font-family: 'Inter', sans-serif;
       white-space: nowrap;
+      align-items: center;
+      gap: 3px;
     }
-    .usd-price-badge.show { display: block; animation: fadeIn 0.25s ease; }
-    .usd-price-badge small { color: #94a3b8; font-size: 11px; font-weight: 400; margin-right: 6px; }
+    .usd-price-badge-sm.show { display: flex; animation: fadeIn 0.25s ease; }
+    .usd-price-badge-sm small { color: #94a3b8; font-size: 9px; font-weight: 400; }
+    .usd-price-badge-sm .usd-amount { color: #facc15; font-weight: 700; }
+    
+    .hide-arrows::-webkit-inner-spin-button,
+    .hide-arrows::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    .hide-arrows { -moz-appearance: textfield; }
+    
+    .category-tag-clickable {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .category-tag-clickable:hover {
+      background: #e0e7ff;
+      color: #1e40af;
+      transform: scale(1.02);
+    }
+    /* Tasa BCV en el header */
+    .tasa-updating {
+      animation: pulse-dot 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    /* Botón de actualizar tasa */
+    .tasa-refresh-btn {
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 0 4px;
+    }
+    .tasa-refresh-btn:hover {
+      transform: rotate(180deg);
+    }
+    .tasa-refresh-btn:active {
+      transform: rotate(360deg) scale(0.9);
+    }
   </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
@@ -136,7 +174,14 @@
     <div class="border-b border-white/5 bg-[#191a1d]">
       <div class="max-w-7xl mx-auto px-4 py-1.5 flex justify-between items-center text-[10px] sm:text-xs font-bold text-slate-400 f-int">
         <div class="flex items-center gap-3">
-          <span id="h-tasa" class="hidden items-center gap-1.5 text-blue-400 font-bold"><span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>TASA BCV <span class="text-white ml-1 font-black tracking-wider">1 USD = 791.67 VES</span></span>
+          <span id="h-tasa" class="flex items-center gap-1.5 text-blue-400 font-bold">
+            <span id="tasa-dot" class="w-1.5 h-1.5 rounded-full bg-blue-500 tasa-updating"></span>
+            TASA BCV <span id="tasa-value" class="text-white ml-1 font-black tracking-wider">1 USD = 791.67 VES</span>
+            <span id="tasa-update-time" class="text-[8px] text-slate-500 ml-1"></span>
+            <span onclick="manualUpdateTasa()" class="tasa-refresh-btn text-slate-400 hover:text-blue-400 transition-colors" title="Actualizar tasa BCV">
+              <i class="ph-bold ph-arrows-clockwise text-sm"></i>
+            </span>
+          </span>
           <span id="h-truck" class="hidden sm:flex items-center gap-1.5 text-amber-500"><i class="ph-fill ph-truck"></i> Envíos Nacionales</span>
         </div>
         <span class="tracking-widest">RIF J507436055</span>
@@ -219,7 +264,7 @@
           <button class="mt-8 text-amber-400 font-black text-sm flex items-center gap-2 group-hover:gap-3 transition-all tracking-widest uppercase bg-white/5 px-5 py-2.5 rounded-lg backdrop-blur-sm border border-white/5">VER CATÁLOGO <i class="ph-bold ph-arrow-right"></i></button>
         </div>
       </div>
-      <div class="bg-gradient-to-br from-rose-600 to-pink-600 rounded-3xl p-8 sm:p-10 relative overflow-hidden shadow-xl cursor-pointer group" onclick="filterC('papeleria')">
+      <div class="bg-gradient-to-br from-rose-600 to-pink-600 rounded-3xl p-8 sm:p-10 relative overflow-hidden shadow-xl cursor-pointer group" onclick="filterCategory('papeleria')">
         <i class="ph-fill ph-backpack absolute -right-4 -bottom-4 text-9xl text-white/10 group-hover:scale-110 transition-transform duration-500"></i>
         <div class="relative z-10 h-full flex flex-col items-start justify-between">
           <div>
@@ -249,22 +294,38 @@
 
   <main id="v-cat" class="hidden flex-1 w-full bg-slate-50 p-3 sm:p-4 lg:p-6 pb-24">
     <div class="max-w-[1400px] mx-auto space-y-4">
-      <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col lg:flex-row gap-4 justify-between items-center relative z-20">
-        <div class="w-full lg:w-1/2 relative">
-          <i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
-          <input type="text" id="s-input" placeholder="Buscar por código, producto o marca..." oninput="updS(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-10 py-3.5 outline-none focus:ring-2 focus:ring-blue-500 text-sm f-int transition-all">
-          <button id="s-clear" onclick="clrSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-full flex items-center justify-center transition-colors">
-            <i class="ph-bold ph-x text-sm"></i>
-          </button>
-        </div>
-        <div class="flex items-center gap-2 overflow-x-auto hide-sc w-full lg:w-auto pb-1 lg:pb-0 shrink-0">
-          <span class="text-[10px] font-black tracking-widest text-slate-400 mr-2 uppercase">MARCA:</span>
-          <button id="b-todo" onclick="setB('')" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-900 text-white transition-all">Todas</button>
-          <button id="b-ingco" onclick="setB('INGCO')" class="px-5 py-2.5 rounded-xl text-sm font-black italic b-ing border border-slate-200 bg-white">INGCO</button>
-          <button id="b-wadfow" onclick="setB('WADFOW')" class="px-5 py-2.5 rounded-xl text-sm font-black italic b-wad border border-slate-200 bg-white">WADFOW</button>
-          <button id="b-vert" onclick="setB('VERT')" class="px-5 py-2.5 rounded-xl text-sm font-black italic b-ver border border-slate-200 bg-white">VERT</button>
+      <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
+          <div class="w-full lg:w-1/2 relative">
+            <i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+            <input type="text" id="s-input" placeholder="Buscar por código, producto o marca..." oninput="updS(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-10 py-3.5 outline-none focus:ring-2 focus:ring-blue-500 text-sm f-int transition-all">
+            <button id="s-clear" onclick="clrSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-full flex items-center justify-center transition-colors">
+              <i class="ph-bold ph-x text-sm"></i>
+            </button>
+          </div>
+          <div class="flex items-center gap-2 w-full lg:w-auto flex-wrap justify-start lg:justify-end">
+            <div class="flex items-center gap-1.5 overflow-x-auto hide-sc pb-1 lg:pb-0">
+              <span class="text-[10px] font-black tracking-widest text-slate-400 mr-0.5 uppercase">MARCA:</span>
+              <button id="b-todo" onclick="setB('')" class="px-3 py-1.5 rounded-xl text-[11px] font-bold bg-slate-900 text-white transition-all whitespace-nowrap">Todas</button>
+              <button id="b-ingco" onclick="setB('INGCO')" class="px-3 py-1.5 rounded-xl text-[11px] font-black italic b-ing border border-slate-200 bg-white whitespace-nowrap">INGCO</button>
+              <button id="b-wadfow" onclick="setB('WADFOW')" class="px-3 py-1.5 rounded-xl text-[11px] font-black italic b-wad border border-slate-200 bg-white whitespace-nowrap">WADFOW</button>
+              <button id="b-vert" onclick="setB('VERT')" class="px-3 py-1.5 rounded-xl text-[11px] font-black italic b-ver border border-slate-200 bg-white whitespace-nowrap">VERT</button>
+            </div>
+            <div class="usd-reveal-container">
+              <div id="usdPriceBadgeCat" class="usd-price-badge-sm">
+                <small>USD</small> <span class="usd-amount" id="usdPriceValueCat">0.00</span>
+              </div>
+              <button id="usdRevealBtnCat" class="usd-reveal-btn-sm" onclick="toggleUsdPriceCat()">
+                <div class="usd-ring-sm"></div>
+                <div class="usd-icon-sm">
+                  <i class="ph-fill ph-currency-dollar"></i>
+                </div>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+      
       <div class="flex flex-wrap gap-3">
         <button id="t-todo" onclick="setT('')" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-900 text-white shadow-sm transition-all">Catálogo Completo</button>
         <button id="t-ofr" onclick="setT('oferta')" class="t-ofr px-5 py-2.5 rounded-xl text-sm font-bold border border-rose-200 flex items-center gap-1.5 bg-white shadow-sm"><i class="ph-fill ph-fire text-rose-500"></i> En Oferta <span class="bg-rose-100 text-rose-600 text-[9px] font-black px-1.5 py-0.5 rounded ml-1 uppercase">Promo</span></button>
@@ -301,7 +362,7 @@
         <img id="m-img" src="" class="max-w-full max-h-full object-contain mix-blend-multiply drop-shadow-md">
       </div>
       <div class="p-5 sm:p-6 flex-1 overflow-y-auto hide-sc bg-white relative">
-        <div id="m-category-tag" class="mb-2 text-xs text-slate-500 font-medium bg-slate-100 inline-block px-3 py-1 rounded-full border border-slate-200"></div>
+        <div id="m-category-tag" class="mb-2 text-xs text-slate-500 font-medium bg-slate-100 inline-block px-3 py-1 rounded-full border border-slate-200 category-tag-clickable" onclick="goToCategoryFromModal()"></div>
         <div class="flex items-center gap-2 mb-3 flex-wrap">
           <span id="m-cod" class="code-pill code-pill-sm"></span>
           <span id="m-br" class="hidden text-[10px] font-black italic tracking-tighter px-2.5 py-1 rounded shadow-sm"></span>
@@ -317,21 +378,20 @@
         <div class="flex flex-col gap-3">
           <div class="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-2xl p-1.5 shadow-inner w-full max-w-[240px] mx-auto h-14">
             <button onclick="updMQ(-1)" class="w-12 h-full flex items-center justify-center text-slate-500 hover:text-slate-900 active:scale-90 transition-all bg-white rounded-xl shadow-sm border border-slate-100"><i class="ph-bold ph-minus"></i></button>
-            <input type="number" id="m-qty" value="0" min="0" class="w-16 text-center bg-transparent font-black text-2xl text-slate-900 outline-none f-num" onchange="manMQ(this.value)">
+            <input type="number" id="m-qty" value="0" min="0" class="w-16 text-center bg-transparent font-black text-2xl text-slate-900 outline-none f-num hide-arrows" onchange="manMQ(this.value)">
             <button onclick="updMQ(1)" class="w-12 h-full flex items-center justify-center text-slate-500 hover:text-slate-900 active:scale-90 transition-all bg-white rounded-xl shadow-sm border border-slate-100"><i class="ph-bold ph-plus"></i></button>
           </div>
           <p class="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Total se actualiza automáticamente</p>
         </div>
       </div>
-      <!-- USD Reveal -->
       <div class="absolute bottom-4 right-4 z-30" style="pointer-events: none;">
         <div class="relative" style="pointer-events: auto;">
-          <div id="usdPriceBadge" class="usd-price-badge">
+          <div id="usdPriceBadge" class="usd-price-badge-sm">
             <small>USD</small> <span id="usdPriceValue">0.00</span>
           </div>
-          <button id="usdRevealBtn" class="usd-reveal-btn" onclick="toggleUsdPrice()">
-            <div class="usd-ring"></div>
-            <div class="usd-icon">
+          <button id="usdRevealBtn" class="usd-reveal-btn-sm" onclick="toggleUsdPrice()">
+            <div class="usd-ring-sm"></div>
+            <div class="usd-icon-sm">
               <i class="ph-fill ph-currency-dollar"></i>
             </div>
           </button>
@@ -343,7 +403,7 @@
   <!-- CART -->
   <div id="drawer" class="fixed inset-y-0 right-0 w-full sm:w-[420px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col border-l border-slate-200">
     <div class="cart-header p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-shrink-0">
-      <h3 class="font-black text-lg text-slate-900 tracking-tight">📦 RESUMEN DE PEDIDO</h3>
+      <h3 class="font-black text-lg text-slate-900 tracking-tight">📦 Tu Pedido </h3>
       <button onclick="toggCart()" class="w-8 h-8 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-rose-500 shadow-sm transition-colors flex items-center justify-center">
         <i class="ph-bold ph-x"></i>
       </button>
@@ -378,7 +438,8 @@
       <div class="mb-3">
         <p class="text-[9px] font-bold text-slate-400 mb-1.5 uppercase tracking-widest flex justify-between">
           Forma de Pago: 
-          <span class="bg-slate-100 px-1.5 py-0.5 rounded text-[8px] border border-slate-200 f-num text-slate-500">TASA BCV: 791.67</span>
+          <span id="tasa-display" class="bg-slate-100 px-1.5 py-0.5 rounded text-[8px] border border-slate-200 f-num text-slate-500">TASA BCV: 791.67</span>
+        </span>
         </p>
         <div class="flex flex-col gap-1.5">
           <div class="flex gap-1.5">
@@ -397,11 +458,14 @@
         </div>
       </div>
       <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl flex items-center justify-between mb-3 shadow-inner">
-        <span class="text-sm font-bold text-slate-600 uppercase tracking-wider">Total Estimado</span>
-        <div class="text-right">
-          <span id="c-tot" class="block font-black text-2xl f-num leading-none mb-0.5"></span>
-          <span id="c-ref" class="block text-[10px] text-slate-400 font-bold f-num"></span>
+        <div>
+          <span class="text-sm font-bold text-slate-600 uppercase tracking-wider">Total Estimado</span>
+          <div class="flex items-center gap-2 mt-0.5">
+            <span id="c-tot" class="block font-black text-lg f-num leading-none text-blue-600"></span>
+            <span id="c-tot-usd" class="text-xs font-bold text-slate-400 f-num"></span>
+          </div>
         </div>
+        <span id="c-ref" class="text-[9px] text-slate-400 font-bold f-num text-right"></span>
       </div>
       <div class="flex gap-2">
         <button onclick="clrC()" class="px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-slate-600 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 transition-colors shadow-sm shrink-0">
@@ -416,16 +480,149 @@
   <div id="overlay" onclick="toggCart()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-40 opacity-0 transition-opacity duration-300"></div>
 
   <script>
-    const CONFIG = { TASA: 791.67, WHATSAPP: '584223888007', CSV_URL: 'https://docs.google.com/spreadsheets/d/11P_SClE2hNTn5g-Eq2GRpQBA83q71RityFaAkFNB554/export?format=csv' };
+    const CONFIG = { 
+      TASA: 791.67, 
+      WHATSAPP: '584223888007', 
+      CSV_URL: 'https://docs.google.com/spreadsheets/d/11P_SClE2hNTn5g-Eq2GRpQBA83q71RityFaAkFNB554/export?format=csv',
+      DOLAR_API_URL: 'https://ve.dolarapi.com/v1/dolares/oficial'
+    };
     const SVG = `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3crect width='100' height='100' fill='%23f1f5f9'/%3e%3ctext x='50' y='50' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='8' font-weight='bold' fill='%2394a3b8'%3eSin Imagen%3c/text%3e%3c/svg%3e`;
 
     function sanitize(str) { if (!str) return ''; const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }; return str.toString().replace(/[&<>"']/g, m => map[m]); }
     function sanitizeNumber(val) { const num = parseInt(val); return isNaN(num) || num < 0 ? 0 : num; }
     function normalize(str) { return str ? str.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase() : ''; }
     function parseNumber(str) { if (!str) return 0; const cleaned = str.toString().replace(/[$]/g, '').replace(/,/g, '.').trim(); return parseFloat(cleaned) || 0; }
-    function formatCurrency(amount) { if (s.cur === 'VES') return `Bs ${(amount * CONFIG.TASA).toLocaleString('es-VE', { minimumFractionDigits: 2 })}`; return `$${amount.toFixed(2)}`; }
+    function formatCurrency(amount) { if (s.cur === 'VES') return `Bs ${(amount * getTasa()).toLocaleString('es-VE', { minimumFractionDigits: 2 })}`; return `$${amount.toFixed(2)}`; }
 
-    // 图片加载自动尝试png和jpg
+    // ==================== TASA BCV - Auto Actualización Mejorada ====================
+    let currentTasa = CONFIG.TASA;
+    let lastUpdateTime = null;
+    let tasaUpdateInterval = null;
+
+    function getTasa() {
+      return currentTasa;
+    }
+
+    function updateTasaDisplay() {
+      const tasaValue = document.getElementById('tasa-value');
+      const tasaTime = document.getElementById('tasa-update-time');
+      const tasaDisplay = document.getElementById('tasa-display');
+      const tasaDot = document.getElementById('tasa-dot');
+      
+      if (tasaValue) {
+        tasaValue.textContent = `1 USD = ${currentTasa.toFixed(2)} VES`;
+      }
+      if (tasaDisplay) {
+        tasaDisplay.textContent = `TASA BCV: ${currentTasa.toFixed(2)}`;
+      }
+      if (tasaTime && lastUpdateTime) {
+        const date = new Date(lastUpdateTime);
+        tasaTime.textContent = `(actualizado: ${date.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' })})`;
+      }
+      if (tasaDot) {
+        tasaDot.classList.remove('tasa-updating');
+        void tasaDot.offsetWidth;
+        tasaDot.classList.add('tasa-updating');
+      }
+      // 更新所有价格显示
+      if (typeof renderProductGrid === 'function') renderProductGrid();
+      if (typeof updateCartUI === 'function') updateCartUI();
+      if (s.mod && typeof updateModalPrices === 'function') updateModalPrices();
+    }
+
+    async function fetchTasaBCV() {
+      try {
+        const response = await fetch(CONFIG.DOLAR_API_URL);
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const data = await response.json();
+        
+        // 根据截图API返回格式: { fuente, nombre, compra, venta, promedio, fechaActualizacion }
+        if (data && typeof data.venta === 'number' && data.venta > 0) {
+          currentTasa = data.venta;
+          // 支持两种字段名：fechaActualizacion (带tilde) 或 fechaActualizacion (不带)
+          lastUpdateTime = data.fechaActualizacion ? new Date(data.fechaActualizacion) : new Date();
+          updateTasaDisplay();
+          console.log('✅ Tasa BCV actualizada:', currentTasa, 'a las', lastUpdateTime.toLocaleString('es-VE'));
+          return true;
+        }
+        console.warn('⚠️ Respuesta de API sin datos válidos:', data);
+        return false;
+      } catch (error) {
+        console.warn('⚠️ Error al obtener tasa BCV:', error.message);
+        return false;
+      }
+    }
+
+    // 手动更新Tasa（用于按钮触发）
+    function manualUpdateTasa() {
+      const dot = document.getElementById('tasa-dot');
+      if (dot) {
+        dot.classList.remove('tasa-updating');
+        void dot.offsetWidth;
+        dot.classList.add('tasa-updating');
+      }
+      fetchTasaBCV().then(success => {
+        toast(success ? '✅ Tasa BCV actualizada correctamente' : '❌ Error al actualizar tasa, usando valor anterior', !success);
+      });
+    }
+
+    // 当页面可见时自动刷新（如果距离上次更新超过30分钟）
+    function autoRefreshOnVisibilityChange() {
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && lastUpdateTime) {
+          const minutesSinceUpdate = (Date.now() - lastUpdateTime.getTime()) / (1000 * 60);
+          if (minutesSinceUpdate > 30) {
+            console.log('🔄 Actualizando Tasa BCV por regreso a la pestaña...');
+            fetchTasaBCV();
+          }
+        }
+      });
+    }
+
+    function scheduleTasaUpdate() {
+      // 1. 立即获取一次
+      fetchTasaBCV();
+      
+      // 2. 每30分钟自动检查更新（更频繁以确保数据新鲜）
+      if (tasaUpdateInterval) clearInterval(tasaUpdateInterval);
+      tasaUpdateInterval = setInterval(async () => {
+        await fetchTasaBCV();
+      }, 30 * 60 * 1000); // 30分钟
+      
+      // 3. 每天在关键时间点强制更新 (8:00, 12:00, 18:00, 21:00)
+      const updateTimes = [8, 12, 18, 21];
+      updateTimes.forEach(hour => {
+        const now = new Date();
+        const target = new Date(now);
+        target.setHours(hour, 0, 0, 0);
+        if (now > target) target.setDate(target.getDate() + 1);
+        const msUntilTarget = target - now;
+        
+        if (msUntilTarget > 0 && msUntilTarget < 24 * 60 * 60 * 1000) {
+          setTimeout(async () => {
+            await fetchTasaBCV();
+            // 之后每天同一时间更新
+            setInterval(async () => {
+              await fetchTasaBCV();
+            }, 24 * 60 * 60 * 1000);
+          }, msUntilTarget);
+        }
+      });
+      
+      // 4. 页面可见性变化时刷新
+      autoRefreshOnVisibilityChange();
+      
+      // 5. 网络恢复时刷新
+      window.addEventListener('online', () => {
+        console.log('🔄 Conexión recuperada, actualizando Tasa BCV...');
+        fetchTasaBCV();
+      });
+      
+      console.log('🔄 Sistema de actualización de Tasa BCV iniciado');
+    }
+
+    // ==================== Resto del código ====================
+
     function loadImageWithFallback(imgElement, url) {
       if (!url) { imgElement.src = SVG; return; }
       if (url.startsWith('data:') || url.startsWith('http') === false) { imgElement.src = url; return; }
@@ -462,8 +659,15 @@
       }
     }
 
-    const s = { p: [], c: {}, v: 'home', l1: 'Todo', l2: '', l3: '', sr: '', tg: '', br: '', cur: 'USD', mod: null, del: 'nacional', pay: 'pago_movil_bs', page: 1, perPage: 20 };
+    const s = { p: [], c: {}, v: 'home', l1: 'Todo', l2: '', l3: '', sr: '', tg: '', br: '', cur: 'USD', mod: null, del: 'nacional', pay: 'pago_movil_bs', page: 1 };
     const $ = id => document.getElementById(id);
+
+    function getPerPage() {
+      if (window.innerWidth < 768) {
+        return 21;
+      }
+      return 20;
+    }
 
     function getCatIcons(cat) {
       const c = normalize(cat);
@@ -485,6 +689,8 @@
     }
 
     let usdVisible = false;
+    let usdVisibleCat = false;
+    
     function toggleUsdPrice() {
       const badge = document.getElementById('usdPriceBadge');
       if (!badge) return;
@@ -498,11 +704,72 @@
       }
     }
 
+    function toggleUsdPriceCat() {
+      const badge = document.getElementById('usdPriceBadgeCat');
+      if (!badge) return;
+      usdVisibleCat = !usdVisibleCat;
+      badge.classList.toggle('show', usdVisibleCat);
+      if (s.l1 && s.l1 !== 'Todo') {
+        const productsInCat = s.p.filter(p => p.l1 === s.l1);
+        if (productsInCat.length > 0) {
+          const p = productsInCat[0];
+          document.getElementById('usdPriceValueCat').textContent = p.usdPrice ? p.usdPrice.toFixed(2) : p.pd.toFixed(2);
+        }
+      } else {
+        if (s.p.length > 0) {
+          const p = s.p[0];
+          document.getElementById('usdPriceValueCat').textContent = p.usdPrice ? p.usdPrice.toFixed(2) : p.pd.toFixed(2);
+        }
+      }
+    }
+
     function toggleModalCurrency() {
       s.cur = s.cur === 'USD' ? 'VES' : 'USD';
       updateModalPrices();
       const label = $('modal-currency-label');
       if (label) label.textContent = s.cur === 'USD' ? 'VES' : 'USD';
+    }
+
+    function goToCategoryFromModal() {
+      const catTag = $('m-category-tag');
+      if (!catTag) return;
+      const catText = catTag.textContent.trim();
+      if (!catText || catText === 'General') return;
+      
+      const mainCat = catText.split('/')[0].trim();
+      if (!mainCat) return;
+      
+      closeM();
+      
+      setTimeout(() => {
+        filterCategoryByName(mainCat);
+      }, 300);
+    }
+
+    function filterCategoryByName(catName) {
+      let selected = 'Todo';
+      let matchedCount = 0;
+      s.p.forEach(p => { 
+        if (p.l1 === catName) {
+          selected = p.l1;
+          matchedCount++;
+        }
+      });
+      
+      if (matchedCount > 0 && selected !== 'Todo') {
+        s.l1 = selected;
+        s.l2 = '';
+        s.l3 = '';
+        s.sr = '';
+        s.tg = '';
+        s.br = '';
+        s.page = 1;
+        setView('catalog');
+        setTimeout(() => {
+          renderCatalog();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 50);
+      }
     }
 
     async function fetchCSV() {
@@ -526,8 +793,6 @@
       if (lines.length < 2) return;
       const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
       
-      // 精确列名匹配 - 基于您的表格结构
-      // I列: Detal, J列: Mayor, K列: VIP, L列: 美金价格, M列: CantidadBul
       const findIndex = (...names) => {
         const lowerNames = names.map(n => n.toLowerCase().trim());
         return headers.findIndex(h => lowerNames.some(n => h.includes(n) || n.includes(h)));
@@ -538,7 +803,6 @@
       const idxDetail = findIndex('detal', 'menor', 'detalle', 'precio detal');
       const idxWholesale = findIndex('mayor', 'precio mayor', 'wholesale');
       const idxVip = findIndex('vip', 'precio3', 'especial', 'precio vip');
-      // 美金价格列 - 优先匹配 L列 (美金价格)
       const idxUsdPrice = findIndex('美金', 'usd', 'dollar', 'precio usd', 'usd price');
       const idxStock = findIndex('stock', 'cant', 'inv', 'disp', 'inventario');
       const idxCategory = findIndex('cat', 'categoria', 'categoría', 'category');
@@ -546,8 +810,6 @@
       const idxInfo = findIndex('info', 'spec', 'especificaciones', 'detalles');
       const idxTag = findIndex('ofer', 'tag', 'etiqueta', 'tipo');
       const idxImage = findIndex('images', 'img', 'url', 'foto', 'imagen');
-
-      console.log('列索引 - Detal:', idxDetail, 'Mayor:', idxWholesale, 'VIP:', idxVip, '美金价格:', idxUsdPrice);
 
       s.p = [];
       for (let i = 1; i < lines.length; i++) {
@@ -567,7 +829,6 @@
         const catParts = idxCategory !== -1 ? (values[idxCategory] || '').split('/').map(x => x.trim()).filter(Boolean) : [];
         const detailPrice = parseNumber(idxDetail !== -1 ? values[idxDetail] : 0);
         const wholesalePrice = parseNumber(idxWholesale !== -1 ? values[idxWholesale] : detailPrice);
-        // 提取美金价格 - 使用L列（美金价格），如果没有则使用Detal
         let usdPrice = parseNumber(idxUsdPrice !== -1 && values[idxUsdPrice] ? values[idxUsdPrice] : '');
         if (!usdPrice || usdPrice === 0) {
           usdPrice = detailPrice;
@@ -614,6 +875,8 @@
     }
 
     function renderCatalog() {
+      const perPage = getPerPage();
+      
       const l1 = $('br-l1'), l2 = $('br-l2'), l3 = $('br-l3');
       if (l1) l1.textContent = s.l1;
       if (l2) { if (s.l1 !== 'Todo' && s.l2) { l2.textContent = s.l2; l2.classList.remove('hidden'); } else l2.classList.add('hidden'); }
@@ -656,8 +919,8 @@
         const el = $(`b-${b}`);
         if (!el) return;
         const isActive = s.br === (b === 'todo' ? '' : b.toUpperCase());
-        if (b === 'todo') el.className = `px-5 py-2.5 rounded-xl text-sm transition-all shadow-sm border ${isActive ? 'bg-slate-900 text-white font-bold border-slate-900' : 'bg-white text-slate-600 font-bold border-slate-200'}`;
-        else el.className = `px-5 py-2.5 rounded-xl text-sm transition-all border ${isActive ? 'act' : 'bg-white font-black italic border-slate-200'} b-${b.substring(0, 3)}`;
+        if (b === 'todo') el.className = `px-3 py-1.5 rounded-xl text-[11px] transition-all shadow-sm border ${isActive ? 'bg-slate-900 text-white font-bold border-slate-900' : 'bg-white text-slate-600 font-bold border-slate-200'}`;
+        else el.className = `px-3 py-1.5 rounded-xl text-[11px] transition-all border ${isActive ? 'act' : 'bg-white font-black italic border-slate-200'} b-${b.substring(0, 3)}`;
       });
 
       const tTodo = $('t-todo'), tOfr = $('t-ofr'), tNew = $('t-new');
@@ -669,6 +932,8 @@
     }
 
     function renderProductGrid() {
+      const perPage = getPerPage();
+      
       let baseTotal = 0;
       for (const [id, qty] of Object.entries(s.c)) {
         const p = s.p.find(x => x.id === id);
@@ -703,10 +968,10 @@
       }
       noResults.classList.add('hidden');
 
-      const totalPages = Math.ceil(filtered.length / s.perPage);
+      const totalPages = Math.ceil(filtered.length / perPage);
       if (s.page > totalPages) s.page = totalPages > 0 ? totalPages : 1;
-      const startIdx = (s.page - 1) * s.perPage;
-      const paginatedProducts = filtered.slice(startIdx, startIdx + s.perPage);
+      const startIdx = (s.page - 1) * perPage;
+      const paginatedProducts = filtered.slice(startIdx, startIdx + perPage);
 
       let htmlString = '';
       for (let i = 0; i < paginatedProducts.length; i++) {
@@ -842,7 +1107,13 @@
       if (mask) mask.style.display = isAgotado ? 'flex' : 'none';
 
       const catTag = $('m-category-tag');
-      if (catTag) catTag.textContent = p.l1 + (p.l2 ? ` / ${p.l2}` : '') + (p.l3 ? ` / ${p.l3}` : '');
+      if (catTag) {
+        const catText = p.l1 + (p.l2 ? ` / ${p.l2}` : '') + (p.l3 ? ` / ${p.l3}` : '');
+        catTag.textContent = catText;
+        catTag.style.cursor = 'pointer';
+        catTag.title = '点击查看此分类的所有产品';
+        catTag.onclick = goToCategoryFromModal;
+      }
 
       const code = $('m-cod');
       if (code) code.textContent = p.id;
@@ -862,7 +1133,6 @@
       const qty = $('m-qty');
       if (qty) qty.value = s.c[p.id] || 0;
 
-      // 更新USD价格 - 使用美金价格列 (L列)
       document.getElementById('usdPriceValue').textContent = p.usdPrice ? p.usdPrice.toFixed(2) : p.pd.toFixed(2);
       const badge = document.getElementById('usdPriceBadge');
       if (badge) badge.classList.remove('show');
@@ -1022,20 +1292,27 @@
         }
       }
 
-      const totalEl = $('c-tot'), refEl = $('c-ref');
-      if (totalEl && refEl) {
+      const totalEl = $('c-tot'), totalUsdEl = $('c-tot-usd'), refEl = $('c-ref');
+      if (totalEl && totalUsdEl && refEl) {
+        const tasa = getTasa();
         if (s.pay.includes('bs')) {
-          totalEl.textContent = `Bs. ${(finalAmount * CONFIG.TASA).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-          totalEl.className = "block font-black text-2xl f-num leading-none mb-0.5 text-emerald-600";
-          refEl.textContent = `Ref USD: $${finalAmount.toFixed(2)}`;
+          totalEl.textContent = `Bs ${(finalAmount * tasa).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          totalEl.className = "block font-black text-lg f-num leading-none text-emerald-600";
+          totalUsdEl.textContent = `$${finalAmount.toFixed(2)} USD`;
+          totalUsdEl.className = "text-xs font-bold text-slate-400 f-num";
+          refEl.textContent = `Tasa: ${tasa.toFixed(2)} VES/USD`;
         } else if (s.pay === 'binance_usdt') {
           totalEl.textContent = `${finalAmount.toFixed(2)} USDT`;
-          totalEl.className = "block font-black text-2xl f-num leading-none mb-0.5 text-yellow-600";
-          refEl.textContent = `Ref BCV: Bs ${(finalAmount * CONFIG.TASA).toLocaleString('es-VE', { maximumFractionDigits: 2 })}`;
+          totalEl.className = "block font-black text-lg f-num leading-none text-yellow-600";
+          totalUsdEl.textContent = `$${finalAmount.toFixed(2)} USD`;
+          totalUsdEl.className = "text-xs font-bold text-slate-400 f-num";
+          refEl.textContent = `Tasa: ${tasa.toFixed(2)} VES/USD`;
         } else {
           totalEl.textContent = `$${finalAmount.toFixed(2)}`;
-          totalEl.className = "block font-black text-2xl f-num leading-none mb-0.5 text-blue-600";
-          refEl.textContent = `Ref BCV: Bs ${(finalAmount * CONFIG.TASA).toLocaleString('es-VE', { maximumFractionDigits: 2 })}`;
+          totalEl.className = "block font-black text-lg f-num leading-none text-blue-600";
+          totalUsdEl.textContent = `Bs ${(finalAmount * tasa).toLocaleString('es-VE', { maximumFractionDigits: 2 })}`;
+          totalUsdEl.className = "text-xs font-bold text-slate-400 f-num";
+          refEl.textContent = `Tasa: ${tasa.toFixed(2)} VES/USD`;
         }
       }
 
@@ -1060,12 +1337,34 @@
 
     function filterCategory(cat) {
       let selected = 'Todo';
-      s.p.forEach(p => { if (normalize(p.l1).includes(cat)) selected = p.l1; });
-      s.l1 = selected;
-      s.l2 = s.l3 = s.sr = s.tg = s.br = '';
-      s.page = 1;
-      setView('catalog');
-      renderCatalog();
+      let matchedCount = 0;
+      s.p.forEach(p => { 
+        if (normalize(p.l1).includes(cat)) {
+          selected = p.l1;
+          matchedCount++;
+        }
+      });
+      
+      if (matchedCount > 0 && selected !== 'Todo') {
+        s.l1 = selected;
+        s.l2 = '';
+        s.l3 = '';
+        s.sr = '';
+        s.tg = '';
+        s.br = '';
+        s.page = 1;
+        setView('catalog');
+        setTimeout(() => {
+          renderCatalog();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 50);
+      } else {
+        setView('catalog');
+        setTimeout(() => {
+          s.l1 = 'Todo';
+          renderCatalog();
+        }, 50);
+      }
     }
 
     function setB(brand) { s.br = s.br === brand ? '' : brand; s.page = 1; renderCatalog(); }
@@ -1211,12 +1510,23 @@
         lines.push(`- ${qty}x [${id}] ${p.name} ($${pr.toFixed(2)})`);
       }
       const br = "%0A";
+      const tasa = getTasa();
       let msg = `*NUEVO PEDIDO ELECTROLUZ PV*${br}${br}*Productos:*${br}${lines.join(br)}${br}${br}---------------------------${br}*Entrega:* ${{nacional:'Envío Nacional', delivery:'Delivery Caracas', pickup:'PickUp en Tienda'}[s.del] || s.del}${br}*Pago:* ${{pago_movil_bs:'Pago Móvil Bs', transferencia_bs:'Transferencia Bs', efectivo_bs:'Efectivo Bs', efectivo_usd:'Efectivo USD', binance_usdt:'Binance USDT'}[s.pay] || s.pay}${br}${br}`;
-      if (s.pay.includes('bs')) msg += `*Subtotal USD:* $${fA.toFixed(2)}${br}*Tasa BCV:* ${CONFIG.TASA} VES/USD${br}*TOTAL BS:* Bs. ${(fA * CONFIG.TASA).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      if (s.pay.includes('bs')) msg += `*Subtotal USD:* $${fA.toFixed(2)}${br}*Tasa BCV:* ${tasa.toFixed(2)} VES/USD${br}*TOTAL BS:* Bs. ${(fA * tasa).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       else if (s.pay === 'binance_usdt') msg += `*TOTAL USDT:* ${fA.toFixed(2)}`;
       else msg += `*TOTAL USD:* $${fA.toFixed(2)}`;
       window.open(`https://wa.me/${CONFIG.WHATSAPP}?text=${msg}`, '_blank');
     }
+
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        if (s.v === 'catalog') {
+          renderProductGrid();
+        }
+      }, 300);
+    });
 
     // Expose to window
     window.setView = setView;
@@ -1234,6 +1544,8 @@
     window.toggCart = toggCart;
     window.sendWA = sendWA;
     window.filterCategory = filterCategory;
+    window.filterCategoryByName = filterCategoryByName;
+    window.goToCategoryFromModal = goToCategoryFromModal;
     window.setB = setB;
     window.setT = setT;
     window.setL1 = setL1;
@@ -1244,9 +1556,15 @@
     window.clrF = clrF;
     window.openModal = openModal;
     window.toggleUsdPrice = toggleUsdPrice;
+    window.toggleUsdPriceCat = toggleUsdPriceCat;
     window.changePage = changePage;
+    window.fetchTasaBCV = fetchTasaBCV;
+    window.manualUpdateTasa = manualUpdateTasa;
 
     window.onload = function() {
+      // 先获取Tasa BCV
+      scheduleTasaUpdate();
+      // 然后加载产品数据
       fetchCSV();
       setDel(s.del);
       setPay(s.pay);
