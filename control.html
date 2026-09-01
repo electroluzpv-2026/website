@@ -8,8 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         body { font-family: 'Poppins', sans-serif; background: #f1f5f9; color: #0f172a; }
@@ -18,7 +16,6 @@
         .hide-sc::-webkit-scrollbar { display: none; }
         .hide-sc { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .badge-admin { background: #1e293b; color: #facc15; font-weight: 700; padding: 0.15rem 0.6rem; border-radius: 9999px; font-size: 0.55rem; letter-spacing: 0.05em; border: 1px solid #facc15; }
         .code-pill { display: inline-block; padding: 0.05rem 0.4rem; border-radius: 9999px; border: 1.5px solid #3b82f6; background: white; color: #1e293b; font-size: 0.55rem; font-weight: 600; white-space: nowrap; }
         .fade-in { animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
@@ -32,15 +29,6 @@
         .image-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 1rem; }
         .image-modal.active { display: flex; }
         .image-modal img { max-width: 95vw; max-height: 85vh; border-radius: 1rem; box-shadow: 0 20px 60px rgba(0,0,0,0.5); object-fit: contain; background: white; padding: 0.5rem; }
-
-        .stock-col { display: none; }
-        .admin-mode .stock-col { display: table-cell; }
-        .admin-only { display: none; }
-        .admin-mode .admin-only { display: table-cell; }
-
-        .stock-ok { background: #dcfce7; color: #166534; }
-        .stock-warn { background: #fee2e2; color: #991b1b; }
-        .stock-diff { background: #fef3c7; color: #92400e; }
 
         .btn-add { background: #2563eb; color: white; padding: 0.1rem 0.4rem; border-radius: 0.4rem; font-size: 0.6rem; font-weight: 700; transition: 0.2s; border: none; cursor: pointer; white-space: nowrap; }
         .btn-add:hover { background: #1d4ed8; transform: scale(1.05); }
@@ -64,12 +52,6 @@
             .cart-item .info { font-size: 0.8rem; }
             .cart-item .qty input { width: 48px; font-size: 0.85rem; }
         }
-        
-        .save-btn { background: #10b981; color: white; padding: 0.3rem 0.8rem; border-radius: 0.5rem; font-weight: 700; font-size: 0.7rem; transition: 0.2s; border: none; cursor: pointer; }
-        .save-btn:hover { background: #059669; transform: scale(1.02); }
-        @media (min-width: 640px) {
-            .save-btn { padding: 0.4rem 1.2rem; font-size: 0.85rem; }
-        }
 
         .inventory-table th { background: #f1f5f9; border-bottom: 2px solid #e2e8f0; font-size: 0.55rem; padding: 0.3rem 0.3rem; }
         .inventory-table td { border-bottom: 1px solid #e2e8f0; padding: 0.25rem 0.25rem; font-size: 0.6rem; }
@@ -85,12 +67,6 @@
             .qty-input { width: 56px; font-size: 0.85rem; padding: 0.2rem; }
         }
 
-        .mobile-brand-filter { display: flex; gap: 0.3rem; flex-wrap: wrap; }
-        .mobile-brand-filter button { font-size: 0.55rem; padding: 0.15rem 0.4rem; }
-        @media (min-width: 640px) {
-            .mobile-brand-filter button { font-size: 0.7rem; padding: 0.2rem 0.6rem; }
-        }
-
         .search-input { font-size: 0.7rem; padding: 0.4rem 0.6rem; }
         @media (min-width: 640px) {
             .search-input { font-size: 0.9rem; padding: 0.6rem 0.8rem; }
@@ -103,10 +79,8 @@
             .header-sub { font-size: 0.6rem; }
         }
 
-        .admin-btn { font-size: 0.55rem; padding: 0.2rem 0.4rem; }
         .cart-btn { font-size: 0.55rem; padding: 0.2rem 0.4rem; }
         @media (min-width: 640px) {
-            .admin-btn { font-size: 0.7rem; padding: 0.3rem 0.6rem; }
             .cart-btn { font-size: 0.7rem; padding: 0.3rem 0.6rem; }
         }
 
@@ -115,24 +89,50 @@
             .cart-badge { font-size: 0.65rem; width: 20px; height: 20px; }
         }
 
-        .pagination-btn { width: 24px; height: 24px; font-size: 0.6rem; }
-        @media (min-width: 640px) {
-            .pagination-btn { width: 32px; height: 32px; font-size: 0.8rem; }
+        /* Report Preview */
+        .report-preview { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); z-index: 200; align-items: center; justify-content: center; padding: 0.5rem; overflow-y: auto; }
+        .report-preview.active { display: flex; }
+        .report-preview .report-content { background: white; border-radius: 1rem; max-width: 900px; width: 100%; max-height: 92vh; overflow-y: auto; padding: 1.2rem; position: relative; }
+        .report-preview .report-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+        .report-preview .report-title { font-size: 1rem; font-weight: 700; color: #0f172a; }
+        .report-preview .report-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+        .report-preview .report-actions button { padding: 0.25rem 0.7rem; border-radius: 0.5rem; font-weight: 700; border: none; cursor: pointer; font-size: 0.65rem; }
+        .report-preview .report-actions .btn-pdf { background: #ef4444; color: white; }
+        .report-preview .report-actions .btn-pdf:hover { background: #dc2626; }
+        .report-preview .report-actions .btn-image { background: #3b82f6; color: white; }
+        .report-preview .report-actions .btn-image:hover { background: #2563eb; }
+        .report-preview .report-actions .btn-csv { background: #10b981; color: white; }
+        .report-preview .report-actions .btn-csv:hover { background: #059669; }
+        .report-preview .report-actions .btn-close { background: #e2e8f0; color: #1e293b; }
+        .report-preview .report-actions .btn-close:hover { background: #cbd5e1; }
+        .report-preview .report-body { font-size: 0.7rem; }
+        .report-preview .report-body table { width: 100%; border-collapse: collapse; }
+        .report-preview .report-body th { background: #f1f5f9; padding: 0.3rem 0.4rem; border: 1px solid #ddd; font-size: 0.55rem; text-transform: uppercase; text-align: left; }
+        .report-preview .report-body td { padding: 0.25rem 0.3rem; border: 1px solid #ddd; font-size: 0.55rem; }
+        .report-preview .report-body .r-img { width: 28px; height: 28px; object-fit: contain; border-radius: 0.3rem; background: #f8fafc; }
+        .report-preview .report-summary { margin-top: 0.8rem; padding-top: 0.8rem; border-top: 2px solid #e2e8f0; font-size: 0.6rem; color: #64748b; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.3rem; }
+        .stock-ok { background: #dcfce7; color: #166534; }
+        .stock-warn { background: #fee2e2; color: #991b1b; }
+        .stock-diff { background: #fef3c7; color: #92400e; }
+
+        @media (max-width: 640px) {
+            .report-preview .report-content { padding: 0.8rem; max-height: 95vh; }
+            .report-preview .report-body { font-size: 0.5rem; }
+            .report-preview .report-body th { font-size: 0.45rem; padding: 0.15rem 0.2rem; }
+            .report-preview .report-body td { font-size: 0.45rem; padding: 0.12rem 0.15rem; }
+            .report-preview .report-body .r-img { width: 20px; height: 20px; }
+            .report-preview .report-title { font-size: 0.75rem; }
+            .report-preview .report-actions button { font-size: 0.5rem; padding: 0.15rem 0.4rem; }
+            .report-preview .report-summary { font-size: 0.5rem; }
         }
 
-        .admin-panel-text { font-size: 0.6rem; }
+        .admin-login-btn { background: #1e293b; color: #facc15; border: 1px solid #facc15; padding: 0.2rem 0.6rem; border-radius: 0.5rem; font-size: 0.55rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .admin-login-btn:hover { background: #facc15; color: #1e293b; }
         @media (min-width: 640px) {
-            .admin-panel-text { font-size: 0.75rem; }
+            .admin-login-btn { font-size: 0.7rem; padding: 0.3rem 0.8rem; }
         }
-
-        /* 移动端表格优化 - 固定列宽 */
-        .mobile-table td:nth-child(1) { width: 10%; }
-        .mobile-table td:nth-child(2) { width: 15%; }
-        .mobile-table td:nth-child(3) { width: 30%; }
-        .mobile-table td:nth-child(4) { width: 10%; }
-        .mobile-table td:nth-child(5) { width: 10%; }
-        .mobile-table td:nth-child(6) { width: 15%; }
-        .mobile-table td:nth-child(7) { width: 10%; }
+        .admin-logged { background: #10b981; color: white; border: 1px solid #10b981; }
+        .admin-logged:hover { background: #059669; color: white; }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
@@ -151,49 +151,67 @@
                     <p class="text-slate-400 header-sub font-black tracking-[0.15em] uppercase mt-0">INVENTARIO · CONTROL</p>
                 </div>
             </div>
-            <div class="flex items-center gap-1">
-                <button onclick="toggleAdmin()" class="bg-white/10 hover:bg-white/20 text-white admin-btn rounded-lg font-bold border border-white/10 transition flex items-center gap-0.5">
-                    <i class="ph-bold ph-lock-key text-[0.5rem] sm:text-xs"></i> <span id="admin-label" class="text-[0.45rem] sm:text-[0.6rem]">Admin</span>
-                </button>
-                <button onclick="toggleCart()" class="bg-emerald-600 hover:bg-emerald-500 text-white cart-btn rounded-lg font-bold transition relative flex items-center gap-0.5">
-                    <i class="ph-bold ph-clipboard-text text-[0.5rem] sm:text-xs"></i> <span class="hidden sm:inline text-[0.45rem] sm:text-[0.6rem]">Inventario</span>
-                    <span id="cart-badge" class="cart-badge absolute -top-1 -right-1 bg-rose-500 text-white flex items-center justify-center rounded-full border-2 border-[#242629]">0</span>
-                </button>
-            </div>
+            <button onclick="toggleCart()" class="bg-emerald-600 hover:bg-emerald-500 text-white cart-btn rounded-lg font-bold transition relative flex items-center gap-0.5">
+                <i class="ph-bold ph-clipboard-text text-[0.5rem] sm:text-xs"></i> <span class="hidden sm:inline text-[0.45rem] sm:text-[0.6rem]">Inventario</span>
+                <span id="cart-badge" class="cart-badge absolute -top-1 -right-1 bg-rose-500 text-white flex items-center justify-center rounded-full border-2 border-[#242629]">0</span>
+            </button>
         </div>
     </header>
 
     <!-- TOAST -->
     <div id="toast" class="hidden fixed top-6 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full text-white font-bold text-[0.6rem] sm:text-sm shadow-2xl z-50 flex items-center gap-1.5 transition-all duration-300"></div>
 
-    <!-- MODAL PARA IMAGEN -->
+    <!-- IMAGE MODAL -->
     <div id="imageModal" class="image-modal" onclick="closeImageModal()">
         <img id="modalImage" src="" alt="Producto" />
     </div>
 
-    <!-- PANEL DE INVENTARIO -->
-    <div id="cartPanel" class="fixed inset-y-0 right-0 w-[280px] sm:w-[420px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col border-l border-slate-200">
+    <!-- REPORT PREVIEW (todo en uno: vista + PDF + imagen + CSV) -->
+    <div id="reportPreview" class="report-preview" onclick="if(event.target===this) closeReport()">
+        <div class="report-content" id="reportContent">
+            <div class="report-header">
+                <span class="report-title" id="reportTitle">📋 Reporte</span>
+                <div class="report-actions">
+                    <button class="btn-pdf" onclick="exportReportPDF()"><i class="ph-bold ph-file-pdf"></i> PDF</button>
+                    <button class="btn-image" onclick="exportReportImage()"><i class="ph-bold ph-image"></i> Imagen</button>
+                    <button class="btn-csv" onclick="exportReportCSV()"><i class="ph-bold ph-download"></i> CSV</button>
+                    <button class="btn-close" onclick="closeReport()">✕ Cerrar</button>
+                </div>
+            </div>
+            <div id="reportBody" class="report-body"></div>
+            <div class="report-summary" id="reportSummary"></div>
+        </div>
+    </div>
+
+    <!-- INVENTARIO PANEL -->
+    <div id="cartPanel" class="fixed inset-y-0 right-0 w-[300px] sm:w-[440px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col border-l border-slate-200">
         <div class="p-2 sm:p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-shrink-0">
-            <h3 class="font-black text-sm sm:text-lg text-slate-900 tracking-tight">📋 Productos Agregados</h3>
+            <h3 class="font-black text-sm sm:text-lg text-slate-900 tracking-tight">📋 Inventario</h3>
             <button onclick="toggleCart()" class="w-6 h-6 sm:w-8 sm:h-8 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-rose-500 shadow-sm transition-colors flex items-center justify-center">
                 <i class="ph-bold ph-x text-xs sm:text-base"></i>
             </button>
         </div>
+
+        <!-- Admin status inside panel -->
+        <div class="px-2 sm:px-4 py-1 sm:py-2 border-b border-slate-100 flex items-center justify-between bg-amber-50/50">
+            <span class="text-[0.5rem] sm:text-xs font-bold text-slate-600">🔐 Admin:</span>
+            <button id="adminToggleBtn" onclick="toggleAdminInPanel()" class="admin-login-btn">
+                <i class="ph-bold ph-lock-key"></i> <span id="adminStatusLabel">Iniciar Sesión</span>
+            </button>
+        </div>
+
         <div id="cartItems" class="flex-1 overflow-y-auto p-2 sm:p-4 space-y-1.5 sm:space-y-2 bg-slate-50/50 hide-sc">
             <div class="text-center text-slate-400 py-6 text-[0.6rem] sm:text-sm font-bold">No hay productos agregados</div>
         </div>
         <div class="p-2 sm:p-4 bg-white border-t border-slate-200 flex-shrink-0 flex flex-wrap gap-1 sm:gap-2">
             <button onclick="clearCart()" class="px-2 sm:px-4 py-1 sm:py-2 bg-slate-100 border border-slate-200 rounded-lg text-slate-600 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 transition shadow-sm shrink-0 text-[0.55rem] sm:text-sm font-bold flex items-center gap-0.5">
-                <i class="ph-bold ph-trash text-[0.5rem] sm:text-base"></i> <span class="hidden xs:inline">Vaciar</span>
+                <i class="ph-bold ph-trash text-[0.5rem] sm:text-base"></i> Vaciar
             </button>
-            <button onclick="saveInventory()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[0.55rem] sm:text-sm rounded-lg transition shadow-md flex items-center justify-center gap-0.5 sm:gap-1.5 py-1 sm:py-2 save-btn">
+            <button onclick="saveInventory()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[0.55rem] sm:text-sm rounded-lg transition shadow-md flex items-center justify-center gap-0.5 sm:gap-1.5 py-1 sm:py-2">
                 <i class="ph-bold ph-floppy-disk text-[0.5rem] sm:text-base"></i> Guardar
             </button>
-            <button onclick="exportCartCSV()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold text-[0.55rem] sm:text-sm rounded-lg transition shadow-md flex items-center justify-center gap-0.5 sm:gap-1.5 py-1 sm:py-2">
-                <i class="ph-bold ph-download text-[0.5rem] sm:text-base"></i> CSV
-            </button>
-            <button onclick="exportCartPDF()" class="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-bold text-[0.55rem] sm:text-sm rounded-lg transition shadow-md flex items-center justify-center gap-0.5 sm:gap-1.5 py-1 sm:py-2">
-                <i class="ph-bold ph-file-pdf text-[0.5rem] sm:text-base"></i> PDF
+            <button onclick="showReport()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold text-[0.55rem] sm:text-sm rounded-lg transition shadow-md flex items-center justify-center gap-0.5 sm:gap-1.5 py-1 sm:py-2">
+                <i class="ph-bold ph-eye text-[0.5rem] sm:text-base"></i> Vista
             </button>
         </div>
     </div>
@@ -202,43 +220,13 @@
     <!-- MAIN -->
     <main class="flex-1 w-full max-w-7xl mx-auto px-1.5 sm:px-4 py-1.5 sm:py-6">
 
-        <!-- Panel Admin -->
-        <div id="admin-panel" class="hidden bg-white p-2 sm:p-4 rounded-xl sm:rounded-2xl shadow-lg border border-slate-200 mb-2 sm:mb-6 fade-in">
-            <div class="flex flex-wrap items-center justify-between gap-1 sm:gap-4">
-                <div class="flex items-center gap-1.5 sm:gap-3">
-                    <i class="ph-fill ph-shield-check text-base sm:text-2xl text-blue-600"></i>
-                    <span class="font-black text-[0.6rem] sm:text-sm text-slate-800 tracking-widest">MODO ADMIN</span>
-                    <span class="badge-admin">ACTIVO</span>
-                </div>
-                <div class="flex items-center gap-1 sm:gap-3 text-[0.5rem] sm:text-xs font-bold text-slate-500">
-                    <span>Prod: <span id="total-prod" class="text-slate-800">0</span></span>
-                    <span class="w-px h-3 bg-slate-300"></span>
-                    <span>Diff: <span id="total-disc" class="text-rose-600">0</span></span>
-                    <span class="w-px h-3 bg-slate-300 hidden sm:inline"></span>
-                    <span class="hidden sm:inline">Actual: <span id="last-save" class="text-slate-800">—</span></span>
-                </div>
-                <div class="flex gap-1 sm:gap-2">
-                    <button onclick="exportDiscrepanciasCSV()" class="bg-amber-600 hover:bg-amber-500 text-white px-1.5 sm:px-3 py-0.5 sm:py-1.5 rounded-lg font-bold text-[0.45rem] sm:text-xs flex items-center gap-0.5 sm:gap-1.5 transition shadow-sm">
-                        <i class="ph-bold ph-download text-[0.4rem] sm:text-sm"></i> <span class="hidden xs:inline">CSV</span> Diff
-                    </button>
-                    <button onclick="exportDiscrepanciasPDF()" class="bg-rose-600 hover:bg-rose-500 text-white px-1.5 sm:px-3 py-0.5 sm:py-1.5 rounded-lg font-bold text-[0.45rem] sm:text-xs flex items-center gap-0.5 sm:gap-1.5 transition shadow-sm">
-                        <i class="ph-bold ph-file-pdf text-[0.4rem] sm:text-sm"></i> <span class="hidden xs:inline">PDF</span> Diff
-                    </button>
-                    <button onclick="checkStock()" class="bg-blue-600 hover:bg-blue-500 text-white px-1.5 sm:px-4 py-0.5 sm:py-1.5 rounded-lg font-bold text-[0.45rem] sm:text-xs flex items-center gap-0.5 sm:gap-2 transition shadow-sm">
-                        <i class="ph-bold ph-arrows-clockwise text-[0.4rem] sm:text-sm"></i> <span class="hidden xs:inline">Verificar</span>
-                    </button>
-                </div>
-            </div>
-            <div id="admin-msg" class="mt-1 sm:mt-2 text-[0.5rem] sm:text-xs text-slate-500 bg-slate-50 p-1 sm:p-2 rounded-lg border border-slate-100 min-h-[1.5rem] sm:min-h-[2rem]"></div>
-        </div>
-
         <!-- Barra de búsqueda -->
         <div class="bg-white p-1.5 sm:p-3 rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 flex flex-col lg:flex-row gap-1.5 sm:gap-3 justify-between items-center mb-1.5 sm:mb-4">
             <div class="w-full lg:w-1/2 relative">
                 <i class="ph-bold ph-magnifying-glass absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[0.6rem] sm:text-base"></i>
-                <input type="text" id="search-input" placeholder="Buscar..." oninput="filterProducts()" class="search-input w-full bg-slate-50 border border-slate-200 rounded-lg pl-6 sm:pl-9 pr-2 sm:pr-4 py-1 sm:py-2.5 outline-none focus:ring-2 focus:ring-blue-500 f-int">
+                <input type="text" id="search-input" placeholder="Buscar por código, descripción o marca..." oninput="filterProducts()" class="search-input w-full bg-slate-50 border border-slate-200 rounded-lg pl-6 sm:pl-9 pr-2 sm:pr-4 py-1 sm:py-2.5 outline-none focus:ring-2 focus:ring-blue-500 f-int">
             </div>
-            <div class="flex items-center gap-1 overflow-x-auto hide-sc w-full lg:w-auto mobile-brand-filter">
+            <div class="flex items-center gap-1 overflow-x-auto hide-sc w-full lg:w-auto flex-wrap">
                 <span class="text-[0.45rem] sm:text-[0.6rem] font-black text-slate-400 uppercase mr-0.5">Marca:</span>
                 <button onclick="setBrand('')" class="px-1.5 sm:px-3 py-0.5 rounded-lg text-[0.5rem] sm:text-xs font-bold bg-slate-900 text-white transition-all">Todas</button>
                 <button onclick="setBrand('INGCO')" class="px-1.5 sm:px-3 py-0.5 rounded-lg text-[0.5rem] sm:text-xs font-black italic bg-white border border-slate-200 text-[#FFCC00] hover:bg-[#FFCC00] hover:text-black transition">INGCO</button>
@@ -248,24 +236,21 @@
         </div>
 
         <!-- Tabla -->
-        <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 overflow-hidden" id="table-container">
+        <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="inventory-table mobile-table w-full text-[0.5rem] sm:text-sm">
+                <table class="inventory-table w-full text-[0.5rem] sm:text-sm">
                     <thead>
                         <tr>
                             <th class="text-left">IMG</th>
                             <th class="text-left">CÓD</th>
                             <th class="text-left">DESCRIPCIÓN</th>
                             <th class="text-left">M</th>
-                            <th class="text-center stock-col">S</th>
                             <th class="text-center">CANT</th>
                             <th class="text-center">+</th>
-                            <th class="text-center admin-only">R</th>
-                            <th class="text-center admin-only">EST</th>
                         </tr>
                     </thead>
                     <tbody id="inventory-body">
-                        <tr><td colspan="9" class="text-center py-4 sm:py-8 text-[0.5rem] sm:text-sm text-slate-400">Cargando productos...</td></tr>
+                        <tr><td colspan="6" class="text-center py-4 sm:py-8 text-[0.5rem] sm:text-sm text-slate-400">Cargando productos...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -277,9 +262,9 @@
 
         <!-- Paginación -->
         <div id="pagination" class="flex justify-center items-center gap-2 sm:gap-4 mt-2 sm:mt-6 text-[0.6rem] sm:text-sm font-bold text-slate-600">
-            <button id="prev-page" onclick="changePage(-1)" class="pagination-btn rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center"><i class="ph-bold ph-caret-left"></i></button>
+            <button id="prev-page" onclick="changePage(-1)" class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center"><i class="ph-bold ph-caret-left text-[0.5rem] sm:text-base"></i></button>
             <span id="page-info">Página 1 de 1</span>
-            <button id="next-page" onclick="changePage(1)" class="pagination-btn rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center"><i class="ph-bold ph-caret-right"></i></button>
+            <button id="next-page" onclick="changePage(1)" class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center"><i class="ph-bold ph-caret-right text-[0.5rem] sm:text-base"></i></button>
         </div>
     </main>
 
@@ -300,6 +285,7 @@
         let searchTerm = '';
         let cart = {};
         let savedInventory = {};
+        let reportData = null;
 
         // ========== UTILIDADES ==========
         function sanitize(str) { if (!str) return ''; const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }; return str.toString().replace(/[&<>"']/g, m => map[m]); }
@@ -323,20 +309,20 @@
                 const text = await res.text();
                 if (text.toLowerCase().includes('<html')) { 
                     toast('Error: Google Sheet no disponible', true);
-                    document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">Error: CSV no disponible</td></tr>';
+                    document.getElementById('inventory-body').innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">Error: CSV no disponible</td></tr>';
                     return;
                 }
                 parseCSV(text);
             } catch (e) { 
                 toast('Error cargando: ' + e.message, true);
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">Error: ' + e.message + '</td></tr>';
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">Error: ' + e.message + '</td></tr>';
             }
         }
 
         function parseCSV(text) {
             const lines = text.split(/\r?\n/);
             if (lines.length < 2) {
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">CSV vacío</td></tr>';
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">CSV vacío</td></tr>';
                 return;
             }
             
@@ -350,7 +336,7 @@
             const idxImage = findIdx('images', 'img', 'url', 'imagen');
 
             if (idxCode === -1) {
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">No se encontró columna de código</td></tr>';
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">No se encontró columna de código</td></tr>';
                 return;
             }
 
@@ -384,7 +370,7 @@
             }
             
             if (products.length === 0) {
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-amber-500 font-bold text-[0.5rem] sm:text-sm">No se encontraron productos</td></tr>';
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-amber-500 font-bold text-[0.5rem] sm:text-sm">No se encontraron productos</td></tr>';
                 return;
             }
 
@@ -396,7 +382,6 @@
 
             filtered = [...products];
             renderInventory();
-            updateAdminStats();
             updateCartBadge();
         }
 
@@ -404,11 +389,10 @@
         function renderInventory() {
             const tbody = document.getElementById('inventory-body');
             const noRes = document.getElementById('no-results');
-            const container = document.getElementById('table-container');
             if (!tbody) return;
 
             if (products.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-slate-400 text-[0.5rem] sm:text-sm">Cargando productos...</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-slate-400 text-[0.5rem] sm:text-sm">Cargando productos...</td></tr>';
                 return;
             }
 
@@ -435,17 +419,8 @@
             noRes.classList.add('hidden');
             document.getElementById('pagination').classList.remove('hidden');
 
-            container.classList.toggle('admin-mode', adminMode);
-
             let html = '';
             pageItems.forEach(p => {
-                const realQty = savedInventory[p.id] || 0;
-                const diff = realQty - p.stock;
-                let status = '', statusClass = '';
-                if (diff === 0) { status = '✓'; statusClass = 'stock-ok'; }
-                else if (diff > 0) { status = `+${diff}`; statusClass = 'stock-diff'; }
-                else { status = `${diff}`; statusClass = 'stock-warn'; }
-
                 const imgSrc = p.image && p.image.trim() !== '' ? p.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"%3e%3crect width="48" height="48" fill="%23f1f5f9"/%3e%3ctext x="24" y="24" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="6" fill="%2394a3b8"%3eSin%3c/text%3e%3c/svg%3e';
 
                 html += `
@@ -454,7 +429,6 @@
                         <td><span class="code-pill">${p.id}</span></td>
                         <td class="font-medium text-slate-800 text-[0.5rem] sm:text-sm">${p.name}</td>
                         <td class="text-[0.5rem] sm:text-xs font-black italic text-slate-600">${p.brand || '—'}</td>
-                        <td class="text-center font-bold f-num stock-col text-[0.5rem] sm:text-sm">${p.stock}</td>
                         <td class="text-center">
                             <input type="number" class="qty-input" id="qty_${p.id}" value="${cart[p.id] || 0}" min="0" onchange="updateCartQtyFromTable('${p.id}', this.value)" />
                         </td>
@@ -463,8 +437,6 @@
                                 <i class="ph-bold ph-plus text-[0.4rem] sm:text-xs"></i>
                             </button>
                         </td>
-                        <td class="text-center font-bold f-num admin-only text-[0.5rem] sm:text-sm">${realQty}</td>
-                        <td class="text-center admin-only"><span class="text-[0.45rem] sm:text-[0.6rem] font-bold px-1 sm:px-2.5 py-0.5 rounded-full ${statusClass}">${status}</span></td>
                     </tr>
                 `;
             });
@@ -624,307 +596,318 @@
                 savedInventory[id] = cart[id];
             });
             
-            if (adminMode) {
-                renderInventory();
-                updateAdminStats();
-            }
-            
-            document.getElementById('last-save').textContent = new Date().toLocaleString();
             toast(`✅ Guardado (${ids.length} productos)`);
         }
 
-        // ========== ADMIN ==========
-        function toggleAdmin() {
-            adminMode = !adminMode;
-            const panel = document.getElementById('admin-panel');
-            const label = document.getElementById('admin-label');
-            if (adminMode) {
-                const pwd = prompt('🔐 Contraseña:');
-                if (pwd !== CONFIG.ADMIN_PASSWORD) {
-                    adminMode = false;
-                    toast('Contraseña incorrecta', true);
-                    return;
-                }
-                panel.classList.remove('hidden');
-                label.textContent = 'Admin ✓';
-                toast('Modo admin activado');
-                renderInventory();
-                updateAdminStats();
-            } else {
-                panel.classList.add('hidden');
-                label.textContent = 'Admin';
-                renderInventory();
-                toast('Modo admin desactivado');
-            }
-        }
+        // ========== ADMIN EN PANEL ==========
+        let adminLoggedIn = false;
 
-        function updateAdminStats() {
-            document.getElementById('total-prod').textContent = products.length;
-            let disc = 0;
-            const addedIds = Object.keys(cart).filter(id => cart[id] > 0);
-            addedIds.forEach(id => {
-                const p = products.find(x => x.id === id);
-                if (p) {
-                    const real = savedInventory[id] || 0;
-                    if (real !== p.stock) disc++;
-                }
-            });
-            document.getElementById('total-disc').textContent = disc;
-        }
-
-        function checkStock() {
-            let mismatches = 0;
-            let msg = '';
-            const addedIds = Object.keys(cart).filter(id => cart[id] > 0);
-            
-            if (addedIds.length === 0) {
-                document.getElementById('admin-msg').innerHTML = '<span class="text-amber-600 font-bold">⚠️ No hay productos agregados.</span>';
-                toast('No hay productos', true);
+        function toggleAdminInPanel() {
+            if (adminLoggedIn) {
+                adminLoggedIn = false;
+                document.getElementById('adminStatusLabel').textContent = 'Iniciar Sesión';
+                document.getElementById('adminToggleBtn').classList.remove('admin-logged');
+                toast('Sesión de admin cerrada');
                 return;
             }
-            
-            addedIds.forEach(id => {
-                const p = products.find(x => x.id === id);
-                if (!p) return;
-                const real = savedInventory[id] || 0;
-                if (real !== p.stock) {
-                    mismatches++;
-                    const diff = real - p.stock;
-                    msg += `• ${p.id} : ${p.name} — inv ${p.stock} → real ${real} (${diff > 0 ? '+' : ''}${diff})\n`;
-                }
-            });
-            
-            const el = document.getElementById('admin-msg');
-            if (mismatches === 0) {
-                el.innerHTML = '<span class="text-emerald-600 font-bold">✅ Todos coinciden.</span>';
-            } else {
-                el.innerHTML = `<span class="text-rose-600 font-bold">⚠️ ${mismatches} discrepancia(s):</span><br><pre class="text-[0.5rem] sm:text-xs text-slate-700 whitespace-pre-wrap mt-1">${msg}</pre>`;
+
+            const pwd = prompt('🔐 Ingrese contraseña de administrador:');
+            if (pwd === CONFIG.ADMIN_PASSWORD) {
+                adminLoggedIn = true;
+                document.getElementById('adminStatusLabel').textContent = '✅ Activo';
+                document.getElementById('adminToggleBtn').classList.add('admin-logged');
+                toast('✅ Admin autenticado');
+            } else if (pwd !== null) {
+                toast('Contraseña incorrecta', true);
             }
-            toast(`Verificación: ${mismatches} discrepancias`, mismatches > 0);
         }
 
-        // ========== DISCREPANCIAS ==========
-        function getDiscrepancias() {
-            const result = [];
-            const addedIds = Object.keys(cart).filter(id => cart[id] > 0);
-            addedIds.forEach(id => {
+        // ========== REPORTE (Vista previa con todos los datos) ==========
+        function showReport() {
+            const ids = Object.keys(cart).filter(id => cart[id] > 0);
+            if (ids.length === 0) { 
+                toast('El inventario está vacío', true); 
+                return; 
+            }
+
+            // Construir datos del reporte
+            reportData = [];
+            let totalUnits = 0;
+            let discrepancies = 0;
+
+            ids.forEach(id => {
                 const p = products.find(x => x.id === id);
                 if (!p) return;
-                const real = savedInventory[id] || 0;
-                if (real !== p.stock) {
-                    result.push({
-                        id: p.id,
-                        name: p.name,
-                        brand: p.brand,
-                        stock: p.stock,
-                        real: real,
-                        diff: real - p.stock
+                const real = cart[id] || 0;
+                const stock = p.stock;
+                const diff = real - stock;
+                totalUnits += real;
+                if (diff !== 0) discrepancies++;
+                
+                // Solo mostrar stock y diff si admin está logueado
+                const showStock = adminLoggedIn;
+                
+                reportData.push({
+                    id: p.id,
+                    name: p.name,
+                    brand: p.brand,
+                    image: p.image,
+                    real: real,
+                    stock: stock,
+                    diff: diff,
+                    showStock: showStock,
+                    status: diff === 0 ? 'OK' : (diff > 0 ? 'EXTRA' : 'FALTANTE')
+                });
+            });
+
+            // Generar HTML del reporte
+            let rows = '';
+            reportData.forEach(d => {
+                const imgSrc = d.image && d.image.trim() !== '' ? d.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"%3e%3crect width="60" height="60" fill="%23f1f5f9"/%3e%3ctext x="30" y="30" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="8" fill="%2394a3b8"%3eSin%3c/text%3e%3c/svg%3e';
+                const statusClass = d.diff === 0 ? 'stock-ok' : (d.diff > 0 ? 'stock-diff' : 'stock-warn');
+                const statusText = d.diff === 0 ? '✓ OK' : (d.diff > 0 ? `+${d.diff}` : `${d.diff}`);
+                
+                rows += `
+                    <tr>
+                        <td><img src="${imgSrc}" class="r-img" /></td>
+                        <td style="font-weight:600;">${d.id}</td>
+                        <td>${d.name}</td>
+                        <td>${d.brand || '—'}</td>
+                        <td style="text-align:center;font-weight:bold;">${d.real}</td>
+                        ${d.showStock ? `<td style="text-align:center;">${d.stock}</td>` : ''}
+                        ${d.showStock ? `<td style="text-align:center;font-weight:bold;color:${d.diff === 0 ? '#166534' : (d.diff > 0 ? '#92400e' : '#991b1b')};">${statusText}</td>` : ''}
+                    </tr>
+                `;
+            });
+
+            const showStock = adminLoggedIn;
+            const stockHeaders = showStock ? `
+                <th style="text-align:center;">Stock</th>
+                <th style="text-align:center;">Estado</th>
+            ` : '';
+
+            const html = `
+                <div style="font-family:Arial,sans-serif;font-size:12px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
+                        <div>
+                            <h2 style="font-size:16px;margin:0;color:#1e293b;">📦 Inventario Electroluz PV</h2>
+                            <p style="font-size:10px;color:#64748b;margin:2px 0 0;">${new Date().toLocaleString()} · RIF J507436055</p>
+                        </div>
+                        <div style="background:#f1f5f9;padding:4px 10px;border-radius:6px;font-size:10px;font-weight:bold;">
+                            ${reportData.length} productos · ${totalUnits} unidades
+                            ${showStock ? ` · ⚠️ ${discrepancies} discrepancia(s)` : ''}
+                            ${!showStock ? ' · 🔒 Admin inactivo' : ''}
+                        </div>
+                    </div>
+                    <table style="width:100%;border-collapse:collapse;font-size:11px;">
+                        <thead>
+                            <tr style="background:#f1f5f9;">
+                                <th style="padding:5px 6px;border:1px solid #ddd;text-align:left;font-size:9px;text-transform:uppercase;">Img</th>
+                                <th style="padding:5px 6px;border:1px solid #ddd;text-align:left;font-size:9px;text-transform:uppercase;">Código</th>
+                                <th style="padding:5px 6px;border:1px solid #ddd;text-align:left;font-size:9px;text-transform:uppercase;">Descripción</th>
+                                <th style="padding:5px 6px;border:1px solid #ddd;text-align:left;font-size:9px;text-transform:uppercase;">Marca</th>
+                                <th style="padding:5px 6px;border:1px solid #ddd;text-align:center;font-size:9px;text-transform:uppercase;">Cantidad</th>
+                                ${stockHeaders}
+                            </tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                    <div style="margin-top:10px;font-size:9px;color:#94a3b8;text-align:center;border-top:1px solid #e2e8f0;padding-top:8px;">
+                        Electroluz PV C.A. · ${showStock ? 'Reporte con verificación de stock' : 'Reporte de inventario (sin verificación)'}
+                        ${showStock ? ` · Discrepancias: ${discrepancies}` : ' · Inicia sesión como admin para verificar stock'}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('reportTitle').textContent = `📋 Inventario (${reportData.length} productos)`;
+            document.getElementById('reportBody').innerHTML = html;
+            document.getElementById('reportSummary').innerHTML = `
+                <span>Total productos: ${reportData.length}</span>
+                <span>Unidades: ${totalUnits}</span>
+                ${showStock ? `<span style="color:${discrepancies > 0 ? '#991b1b' : '#166534'};">Discrepancias: ${discrepancies}</span>` : '<span style="color:#f59e0b;">🔒 Admin inactivo - Stock no verificado</span>'}
+            `;
+            document.getElementById('reportPreview').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeReport() {
+            document.getElementById('reportPreview').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ========== EXPORTAR REPORTE ==========
+        function getReportHTML() {
+            const body = document.getElementById('reportBody');
+            if (!body) return '';
+            return body.innerHTML;
+        }
+
+        function getReportCSV() {
+            if (!reportData || reportData.length === 0) return '';
+            let csv = 'Código,Descripción,Marca,Cantidad';
+            if (adminLoggedIn) csv += ',Stock,Diferencia,Estado';
+            csv += '\n';
+            reportData.forEach(d => {
+                csv += `"${d.id}","${d.name}","${d.brand}",${d.real}`;
+                if (adminLoggedIn) {
+                    csv += `,${d.stock},${d.diff},"${d.status}"`;
+                }
+                csv += '\n';
+            });
+            return csv;
+        }
+
+        function exportReportPDF() {
+            const content = document.getElementById('reportContent');
+            if (!content) { toast('No hay reporte para exportar', true); return; }
+
+            toast('Generando PDF...');
+
+            // Usar html2canvas para generar imagen y luego PDF
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            script.onload = function() {
+                const clone = content.cloneNode(true);
+                clone.style.cssText = 'position:fixed;left:-9999px;top:0;background:white;padding:20px;width:800px;z-index:9999;';
+                document.body.appendChild(clone);
+
+                // Asegurar que las imágenes se carguen
+                const imgs = clone.querySelectorAll('img');
+                let loaded = 0;
+                const total = imgs.length;
+
+                function doCapture() {
+                    html2canvas(clone, {
+                        scale: 2,
+                        useCORS: true,
+                        logging: false,
+                        backgroundColor: '#ffffff',
+                        width: 800,
+                        height: clone.scrollHeight
+                    }).then(canvas => {
+                        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                        const { jsPDF } = window.jspdf;
+                        const pdf = new jsPDF('p', 'mm', 'a4');
+                        const pdfWidth = pdf.internal.pageSize.getWidth();
+                        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+                        pdf.save('inventario_electroluz.pdf');
+                        document.body.removeChild(clone);
+                        toast('PDF descargado');
+                    }).catch(err => {
+                        toast('Error generando PDF: ' + err.message, true);
+                        document.body.removeChild(clone);
                     });
                 }
-            });
-            return result;
-        }
 
-        function exportDiscrepanciasCSV() {
-            const disc = getDiscrepancias();
-            if (disc.length === 0) { toast('No hay discrepancias', true); return; }
+                if (total === 0) {
+                    doCapture();
+                    return;
+                }
+
+                imgs.forEach(img => {
+                    if (img.complete) {
+                        loaded++;
+                        if (loaded === total) doCapture();
+                    } else {
+                        img.onload = () => {
+                            loaded++;
+                            if (loaded === total) doCapture();
+                        };
+                        img.onerror = () => {
+                            loaded++;
+                            if (loaded === total) doCapture();
+                        };
+                    }
+                });
+                setTimeout(doCapture, 3000);
+            };
+            document.head.appendChild(script);
             
-            let csv = 'Código,Descripción,Marca,Stock,Real,Diferencia\n';
-            disc.forEach(d => {
-                csv += `"${d.id}","${d.name}","${d.brand}",${d.stock},${d.real},${d.diff}\n`;
-            });
+            // Si jspdf no está cargado, cargarlo
+            if (typeof window.jspdf === 'undefined') {
+                const jsPDFScript = document.createElement('script');
+                jsPDFScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                document.head.appendChild(jsPDFScript);
+            }
+        }
+
+        function exportReportImage() {
+            const content = document.getElementById('reportContent');
+            if (!content) { toast('No hay reporte para exportar', true); return; }
+
+            toast('Capturando imagen...');
+
+            // Usar html2canvas
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            script.onload = function() {
+                const clone = content.cloneNode(true);
+                clone.style.cssText = 'position:fixed;left:-9999px;top:0;background:white;padding:20px;width:800px;z-index:9999;';
+                document.body.appendChild(clone);
+
+                const imgs = clone.querySelectorAll('img');
+                let loaded = 0;
+                const total = imgs.length;
+
+                function doCapture() {
+                    html2canvas(clone, {
+                        scale: 2,
+                        useCORS: true,
+                        logging: false,
+                        backgroundColor: '#ffffff',
+                        width: 800,
+                        height: clone.scrollHeight
+                    }).then(canvas => {
+                        const link = document.createElement('a');
+                        link.download = 'inventario_electroluz.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                        document.body.removeChild(clone);
+                        toast('Imagen descargada');
+                    }).catch(err => {
+                        toast('Error capturando: ' + err.message, true);
+                        document.body.removeChild(clone);
+                    });
+                }
+
+                if (total === 0) {
+                    doCapture();
+                    return;
+                }
+
+                imgs.forEach(img => {
+                    if (img.complete) {
+                        loaded++;
+                        if (loaded === total) doCapture();
+                    } else {
+                        img.onload = () => {
+                            loaded++;
+                            if (loaded === total) doCapture();
+                        };
+                        img.onerror = () => {
+                            loaded++;
+                            if (loaded === total) doCapture();
+                        };
+                    }
+                });
+                setTimeout(doCapture, 3000);
+            };
+            document.head.appendChild(script);
+        }
+
+        function exportReportCSV() {
+            const csv = getReportCSV();
+            if (!csv) { toast('No hay datos para exportar', true); return; }
+            
             const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = 'discrepancias.csv';
+            link.download = 'inventario_electroluz.csv';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             toast('CSV descargado');
-        }
-
-        async function exportDiscrepanciasPDF() {
-            const disc = getDiscrepancias();
-            if (disc.length === 0) { toast('No hay discrepancias', true); return; }
-
-            toast('Generando PDF...');
-
-            let rows = '';
-            disc.forEach(d => {
-                rows += `
-                    <tr>
-                        <td style="padding:4px 6px;border:1px solid #ddd;font-weight:600;font-size:10px;">${d.id}</td>
-                        <td style="padding:4px 6px;border:1px solid #ddd;font-size:10px;">${d.name}</td>
-                        <td style="padding:4px 6px;border:1px solid #ddd;font-size:10px;">${d.brand || '—'}</td>
-                        <td style="padding:4px 6px;border:1px solid #ddd;text-align:center;font-size:10px;">${d.stock}</td>
-                        <td style="padding:4px 6px;border:1px solid #ddd;text-align:center;font-size:10px;">${d.real}</td>
-                        <td style="padding:4px 6px;border:1px solid #ddd;text-align:center;font-size:10px;font-weight:bold;color:${d.diff > 0 ? '#92400e' : '#991b1b'};">${d.diff > 0 ? '+' : ''}${d.diff}</td>
-                    </tr>
-                `;
-            });
-
-            const htmlContent = `
-                <html>
-                <head><meta charset="UTF-8"><title>Discrepancias</title>
-                <style>
-                    body { font-family: Arial, sans-serif; padding:15px; }
-                    h1 { color:#1e293b; font-size:16px; margin-bottom:2px; }
-                    .sub { color:#64748b; font-size:10px; margin-bottom:15px; }
-                    table { width:100%; border-collapse:collapse; font-size:10px; }
-                    th { background:#f1f5f9; padding:5px 6px; border:1px solid #ddd; text-align:left; font-weight:700; text-transform:uppercase; font-size:8px; }
-                    td { padding:4px 6px; border:1px solid #ddd; }
-                    .footer { margin-top:15px; font-size:9px; color:#94a3b8; text-align:center; border-top:1px solid #e2e8f0; padding-top:10px; }
-                </style>
-                </head>
-                <body>
-                    <h1>⚠️ Discrepancias de Inventario</h1>
-                    <div class="sub">${new Date().toLocaleString()} · RIF J507436055</div>
-                    <table>
-                        <thead><tr>
-                            <th>Código</th><th>Descripción</th><th>Marca</th><th>Stock</th><th>Real</th><th>Diff</th>
-                        </tr></thead>
-                        <tbody>${rows}</tbody>
-                    </table>
-                    <div class="footer">Total: ${disc.length}</div>
-                </body>
-                </html>
-            `;
-
-            const container = document.createElement('div');
-            container.innerHTML = htmlContent;
-            container.style.position = 'fixed';
-            container.style.left = '-9999px';
-            container.style.top = '0';
-            container.style.width = '600px';
-            container.style.background = 'white';
-            container.style.padding = '15px';
-            document.body.appendChild(container);
-
-            try {
-                await new Promise(resolve => setTimeout(resolve, 300));
-                const canvas = await html2canvas(container, {
-                    scale: 2,
-                    useCORS: true,
-                    logging: false,
-                    backgroundColor: '#ffffff',
-                    width: 600
-                });
-                const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save('discrepancias.pdf');
-                toast('PDF descargado');
-            } catch (err) {
-                toast('Error PDF: ' + err.message, true);
-                console.error(err);
-            }
-            document.body.removeChild(container);
-        }
-
-        // ========== EXPORTAR INVENTARIO ==========
-        function exportCartCSV() {
-            const ids = Object.keys(cart).filter(id => cart[id] > 0);
-            if (ids.length === 0) { toast('El inventario está vacío', true); return; }
-            let csv = 'Código,Descripción,Marca,Cantidad\n';
-            ids.forEach(id => {
-                const p = products.find(x => x.id === id);
-                if (!p) return;
-                csv += `"${p.id}","${p.name}","${p.brand}",${cart[id]}\n`;
-            });
-            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'inventario.csv';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            toast('CSV descargado');
-        }
-
-        async function exportCartPDF() {
-            const ids = Object.keys(cart).filter(id => cart[id] > 0);
-            if (ids.length === 0) { toast('El inventario está vacío', true); return; }
-
-            toast('Generando PDF...');
-
-            let rows = '';
-            ids.forEach(id => {
-                const p = products.find(x => x.id === id);
-                if (!p) return;
-                const imgSrc = p.image && p.image.trim() !== '' ? p.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"%3e%3crect width="60" height="60" fill="%23f1f5f9"/%3e%3ctext x="30" y="30" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="8" fill="%2394a3b8"%3eSin%3c/text%3e%3c/svg%3e';
-                rows += `
-                    <tr>
-                        <td style="padding:4px 6px;border:1px solid #ddd;text-align:center;"><img src="${imgSrc}" style="width:36px;height:36px;object-fit:contain;background:#f8fafc;border-radius:4px;" /></td>
-                        <td style="padding:4px 6px;border:1px solid #ddd;font-weight:600;font-size:10px;">${p.id}</td>
-                        <td style="padding:4px 6px;border:1px solid #ddd;font-size:10px;">${p.name}</td>
-                        <td style="padding:4px 6px;border:1px solid #ddd;font-size:10px;">${p.brand || '—'}</td>
-                        <td style="padding:4px 6px;border:1px solid #ddd;text-align:center;font-size:10px;">${cart[id]}</td>
-                    </tr>
-                `;
-            });
-
-            const htmlContent = `
-                <html>
-                <head><meta charset="UTF-8"><title>Inventario</title>
-                <style>
-                    body { font-family: Arial, sans-serif; padding:15px; }
-                    h1 { color:#1e293b; font-size:16px; margin-bottom:2px; }
-                    .sub { color:#64748b; font-size:10px; margin-bottom:15px; }
-                    table { width:100%; border-collapse:collapse; font-size:10px; }
-                    th { background:#f1f5f9; padding:5px 6px; border:1px solid #ddd; text-align:left; font-weight:700; text-transform:uppercase; font-size:8px; }
-                    td { padding:4px 6px; border:1px solid #ddd; }
-                    .footer { margin-top:15px; font-size:9px; color:#94a3b8; text-align:center; border-top:1px solid #e2e8f0; padding-top:10px; }
-                </style>
-                </head>
-                <body>
-                    <h1>📦 Inventario Electroluz PV</h1>
-                    <div class="sub">${new Date().toLocaleString()} · RIF J507436055</div>
-                    <table>
-                        <thead><tr>
-                            <th>Img</th><th>Código</th><th>Descripción</th><th>Marca</th><th>Cant</th>
-                        </tr></thead>
-                        <tbody>${rows}</tbody>
-                    </table>
-                    <div class="footer">Productos: ${ids.length} · Unidades: ${Object.values(cart).reduce((a,b) => a+b, 0)}</div>
-                </body>
-                </html>
-            `;
-
-            const container = document.createElement('div');
-            container.innerHTML = htmlContent;
-            container.style.position = 'fixed';
-            container.style.left = '-9999px';
-            container.style.top = '0';
-            container.style.width = '600px';
-            container.style.background = 'white';
-            container.style.padding = '15px';
-            document.body.appendChild(container);
-
-            try {
-                await new Promise(resolve => setTimeout(resolve, 300));
-                const canvas = await html2canvas(container, {
-                    scale: 2,
-                    useCORS: true,
-                    logging: false,
-                    backgroundColor: '#ffffff',
-                    width: 600
-                });
-                const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save('inventario.pdf');
-                toast('PDF descargado');
-            } catch (err) {
-                toast('Error PDF: ' + err.message, true);
-                console.error(err);
-            }
-            document.body.removeChild(container);
         }
 
         // ========== INICIO ==========
