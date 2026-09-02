@@ -175,7 +175,6 @@
       color: #1e40af;
       transform: scale(1.02);
     }
-    /* Tasa BCV en el header - oculto en home */
     .tasa-updating {
       animation: pulse-dot 1.5s ease-in-out infinite;
     }
@@ -197,67 +196,142 @@
     .tasa-refresh-btn:active {
       transform: rotate(360deg) scale(0.9);
     }
-    /* 手机端页头优化 - 购物车和货币切换放大 */
+
+    /* ===== 手机端页头优化 - 整体比例协调 ===== */
     @media (max-width: 640px) {
+      .header-mobile-compact {
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+      }
       .header-mobile-compact .logo-text h1 {
-        font-size: 0.9rem !important;
+        font-size: 0.85rem !important;
+        line-height: 1.1 !important;
       }
       .header-mobile-compact .logo-text p {
-        font-size: 0.45rem !important;
-        letter-spacing: 0.08em !important;
+        font-size: 0.4rem !important;
+        letter-spacing: 0.06em !important;
       }
       .header-mobile-compact .logo-icon {
-        width: 28px !important;
-        height: 28px !important;
+        width: 30px !important;
+        height: 30px !important;
+        border-radius: 10px !important;
+      }
+      /* Tasa bar compacta */
+      #tasaBar .max-w-7xl {
+        padding-top: 2px !important;
+        padding-bottom: 2px !important;
       }
       #h-tasa span {
-        font-size: 8px !important;
+        font-size: 7px !important;
       }
       #h-tasa .tasa-refresh-btn i {
-        font-size: 10px !important;
+        font-size: 9px !important;
       }
       #h-social a {
-        width: 24px !important;
-        height: 24px !important;
+        width: 26px !important;
+        height: 26px !important;
       }
       #h-social a i {
         font-size: 12px !important;
       }
-      /* 放大货币切换 */
+      /* 货币切换 - 整体同比例放大 */
       #h-ctrls .relative {
-        transform: scale(1) !important;
+        transform: none !important;
+        padding: 2px !important;
+        border-radius: 10px !important;
       }
-      #h-ctrls .relative .w-10 {
-        width: 52px !important;
-        height: 26px !important;
-      }
-      #h-ctrls .relative .w-10 .h-5 {
-        height: 26px !important;
+      #h-ctrls .relative .w-12 {
+        width: 56px !important;
+        height: 28px !important;
       }
       #h-ctrls .relative #cur-usd-lbl,
       #h-ctrls .relative #cur-ves-lbl {
-        font-size: 10px !important;
+        font-size: 9px !important;
+        font-weight: 800 !important;
       }
       #h-ctrls .relative #cur-slider {
-        height: 22px !important;
+        height: 24px !important;
         top: 2px !important;
+        width: 50% !important;
+        border-radius: 8px !important;
       }
-      /* 放大购物车按钮 */
+      /* 购物车按钮 - 同比例放大 */
       #h-ctrls button.relative {
-        padding: 0.4rem 0.8rem !important;
-        font-size: 10px !important;
-        border-radius: 12px !important;
+        padding: 0.35rem 0.7rem !important;
+        font-size: 9px !important;
+        border-radius: 10px !important;
+        gap: 4px !important;
       }
       #h-ctrls button.relative i {
-        font-size: 18px !important;
+        font-size: 16px !important;
+      }
+      #h-ctrls button.relative .hidden.sm\:inline {
+        display: none !important;
       }
       #h-ctrls button.relative #c-badge {
-        width: 22px !important;
-        height: 22px !important;
-        font-size: 11px !important;
-        top: -6px !important;
-        right: -6px !important;
+        width: 18px !important;
+        height: 18px !important;
+        font-size: 9px !important;
+        top: -5px !important;
+        right: -5px !important;
+        border-width: 2px !important;
       }
+      /* 汉堡按钮 */
+      .header-mobile-compact .md\:hidden {
+        width: 30px !important;
+        height: 30px !important;
+        border-radius: 8px !important;
+      }
+      .header-mobile-compact .md\:hidden i {
+        font-size: 14px !important;
+      }
+      /* 社交图标间距 */
+      #h-social {
+        gap: 2px !important;
+      }
+    }
+
+    /* ===== 图片预览 ===== */
+    .image-preview-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+      padding: 20px;
+    }
+    .image-preview-overlay.open {
+      display: flex;
+    }
+    .image-preview-overlay img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 0 60px rgba(0,0,0,0.5);
+    }
+    .image-preview-overlay .close-preview {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: white;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .image-preview-overlay .close-preview:hover {
+      background: rgba(255,255,255,0.25);
     }
 
     /* 汉堡菜单 */
@@ -378,7 +452,6 @@
       background: white;
     }
 
-    /* 价格排序按钮 */
     .price-sort-btn {
       padding: 4px 8px;
       border-radius: 20px;
@@ -401,61 +474,16 @@
       color: white;
     }
 
-    /* 模态框USD + Cambio 并列 */
     .modal-currency-group {
       display: flex;
       align-items: center;
       gap: 6px;
       flex-wrap: wrap;
     }
-
-    /* 图片放大预览 */
-    .image-preview-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.9);
-      z-index: 200;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      cursor: zoom-out;
-      padding: 20px;
-    }
-    .image-preview-overlay.open {
-      display: flex;
-    }
-    .image-preview-overlay img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      border-radius: 8px;
-      box-shadow: 0 0 60px rgba(0,0,0,0.5);
-    }
-    .image-preview-overlay .close-preview {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: white;
-      font-size: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .image-preview-overlay .close-preview:hover {
-      background: rgba(255,255,255,0.3);
-    }
   </style>
 </head>
 <body>
 
-  <!-- 图片预览 -->
   <div id="imagePreview" class="image-preview-overlay" onclick="closeImagePreview()">
     <button class="close-preview" onclick="event.stopPropagation(); closeImagePreview();">
       <i class="ph-bold ph-x"></i>
@@ -491,7 +519,7 @@
     </div>
   </div>
 
-  <!-- HEADER - 主页面隐藏Tasa -->
+  <!-- HEADER -->
   <header id="mainHeader" class="bg-[#242629] sticky top-0 z-40 shadow-md border-b border-white/5 transition-all">
     <div class="border-b border-white/5 bg-[#191a1d]" id="tasaBar">
       <div class="max-w-7xl mx-auto px-3 py-1 flex justify-between items-center text-[8px] sm:text-xs font-bold text-slate-400 f-int">
@@ -529,6 +557,7 @@
           <a href="https://www.tiktok.com/@electroluzpv" target="_blank" class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-cyan-500/20 hover:text-cyan-400 transition-all"><i class="ph-fill ph-tiktok-logo text-xs sm:text-base"></i></a>
         </div>
         <div id="h-ctrls" class="hidden flex items-center gap-2 sm:gap-3">
+          <!-- 货币切换 - 整体容器 -->
           <div class="relative inline-flex items-center cursor-pointer bg-black/20 p-0.5 rounded-full border border-white/10" onclick="toggleCurrency()">
             <div class="w-12 sm:w-16 h-6 sm:h-7 bg-transparent rounded-full flex relative items-center justify-between px-1.5 sm:px-2">
               <span id="cur-usd-lbl" class="text-[8px] sm:text-[9px] font-black z-10 transition-colors text-white">USD</span>
@@ -536,6 +565,7 @@
               <div id="cur-slider" class="absolute left-0 w-1/2 h-[22px] sm:h-full bg-blue-500 rounded-full shadow transition-transform duration-300 transform translate-x-0" style="top:2px;height:22px;sm:top:0;sm:h-full;"></div>
             </div>
           </div>
+          <!-- 购物车按钮 -->
           <button onclick="toggCart()" class="relative bg-white hover:bg-slate-100 text-slate-900 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-black text-[10px] sm:text-xs shadow-lg transition-all flex items-center gap-1.5 uppercase tracking-widest">
             <i class="ph-bold ph-shopping-cart text-base sm:text-lg text-blue-600"></i> <span class="hidden sm:inline">Pedido</span> 
             <span id="c-badge" class="absolute -top-1 -right-1 bg-rose-500 text-white text-[7px] sm:text-[10px] w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center rounded-full border-2 border-[#242629] text-[8px]">0</span>
@@ -616,10 +646,9 @@
     </footer>
   </div>
 
-  <!-- CATALOG - 仅保留搜索框 + 汉堡按钮 + 价格箭头 -->
+  <!-- CATALOG -->
   <main id="v-cat" class="hidden flex-1 w-full bg-slate-50 p-2 sm:p-4 lg:p-6 pb-24">
     <div class="max-w-[1400px] mx-auto space-y-3">
-      <!-- 搜索栏 + 汉堡按钮 + 价格箭头 -->
       <div class="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-2 flex-wrap">
         <button onclick="openMenu()" class="w-9 h-9 flex items-center justify-center text-slate-600 bg-slate-100 rounded-xl border border-slate-200 hover:bg-slate-200 transition-colors shrink-0">
           <i class="ph-bold ph-list text-xl"></i>
@@ -636,8 +665,6 @@
           <button class="price-sort-btn" onclick="setPriceSort('desc')">↓</button>
         </div>
       </div>
-
-      <!-- 产品网格 -->
       <div id="p-grid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 pt-2">
          <div class="col-span-full py-20 text-center flex flex-col items-center"><i class="ph-bold ph-spinner-gap animate-spin text-4xl text-blue-500 mb-3"></i><p class="text-slate-500 font-bold f-int text-lg">Cargando...</p></div>
       </div>
@@ -663,7 +690,6 @@
         <div class="flex items-center gap-2 mb-3 flex-wrap">
           <span id="m-cod" class="code-pill code-pill-sm"></span>
           <span id="m-br" class="hidden text-[10px] font-black italic tracking-tighter px-2.5 py-1 rounded shadow-sm"></span>
-          <!-- Cambio + USD 并列 -->
           <div class="modal-currency-group ml-auto">
             <button onclick="toggleModalCurrency()" class="text-[9px] font-medium bg-blue-50 hover:bg-blue-100 text-blue-600 px-2 py-1 rounded-full border border-blue-200 transition flex items-center gap-1">
               <i class="ph-bold ph-currency-circle-dollar text-sm"></i> <span id="modal-currency-label">VES</span>
@@ -695,7 +721,7 @@
   <!-- CART -->
   <div id="drawer" class="fixed inset-y-0 right-0 w-full sm:w-[420px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col border-l border-slate-200">
     <div class="cart-header p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-shrink-0">
-      <h3 class="font-black text-lg text-slate-900 tracking-tight">📦 Tu Pedido</h3>
+      <h3 class="font-black text-lg text-slate-900 tracking-tight">📦 RESUMEN DE PEDIDO</h3>
       <button onclick="toggCart()" class="w-8 h-8 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-rose-500 shadow-sm transition-colors flex items-center justify-center">
         <i class="ph-bold ph-x"></i>
       </button>
@@ -834,7 +860,6 @@
       setTimeout(() => el.className = 'hidden', 2800);
     }
 
-    // 图片预览功能
     function openImagePreviewFromModal() {
       const img = document.getElementById('m-img');
       if (!img || !img.src || img.src === SVG) return;
@@ -850,7 +875,6 @@
       if (preview) preview.classList.remove('open');
       document.body.style.overflow = '';
     }
-    // 点击预览背景或关闭按钮关闭
 
     let usdVisible = false, usdVisibleCat = false;
     function toggleUsdPrice() {
@@ -861,9 +885,7 @@
       btn.classList.toggle('active', usdVisible);
       if (s.mod) { const p = s.p.find(x => x.id === s.mod); if (p) document.getElementById('usdPriceValue').textContent = p.usdPrice ? p.usdPrice.toFixed(2) : p.pd.toFixed(2); }
     }
-    function toggleUsdPriceCat() {
-      // not used in catalog
-    }
+    function toggleUsdPriceCat() {}
 
     function toggleModalCurrency() { s.cur = s.cur === 'USD' ? 'VES' : 'USD'; updateModalPrices(); const label = $('modal-currency-label'); if (label) label.textContent = s.cur === 'USD' ? 'VES' : 'USD'; }
 
