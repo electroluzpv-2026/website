@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
   <style>
-    /* 基础样式保持不变，新增马卡龙标签云样式 */
+    /* 基础样式保持不变，已移除马卡龙标签云相关样式 */
     body { font-family: 'Poppins', sans-serif; font-weight: 400; background-color: #f8fafc; color: #0f172a; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
     .f-int { font-family: 'Inter', sans-serif; }
     .f-num { font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; }
@@ -341,44 +341,7 @@
       flex-wrap: wrap;
     }
 
-    /* 标签云 - 马卡龙色调 */
-    .tag-cloud {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px 16px;
-      padding: 20px 10px;
-      background: rgba(255,255,255,0.5);
-      border-radius: 30px;
-      backdrop-filter: blur(4px);
-      margin: 20px 0;
-    }
-    .tag-cloud-item {
-      display: inline-block;
-      padding: 6px 16px;
-      border-radius: 40px;
-      font-weight: 700;
-      color: #2d3748;
-      text-shadow: 0 1px 2px rgba(255,255,255,0.3);
-      cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      animation: float 2.5s ease-in-out infinite;
-      font-size: 14px;
-      border: 1px solid rgba(255,255,255,0.5);
-    }
-    .tag-cloud-item:hover {
-      transform: scale(1.1) rotate(-2deg);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    }
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
-      100% { transform: translateY(0px); }
-    }
-    .tag-cloud-item:nth-child(odd) { animation-duration: 2.8s; }
-    .tag-cloud-item:nth-child(3n) { animation-duration: 3.2s; }
-    .tag-cloud-item:nth-child(5n) { animation-duration: 2.2s; }
+    /* 已移除标签云 (tag-cloud) 相关样式 */
   </style>
 </head>
 <body>
@@ -501,8 +464,7 @@
       <!-- 四大分类卡片 -->
       <div id="h-cats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
 
-      <!-- 标签云区域 - 移动到四大分类下方 -->
-      <div id="tag-cloud-container" class="tag-cloud"></div>
+      <!-- 标签云区域已移除 -->
     </section>
 
     <section class="max-w-7xl mx-auto px-4 pb-16 grid md:grid-cols-2 gap-6">
@@ -799,58 +761,8 @@
       renderProductGrid();
     }
 
-    // 标签云 - 马卡龙颜色
-    function renderTagCloud() {
-      const container = document.getElementById('tag-cloud-container');
-      if (!container) return;
-      const catSet = new Set();
-      s.p.forEach(p => {
-        let path = p.l1;
-        if (p.l2) path += ' / ' + p.l2;
-        if (p.l3) path += ' / ' + p.l3;
-        if (path && path !== 'General') catSet.add(path);
-      });
-      const allCats = Array.from(catSet);
-      if (allCats.length === 0) { container.innerHTML = ''; return; }
-
-      // 基于日期种子随机选10个
-      const seed = new Date().toDateString();
-      let hash = 0;
-      for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) & 0xFFFFFFFF;
-      const seededRandom = (max) => {
-        hash = (hash * 9301 + 49297) & 0xFFFFFFFF;
-        return (hash & 0x7FFFFFFF) / 0x7FFFFFFF * max;
-      };
-      const shuffled = [...allCats];
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(seededRandom(i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      const selected = shuffled.slice(0, 10);
-
-      // 马卡龙色系 (柔和的粉彩)
-      const macaronColors = [
-        '#FFB7C5', // 浅粉
-        '#A8D8EA', // 浅蓝
-        '#F7E3AF', // 浅黄
-        '#D4B8D9', // 浅紫
-        '#B5E6C3', // 浅绿
-        '#FAD4C0', // 浅橙
-        '#B2E0D6', // 薄荷
-        '#C9B1D0', // 薰衣草
-        '#FBC8B5', // 杏色
-        '#B5D8EB', // 天蓝
-        '#E8C1C1', // 玫瑰
-        '#C1E1C1'  // 淡绿
-      ];
-
-      container.innerHTML = selected.map((cat, idx) => {
-        const size = 12 + Math.floor(seededRandom(14));
-        const color = macaronColors[Math.floor(seededRandom(macaronColors.length))];
-        const delay = (seededRandom(3)).toFixed(2);
-        return `<span class="tag-cloud-item" style="font-size:${size}px; background:${color}; animation-delay:${delay}s;" onclick="filterCategoryByPath('${cat}')">${cat}</span>`;
-      }).join('');
-    }
+    // 标签云功能已移除 (renderTagCloud 为空函数)
+    function renderTagCloud() { /* 已移除 */ }
 
     function filterCategoryByPath(path) {
       const parts = path.split('/').map(s => s.trim());
@@ -917,7 +829,7 @@
         });
       }
       renderHomeCategories();
-      renderTagCloud();
+      renderTagCloud(); // 现在为空
       renderCatalog();
     }
 
