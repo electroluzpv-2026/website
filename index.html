@@ -8,8 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
   <style>
-    /* 基础样式保持不变，已移除马卡龙标签云相关样式 */
-    body { font-family: 'Poppins', sans-serif; font-weight: 400; background-color: #f8fafc; color: #0f172a; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+    body { font-family: 'Poppins', sans-serif; font-weight: 400; background-color: #f8fafc; color: #0f172a; -webkit-tap-highlight-color: transparent; }
     .f-int { font-family: 'Inter', sans-serif; }
     .f-num { font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; }
     ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -32,7 +31,10 @@
     .btn-del { padding: 6px 4px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 9px; font-weight: 700; color: #64748b; transition: 0.2s; }
     .fade-in { animation: fadeIn 0.3s ease forwards; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    .product-card { }
+    .toggle-checkbox:checked { right: 0; border-color: #3b82f6; }
+    .toggle-checkbox:checked + .toggle-label { background-color: #3b82f6; }
+    .toggle-checkbox:checked + .toggle-label:before { transform: translateX(100%); }
+    .product-card { content-visibility: auto; contain-intrinsic-size: 400px; }
     .code-pill { display: inline-block; padding: 0.15rem 0.7rem; border-radius: 9999px; border: 2px solid #3b82f6; background-color: white; color: #1e293b; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.02em; box-shadow: 0 1px 2px rgba(0,0,0,0.05); white-space: nowrap; }
     .code-pill-sm { font-size: 0.65rem; padding: 0.1rem 0.6rem; border-width: 1.5px; }
     .price-text { font-weight: 400 !important; }
@@ -173,7 +175,7 @@
       color: #1e40af;
       transform: scale(1.02);
     }
-    /* Tasa BCV */
+    /* Tasa BCV en el header - oculto en home */
     .tasa-updating {
       animation: pulse-dot 1.5s ease-in-out infinite;
     }
@@ -195,24 +197,51 @@
     .tasa-refresh-btn:active {
       transform: rotate(360deg) scale(0.9);
     }
-    /* 手机端页头优化 */
+    /* 手机端页头优化 - 保持紧凑 */
     @media (max-width: 640px) {
-      .header-mobile-compact .logo-text h1 { font-size: 0.9rem !important; }
-      .header-mobile-compact .logo-text p { font-size: 0.45rem !important; letter-spacing: 0.08em !important; }
-      .header-mobile-compact .logo-icon { width: 28px !important; height: 28px !important; }
-      #h-tasa span { font-size: 8px !important; }
-      #h-tasa .tasa-refresh-btn i { font-size: 10px !important; }
-      #h-social a { width: 24px !important; height: 24px !important; }
-      #h-social a i { font-size: 12px !important; }
-      #h-ctrls .relative { transform: scale(1) !important; }
-      #h-ctrls .relative .w-10 { width: 48px !important; height: 24px !important; }
-      #h-ctrls .relative span { font-size: 9px !important; }
-      #h-ctrls button { padding: 0.5rem 0.75rem !important; font-size: 10px !important; border-radius: 12px !important; }
-      #h-ctrls button i { font-size: 20px !important; }
-      #h-ctrls .relative .w-10 .h-5 { height: 24px !important; }
-      #c-badge { width: 20px !important; height: 20px !important; font-size: 10px !important; top: -6px !important; right: -6px !important; }
-      #v-cat .flex-1 { max-width: 55% !important; }
-      .price-sort-btn { font-size: 14px !important; padding: 6px 10px !important; }
+      .header-mobile-compact .logo-text h1 {
+        font-size: 0.9rem !important;
+      }
+      .header-mobile-compact .logo-text p {
+        font-size: 0.45rem !important;
+        letter-spacing: 0.08em !important;
+      }
+      .header-mobile-compact .logo-icon {
+        width: 28px !important;
+        height: 28px !important;
+      }
+      #h-tasa span {
+        font-size: 8px !important;
+      }
+      #h-tasa .tasa-refresh-btn i {
+        font-size: 10px !important;
+      }
+      #h-social a {
+        width: 24px !important;
+        height: 24px !important;
+      }
+      #h-social a i {
+        font-size: 12px !important;
+      }
+      #h-ctrls .relative {
+        transform: scale(0.8);
+      }
+      #h-ctrls button {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 8px !important;
+      }
+      #h-ctrls button i {
+        font-size: 12px !important;
+      }
+      #h-ctrls .relative .w-12 {
+        width: 40px !important;
+      }
+      #h-ctrls .relative .h-6 {
+        height: 20px !important;
+      }
+      #h-ctrls .relative span {
+        font-size: 6px !important;
+      }
     }
 
     /* 汉堡菜单 */
@@ -243,7 +272,9 @@
       padding: 1rem;
       overflow-y: auto;
     }
-    .menu-drawer.open { transform: translateX(0); }
+    .menu-drawer.open {
+      transform: translateX(0);
+    }
     .menu-drawer .close-btn {
       position: absolute;
       top: 12px;
@@ -279,10 +310,23 @@
       cursor: pointer;
       border-bottom: 1px solid #f1f5f9;
     }
-    .menu-drawer .menu-item:hover { background: #f1f5f9; color: #1e293b; }
-    .menu-drawer .menu-item i { margin-right: 8px; width: 20px; display: inline-block; }
-    .menu-drawer .sub-menu { padding-left: 1.5rem; }
-    .menu-drawer .sub-menu .menu-item { font-size: 0.75rem; padding: 0.4rem 0.5rem; border-bottom: none; }
+    .menu-drawer .menu-item:hover {
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+    .menu-drawer .menu-item i {
+      margin-right: 8px;
+      width: 20px;
+      display: inline-block;
+    }
+    .menu-drawer .sub-menu {
+      padding-left: 1.5rem;
+    }
+    .menu-drawer .sub-menu .menu-item {
+      font-size: 0.75rem;
+      padding: 0.4rem 0.5rem;
+      border-bottom: none;
+    }
     .menu-drawer .brand-filter {
       display: flex;
       flex-wrap: wrap;
@@ -318,6 +362,7 @@
       background: white;
     }
 
+    /* 价格排序按钮 */
     .price-sort-btn {
       padding: 4px 8px;
       border-radius: 20px;
@@ -331,17 +376,22 @@
       white-space: nowrap;
       line-height: 1;
     }
-    .price-sort-btn:hover { background: #e2e8f0; }
-    .price-sort-btn.active { background: #2563eb; border-color: #2563eb; color: white; }
+    .price-sort-btn:hover {
+      background: #e2e8f0;
+    }
+    .price-sort-btn.active {
+      background: #2563eb;
+      border-color: #2563eb;
+      color: white;
+    }
 
+    /* 模态框USD + Cambio 并列 */
     .modal-currency-group {
       display: flex;
       align-items: center;
       gap: 6px;
       flex-wrap: wrap;
     }
-
-    /* 已移除标签云 (tag-cloud) 相关样式 */
   </style>
 </head>
 <body>
@@ -374,7 +424,7 @@
     </div>
   </div>
 
-  <!-- HEADER -->
+  <!-- HEADER - 主页面隐藏Tasa -->
   <header id="mainHeader" class="bg-[#242629] sticky top-0 z-40 shadow-md border-b border-white/5 transition-all">
     <div class="border-b border-white/5 bg-[#191a1d]" id="tasaBar">
       <div class="max-w-7xl mx-auto px-3 py-1 flex justify-between items-center text-[8px] sm:text-xs font-bold text-slate-400 f-int">
@@ -456,17 +506,9 @@
 
   <div id="v-home-bot" class="bg-[#f8fafc] w-full relative z-20">
     <section class="max-w-7xl mx-auto px-4 pt-10 pb-12">
-      <div class="text-center mb-6">
-        <h3 class="text-3xl font-black text-slate-900 tracking-tight">Categorías Principales</h3>
-        <p class="text-slate-400 text-[10px] font-bold tracking-widest uppercase mt-2">SELECCIONA UNA LÍNEA PARA VER EL CATÁLOGO</p>
-      </div>
-      
-      <!-- 四大分类卡片 -->
+      <div class="text-center mb-10"><h3 class="text-3xl font-black text-slate-900 tracking-tight">Categorías Principales</h3><p class="text-slate-400 text-[10px] font-bold tracking-widest uppercase mt-2">SELECCIONA UNA LÍNEA PARA VER EL CATÁLOGO</p></div>
       <div id="h-cats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
-
-      <!-- 标签云区域已移除 -->
     </section>
-
     <section class="max-w-7xl mx-auto px-4 pb-16 grid md:grid-cols-2 gap-6">
       <div class="bg-gradient-to-br from-[#0b1121] to-[#1e293b] rounded-3xl p-8 sm:p-10 relative overflow-hidden shadow-xl cursor-pointer group border border-slate-800" onclick="setView('catalog')">
         <i class="ph-fill ph-crown absolute -right-4 -bottom-4 text-9xl text-amber-500/10 group-hover:text-amber-500/20 transition-colors"></i>
@@ -507,16 +549,17 @@
     </footer>
   </div>
 
-  <!-- CATALOG -->
+  <!-- CATALOG - 仅保留搜索框 + 汉堡按钮 + 价格箭头 -->
   <main id="v-cat" class="hidden flex-1 w-full bg-slate-50 p-2 sm:p-4 lg:p-6 pb-24">
     <div class="max-w-[1400px] mx-auto space-y-3">
+      <!-- 搜索栏 + 汉堡按钮 + 价格箭头 -->
       <div class="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-2 flex-wrap">
         <button onclick="openMenu()" class="w-9 h-9 flex items-center justify-center text-slate-600 bg-slate-100 rounded-xl border border-slate-200 hover:bg-slate-200 transition-colors shrink-0">
           <i class="ph-bold ph-list text-xl"></i>
         </button>
-        <div class="flex-1 relative min-w-[80px]" style="max-width:55%;">
+        <div class="flex-1 relative min-w-[120px]">
           <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-base"></i>
-          <input type="text" id="s-input" placeholder="Buscar..." oninput="updS(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-8 py-2.5 outline-none focus:ring-2 focus:ring-blue-500 text-sm f-int transition-all">
+          <input type="text" id="s-input" placeholder="Buscar por código, producto o marca..." oninput="updS(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-8 py-2.5 outline-none focus:ring-2 focus:ring-blue-500 text-sm f-int transition-all">
           <button id="s-clear" onclick="clrSearch()" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-full flex items-center justify-center transition-colors">
             <i class="ph-bold ph-x text-xs"></i>
           </button>
@@ -526,6 +569,8 @@
           <button class="price-sort-btn" onclick="setPriceSort('desc')">↓</button>
         </div>
       </div>
+
+      <!-- 产品网格 -->
       <div id="p-grid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 pt-2">
          <div class="col-span-full py-20 text-center flex flex-col items-center"><i class="ph-bold ph-spinner-gap animate-spin text-4xl text-blue-500 mb-3"></i><p class="text-slate-500 font-bold f-int text-lg">Cargando...</p></div>
       </div>
@@ -551,6 +596,7 @@
         <div class="flex items-center gap-2 mb-3 flex-wrap">
           <span id="m-cod" class="code-pill code-pill-sm"></span>
           <span id="m-br" class="hidden text-[10px] font-black italic tracking-tighter px-2.5 py-1 rounded shadow-sm"></span>
+          <!-- Cambio + USD 并列 -->
           <div class="modal-currency-group ml-auto">
             <button onclick="toggleModalCurrency()" class="text-[9px] font-medium bg-blue-50 hover:bg-blue-100 text-blue-600 px-2 py-1 rounded-full border border-blue-200 transition flex items-center gap-1">
               <i class="ph-bold ph-currency-circle-dollar text-sm"></i> <span id="modal-currency-label">VES</span>
@@ -644,7 +690,6 @@
   <div id="overlay" onclick="toggCart()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-40 opacity-0 transition-opacity duration-300"></div>
 
   <script>
-    // 配置与工具函数
     const CONFIG = { TASA: 791.67, WHATSAPP: '584223888007', CSV_URL: 'https://docs.google.com/spreadsheets/d/11P_SClE2hNTn5g-Eq2GRpQBA83q71RityFaAkFNB554/export?format=csv', DOLAR_API_URL: 'https://ve.dolarapi.com/v1/dolares/oficial' };
     const SVG = `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3crect width='100' height='100' fill='%23f1f5f9'/%3e%3ctext x='50' y='50' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='8' font-weight='bold' fill='%2394a3b8'%3eSin Imagen%3c/text%3e%3c/svg%3e`;
 
@@ -654,7 +699,6 @@
     function parseNumber(str) { if (!str) return 0; const cleaned = str.toString().replace(/[$]/g, '').replace(/,/g, '.').trim(); return parseFloat(cleaned) || 0; }
     function formatCurrency(amount) { if (s.cur === 'VES') return `Bs ${(amount * getTasa()).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`; return `$${amount.toFixed(2)}`; }
 
-    // Tasa BCV
     let currentTasa = CONFIG.TASA;
     let lastUpdateTime = null;
     let tasaUpdateInterval = null;
@@ -711,7 +755,6 @@
       } else { imgElement.onerror = function() { this.src = SVG; this.classList.remove('mix-blend-multiply'); }; }
     }
 
-    // 状态
     const s = { p: [], c: {}, v: 'home', l1: 'Todo', l2: '', l3: '', sr: '', tg: '', br: '', cur: 'USD', mod: null, del: 'nacional', pay: 'pago_movil_bs', page: 1, priceSort: '' };
     const $ = id => document.getElementById(id);
     function getPerPage() { return window.innerWidth < 768 ? 21 : 20; }
@@ -733,7 +776,9 @@
       btn.classList.toggle('active', usdVisible);
       if (s.mod) { const p = s.p.find(x => x.id === s.mod); if (p) document.getElementById('usdPriceValue').textContent = p.usdPrice ? p.usdPrice.toFixed(2) : p.pd.toFixed(2); }
     }
-    function toggleUsdPriceCat() {}
+    function toggleUsdPriceCat() {
+      // not used in catalog
+    }
 
     function toggleModalCurrency() { s.cur = s.cur === 'USD' ? 'VES' : 'USD'; updateModalPrices(); const label = $('modal-currency-label'); if (label) label.textContent = s.cur === 'USD' ? 'VES' : 'USD'; }
 
@@ -761,21 +806,6 @@
       renderProductGrid();
     }
 
-    // 标签云功能已移除 (renderTagCloud 为空函数)
-    function renderTagCloud() { /* 已移除 */ }
-
-    function filterCategoryByPath(path) {
-      const parts = path.split('/').map(s => s.trim());
-      if (parts.length < 1) return;
-      s.l1 = parts[0] || 'Todo';
-      s.l2 = parts.length > 1 ? parts[1] : '';
-      s.l3 = parts.length > 2 ? parts[2] : '';
-      s.sr = ''; s.tg = ''; s.br = ''; s.page = 1;
-      setView('catalog');
-      setTimeout(() => { renderCatalog(); window.scrollTo({ top: 0, behavior: 'smooth' }); }, 50);
-    }
-
-    // CSV解析
     async function fetchCSV() {
       try {
         const response = await fetch(CONFIG.CSV_URL);
@@ -829,7 +859,6 @@
         });
       }
       renderHomeCategories();
-      renderTagCloud(); // 现在为空
       renderCatalog();
     }
 
@@ -847,10 +876,13 @@
     }
 
     function renderCatalog() {
+      const perPage = getPerPage();
+      // 更新汉堡菜单中的分类
       renderMenuCategories();
       renderProductGrid();
     }
 
+    // 汉堡菜单分类渲染
     function renderMenuCategories() {
       const container = document.getElementById('menuCategories');
       if (!container) return;
@@ -1166,6 +1198,7 @@
       const catalog = $('v-cat'); if (catalog) catalog.classList.toggle('hidden', isHome);
       const social = $('h-social'); if (social) social.classList.toggle('hidden', !isHome);
       const controls = $('h-ctrls'); if (controls) controls.classList.toggle('hidden', isHome);
+      // Tasa visible solo en catalogo
       const tasaBar = document.getElementById('tasaBar');
       if (tasaBar) tasaBar.style.display = isHome ? 'none' : '';
       const tasa = $('h-tasa'); if (tasa) tasa.classList.toggle('hidden', isHome);
@@ -1201,18 +1234,17 @@
       window.open(`https://wa.me/${CONFIG.WHATSAPP}?text=${msg}`, '_blank');
     }
 
-    // 防抖resize
     let resizeTimeout;
     window.addEventListener('resize', function() { clearTimeout(resizeTimeout); resizeTimeout = setTimeout(function() { if (s.v === 'catalog') renderProductGrid(); }, 300); });
 
-    // 暴露全局
-    window.setView = setView; window.toggleCurrency = toggleCurrency; window.toggleModalCurrency = toggleModalCurrency; window.updateModalPrices = updateModalPrices; window.closeM = closeM; window.updMQ = updMQ; window.manMQ = manMQ; window.updateCart = updateCart; window.manualUpdateCart = manualUpdateCart; window.clrC = clrC; window.setDel = setDel; window.setPay = setPay; window.toggCart = toggCart; window.sendWA = sendWA; window.filterCategory = filterCategory; window.filterCategoryByPath = filterCategoryByPath; window.goToCategoryFromModal = goToCategoryFromModal; window.setB = setB; window.setT = setT; window.setL1 = setL1; window.setL2 = setL2; window.setL3 = setL3; window.updS = updS; window.clrSearch = clrSearch; window.clrF = clrF; window.openModal = openModal; window.toggleUsdPrice = toggleUsdPrice; window.toggleUsdPriceCat = toggleUsdPriceCat; window.changePage = changePage; window.fetchTasaBCV = fetchTasaBCV; window.manualUpdateTasa = manualUpdateTasa; window.setPriceSort = setPriceSort; window.openMenu = openMenu; window.closeMenu = closeMenu;
+    window.setView = setView; window.toggleCurrency = toggleCurrency; window.toggleModalCurrency = toggleModalCurrency; window.updateModalPrices = updateModalPrices; window.closeM = closeM; window.updMQ = updMQ; window.manMQ = manMQ; window.updateCart = updateCart; window.manualUpdateCart = manualUpdateCart; window.clrC = clrC; window.setDel = setDel; window.setPay = setPay; window.toggCart = toggCart; window.sendWA = sendWA; window.filterCategory = filterCategory; window.goToCategoryFromModal = goToCategoryFromModal; window.setB = setB; window.setT = setT; window.setL1 = setL1; window.setL2 = setL2; window.setL3 = setL3; window.updS = updS; window.clrSearch = clrSearch; window.clrF = clrF; window.openModal = openModal; window.toggleUsdPrice = toggleUsdPrice; window.toggleUsdPriceCat = toggleUsdPriceCat; window.changePage = changePage; window.fetchTasaBCV = fetchTasaBCV; window.manualUpdateTasa = manualUpdateTasa; window.setPriceSort = setPriceSort; window.openMenu = openMenu; window.closeMenu = closeMenu;
 
     window.onload = function() {
       scheduleTasaUpdate();
       fetchCSV();
       setDel(s.del);
       setPay(s.pay);
+      // 默认隐藏tasa en home
       document.getElementById('tasaBar').style.display = 'none';
     };
   </script>
