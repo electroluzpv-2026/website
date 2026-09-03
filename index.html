@@ -12,7 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js">
     </script>
     <style>
-        /* ===== 基础样式（保持不变） ===== */
+        /* ===== 基础样式 ===== */
         body {
             font-family: 'Poppins', sans-serif;
             font-weight: 400;
@@ -740,77 +740,78 @@
             outline: none;
         }
 
-        /* ===== 磨砂质感图标容器（玻璃态） ===== */
-        .icon-glass {
+        /* ===== 磨砂玻璃质感图标按钮 ===== */
+        .icon-frost {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1.5px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-            color: #0c83cd;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            color: white;
             flex-shrink: 0;
             transition: all 0.25s ease;
             cursor: pointer;
         }
-        .icon-glass i {
-            font-size: 20px;
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.05));
+        .icon-frost:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.04);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
         }
-        .icon-glass:hover {
-            background: rgba(255, 255, 255, 0.5);
-            box-shadow: 0 6px 20px rgba(12, 131, 205, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            transform: translateY(-2px) scale(1.02);
+        .icon-frost:active {
+            transform: scale(0.96);
         }
-        .icon-glass:active {
-            transform: scale(0.95);
+        .icon-frost i {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
-        /* 搜索框内的小图标（放大镜）使用相同风格，但尺寸略小 */
-        .icon-glass-sm {
-            width: 34px;
-            height: 34px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1.5px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-            color: #0c83cd;
+        /* 搜索框内的小图标（磨砂） */
+        .icon-frost-sm {
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            color: white;
             flex-shrink: 0;
             pointer-events: none;
+            transition: all 0.2s;
         }
-        .icon-glass-sm i {
-            font-size: 16px;
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.05));
+        .icon-frost-sm i {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
         }
+        /* 移动端适配 */
         @media (max-width: 640px) {
-            .icon-glass {
+            .icon-frost {
                 width: 34px;
                 height: 34px;
-                border-radius: 12px;
             }
-            .icon-glass i {
-                font-size: 17px;
+            .icon-frost i {
+                font-size: 16px;
             }
-            .icon-glass-sm {
-                width: 28px;
-                height: 28px;
-                border-radius: 10px;
+            .icon-frost-sm {
+                width: 26px;
+                height: 26px;
             }
-            .icon-glass-sm i {
-                font-size: 13px;
+            .icon-frost-sm i {
+                font-size: 12px;
             }
         }
 
-        /* ===== 分类标签（新颖风格） ===== */
+        /* ===== 新颖的分类标签样式 ===== */
         .category-tab {
             flex-shrink: 0;
             display: inline-flex;
@@ -826,7 +827,7 @@
             transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             cursor: pointer;
             white-space: nowrap;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
             user-select: none;
         }
         .category-tab i {
@@ -834,7 +835,7 @@
         }
         .category-tab:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
             background: #e9edf2;
         }
         .category-tab.active-cat {
@@ -1032,15 +1033,15 @@
                 <!-- 搜索框行 -->
                 <div class="flex items-center gap-2 flex-wrap">
                     <!-- 菜单按钮：磨砂质感 -->
-                    <button onclick="openMenu()" class="icon-glass" aria-label="Abrir menú">
+                    <button onclick="openMenu()" class="icon-frost" aria-label="Abrir menú">
                         <i class="ph-bold ph-list"></i>
                     </button>
                     <div class="flex-1 relative min-w-[120px]">
-                        <!-- 搜索图标：磨砂质感（小号） -->
-                        <div class="absolute left-2 top-1/2 -translate-y-1/2 icon-glass-sm" style="pointer-events:none;">
+                        <!-- 搜索图标：磨砂质感 -->
+                        <div class="absolute left-2 top-1/2 -translate-y-1/2 icon-frost-sm">
                             <i class="ph-bold ph-magnifying-glass"></i>
                         </div>
-                        <input type="text" id="s-input" placeholder="Buscar por código, producto o marca..." oninput="debouncedSearch(this.value)" class="search-input w-full bg-white border-2 border-[#cb0e4c] rounded-xl pl-12 pr-8 py-2.5 text-sm f-int transition-all focus:border-[#0c83cd] focus:ring-2 focus:ring-[#0c83cd]/20">
+                        <input type="text" id="s-input" placeholder="Buscar por código, producto o marca..." oninput="debouncedSearch(this.value)" class="search-input w-full bg-white border-2 border-[#cb0e4c] rounded-xl pl-11 pr-8 py-2.5 text-sm f-int transition-all focus:border-[#0c83cd] focus:ring-2 focus:ring-[#0c83cd]/20">
                         <button id="s-clear" onclick="clrSearch()" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-full flex items-center justify-center transition-colors">
                             <i class="ph-bold ph-x text-xs"></i>
                         </button>
@@ -1234,7 +1235,7 @@
             priceSort: '',
             loading: false,
             loadError: false,
-            _defaultCategorySet: false
+            _defaultCategorySet: true // 改为 true，不再自动筛选
         };
 
         let currentTasa = CONFIG.TASA;
@@ -2237,18 +2238,10 @@
             const truck = $('h-truck');
             if (truck) truck.classList.toggle('hidden', !isHome);
 
-            if (view === 'catalog' && !s._defaultCategorySet && s.p.length > 0) {
+            // 不再自动筛选，保持 Todo
+            if (view === 'catalog' && !s._defaultCategorySet) {
                 s._defaultCategorySet = true;
-                const ilum = s.p.find(p => normalize(p.l1).includes('iluminacion'));
-                if (ilum) {
-                    s.l1 = ilum.l1;
-                    s.l2 = '';
-                    s.l3 = '';
-                    s.tg = '';
-                    s.br = '';
-                    s.page = 1;
-                    renderCatalog();
-                }
+                // 保持 s.l1 = 'Todo'
             }
         }
 
