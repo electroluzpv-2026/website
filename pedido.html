@@ -155,8 +155,16 @@
     <!-- MAIN -->
     <main class="flex-1 w-full max-w-7xl mx-auto px-1.5 sm:px-4 py-1.5 sm:py-6">
 
-        <!-- 筛选栏 + Marca -->
+        <!-- 筛选栏 + Marca + 搜索框 -->
         <div class="bg-white p-1.5 sm:p-3 rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 flex flex-col gap-1.5 sm:gap-2 mb-1.5 sm:mb-4">
+            <!-- 搜索框 (新增) -->
+            <div class="w-full relative">
+                <i class="ph-bold ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[0.65rem] sm:text-sm"></i>
+                <input type="text" id="searchInput" placeholder="Buscar por código, descripción o marca..." 
+                    class="w-full pl-6 sm:pl-8 pr-2 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-[0.6rem] sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/60 focus:border-blue-400 transition bg-slate-50/80"
+                    oninput="applySearch()">
+            </div>
+
             <div class="flex flex-wrap items-center gap-1.5">
                 <span class="text-[0.45rem] sm:text-[0.6rem] font-black text-slate-400 uppercase">Mostrar:</span>
                 <button class="filter-chip active" data-filter="all" onclick="setFilter('all')">Todos</button>
@@ -225,6 +233,7 @@
         let filterMode = 'all';       // 'all', 'zero', 'low'
         let brandFilter = '';         // '' = todas
         let sortMode = 'default';     // 'default', 'qty-asc', 'qty-desc'
+        let searchTerm = '';          // búsqueda
 
         // 点货数据: { id: cantidad }
         let counts = {};
@@ -326,9 +335,19 @@
             updateCheckoutBadge();
         }
 
-        // ========== FILTROS Y ORDEN ==========
+        // ========== FILTROS Y ORDEN + BÚSQUEDA ==========
         function applyFiltersAndSort() {
             let data = [...products];
+
+            // Búsqueda (por código, nombre o marca)
+            if (searchTerm.trim() !== '') {
+                const term = normalize(searchTerm);
+                data = data.filter(p => 
+                    normalize(p.id).includes(term) ||
+                    normalize(p.name).includes(term) ||
+                    normalize(p.brand).includes(term)
+                );
+            }
 
             // Filtro stock
             if (filterMode === 'zero') {
@@ -352,6 +371,15 @@
             }
 
             filtered = data;
+        }
+
+        // Nueva función para búsqueda
+        function applySearch() {
+            const input = document.getElementById('searchInput');
+            searchTerm = input.value;
+            currentPage = 1;
+            applyFiltersAndSort();
+            renderInventory();
         }
 
         function setFilter(mode) {
@@ -530,7 +558,6 @@
         function clearAllCounts() {
             if (!confirm('¿Vaciar todos los conteos?')) return;
             products.forEach(p => { counts[p.id] = 0; });
-            // 刷新所有input
             products.forEach(p => {
                 const input = document.getElementById(`count_${p.id}`);
                 if (input) input.value = 0;
@@ -559,7 +586,6 @@
                 return;
             }
 
-            // Mensaje en español
             let msg = '📋 *Nuevo Pedido - Electroluz PV*\n';
             msg += `📅 ${new Date().toLocaleString('es-ES')}\n`;
             msg += `───────────────────\n\n`;
