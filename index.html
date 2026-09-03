@@ -12,7 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js">
     </script>
     <style>
-        /* 所有样式保持不变，略去以节省空间，实际代码中保留全部样式 */
+        /* ===== 基础样式（保持不变） ===== */
         body {
             font-family: 'Poppins', sans-serif;
             font-weight: 400;
@@ -49,6 +49,8 @@
             -webkit-appearance: none;
             margin: 0;
         }
+
+        /* ===== 品牌按钮（保留） ===== */
         .b-ing {
             color: #FFCC00;
             transition: 0.3s;
@@ -104,6 +106,8 @@
             color: #fff;
             box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
         }
+
+        /* ===== 支付与配送 ===== */
         .btn-pay {
             flex: 1;
             padding: 6px 4px;
@@ -153,6 +157,8 @@
         .toggle-checkbox:checked+.toggle-label:before {
             transform: translateX(100%);
         }
+
+        /* ===== 产品卡片 ===== */
         .product-card {
             content-visibility: auto;
             contain-intrinsic-size: 400px;
@@ -187,6 +193,8 @@
         .cart-item-name {
             font-weight: 500 !important;
         }
+
+        /* ===== 购物车抽屉 ===== */
         #drawer {
             display: flex;
             flex-direction: column;
@@ -203,6 +211,8 @@
             flex-shrink: 0;
             padding: 0.75rem;
         }
+
+        /* ===== 美元按钮 ===== */
         .usd-floating-container {
             display: inline-flex;
             align-items: center;
@@ -330,6 +340,8 @@
             color: #facc15;
             font-weight: 700;
         }
+
+        /* ===== 工具类 ===== */
         .hide-arrows::-webkit-inner-spin-button,
         .hide-arrows::-webkit-outer-spin-button {
             -webkit-appearance: none;
@@ -373,6 +385,8 @@
         .tasa-refresh-btn:active {
             transform: rotate(360deg) scale(0.9);
         }
+
+        /* ===== 响应式 ===== */
         @media (max-width: 640px) {
             .header-mobile-compact {
                 padding-top: 6px !important;
@@ -460,6 +474,8 @@
                 gap: 2px !important;
             }
         }
+
+        /* ===== 图片预览 ===== */
         .image-preview-overlay {
             position: fixed;
             inset: 0;
@@ -501,6 +517,8 @@
         .image-preview-overlay .close-preview:hover {
             background: rgba(255, 255, 255, 0.25);
         }
+
+        /* ===== 汉堡菜单 ===== */
         .menu-overlay {
             position: fixed;
             inset: 0;
@@ -617,6 +635,8 @@
             border: 1px solid #e2e8f0;
             background: white;
         }
+
+        /* ===== 价格排序 ===== */
         .price-sort-btn {
             padding: 4px 8px;
             border-radius: 20px;
@@ -638,12 +658,16 @@
             border-color: #2563eb;
             color: white;
         }
+
+        /* ===== 模态框货币组 ===== */
         .modal-currency-group {
             display: flex;
             align-items: center;
             gap: 6px;
             flex-wrap: wrap;
         }
+
+        /* ===== 警告与重试 ===== */
         .tasa-warning {
             color: #f87171 !important;
             animation: blink-warning 1s ease-in-out infinite;
@@ -683,6 +707,8 @@
         .retry-btn:hover {
             background: #2563eb;
         }
+
+        /* ===== 子菜单展开 ===== */
         .sub-menu-toggle {
             cursor: pointer;
             user-select: none;
@@ -701,6 +727,136 @@
         }
         .sub-menu-content.open {
             max-height: 800px;
+        }
+
+        /* ===== 搜索框品牌色 ===== */
+        .search-input {
+            border: 2px solid #cb0e4c;
+            transition: all 0.2s;
+        }
+        .search-input:focus {
+            border-color: #0c83cd;
+            box-shadow: 0 0 0 3px rgba(12, 131, 205, 0.2);
+            outline: none;
+        }
+
+        /* ===== 磨砂质感图标容器（玻璃态） ===== */
+        .icon-glass {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            color: #0c83cd;
+            flex-shrink: 0;
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+        .icon-glass i {
+            font-size: 20px;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.05));
+        }
+        .icon-glass:hover {
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 6px 20px rgba(12, 131, 205, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px) scale(1.02);
+        }
+        .icon-glass:active {
+            transform: scale(0.95);
+        }
+        /* 搜索框内的小图标（放大镜）使用相同风格，但尺寸略小 */
+        .icon-glass-sm {
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            color: #0c83cd;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            pointer-events: none;
+        }
+        .icon-glass-sm i {
+            font-size: 16px;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.05));
+        }
+        @media (max-width: 640px) {
+            .icon-glass {
+                width: 34px;
+                height: 34px;
+                border-radius: 12px;
+            }
+            .icon-glass i {
+                font-size: 17px;
+            }
+            .icon-glass-sm {
+                width: 28px;
+                height: 28px;
+                border-radius: 10px;
+            }
+            .icon-glass-sm i {
+                font-size: 13px;
+            }
+        }
+
+        /* ===== 分类标签（新颖风格） ===== */
+        .category-tab {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.45rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            background: #f1f5f9;
+            color: #1e293b;
+            border: 2px solid transparent;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            user-select: none;
+        }
+        .category-tab i {
+            font-size: 1rem;
+        }
+        .category-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            background: #e9edf2;
+        }
+        .category-tab.active-cat {
+            background: #cb0e4c;
+            color: white;
+            border-color: #cb0e4c;
+            box-shadow: 0 8px 24px rgba(203, 14, 76, 0.25);
+            transform: scale(1.03);
+        }
+        .category-tab.active-cat:hover {
+            background: #b00d42;
+            box-shadow: 0 10px 28px rgba(203, 14, 76, 0.35);
+        }
+        @media (max-width: 640px) {
+            .category-tab {
+                padding: 0.35rem 0.9rem;
+                font-size: 0.7rem;
+                gap: 4px;
+            }
+            .category-tab i {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -871,22 +1027,36 @@
     <!-- CATALOG -->
     <main id="v-cat" class="hidden flex-1 w-full bg-slate-50 p-2 sm:p-4 lg:p-6 pb-24">
         <div class="max-w-[1400px] mx-auto space-y-3">
-            <div class="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-2 flex-wrap">
-                <button onclick="openMenu()" class="w-9 h-9 flex items-center justify-center text-slate-600 bg-slate-100 rounded-xl border border-slate-200 hover:bg-slate-200 transition-colors shrink-0">
-                    <i class="ph-bold ph-list text-xl"></i>
-                </button>
-                <div class="flex-1 relative min-w-[120px]">
-                    <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-base"></i>
-                    <input type="text" id="s-input" placeholder="Buscar por código, producto o marca..." oninput="debouncedSearch(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-8 py-2.5 outline-none focus:ring-2 focus:ring-blue-500 text-sm f-int transition-all">
-                    <button id="s-clear" onclick="clrSearch()" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-full flex items-center justify-center transition-colors">
-                        <i class="ph-bold ph-x text-xs"></i>
+            <!-- 搜索栏 + 分类滚动栏 -->
+            <div class="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200">
+                <!-- 搜索框行 -->
+                <div class="flex items-center gap-2 flex-wrap">
+                    <!-- 菜单按钮：磨砂质感 -->
+                    <button onclick="openMenu()" class="icon-glass" aria-label="Abrir menú">
+                        <i class="ph-bold ph-list"></i>
                     </button>
+                    <div class="flex-1 relative min-w-[120px]">
+                        <!-- 搜索图标：磨砂质感（小号） -->
+                        <div class="absolute left-2 top-1/2 -translate-y-1/2 icon-glass-sm" style="pointer-events:none;">
+                            <i class="ph-bold ph-magnifying-glass"></i>
+                        </div>
+                        <input type="text" id="s-input" placeholder="Buscar por código, producto o marca..." oninput="debouncedSearch(this.value)" class="search-input w-full bg-white border-2 border-[#cb0e4c] rounded-xl pl-12 pr-8 py-2.5 text-sm f-int transition-all focus:border-[#0c83cd] focus:ring-2 focus:ring-[#0c83cd]/20">
+                        <button id="s-clear" onclick="clrSearch()" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-full flex items-center justify-center transition-colors">
+                            <i class="ph-bold ph-x text-xs"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-1 shrink-0">
+                        <button class="price-sort-btn" onclick="setPriceSort('asc')">↑</button>
+                        <button class="price-sort-btn" onclick="setPriceSort('desc')">↓</button>
+                    </div>
                 </div>
-                <div class="flex items-center gap-1 shrink-0">
-                    <button class="price-sort-btn" onclick="setPriceSort('asc')">↑</button>
-                    <button class="price-sort-btn" onclick="setPriceSort('desc')">↓</button>
+                <!-- 四大分类标签 -->
+                <div id="category-tabs" class="flex gap-3 overflow-x-auto py-3 hide-sc scroll-smooth mt-2">
+                    <!-- 由 JS 动态生成 -->
                 </div>
             </div>
+
+            <!-- 产品网格 -->
             <div id="p-grid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 pt-2">
                 <div class="col-span-full py-20 text-center flex flex-col items-center"><i class="ph-bold ph-spinner-gap animate-spin text-4xl text-blue-500 mb-3"></i><p class="text-slate-500 font-bold f-int text-lg">Cargando...</p></div>
             </div>
@@ -919,7 +1089,6 @@
                     <span id="m-cod" class="code-pill code-pill-sm"></span>
                     <span id="m-br" class="hidden text-[10px] font-black italic tracking-tighter px-2.5 py-1 rounded shadow-sm"></span>
                     <div class="modal-currency-group ml-auto">
-                        <!-- 模态框货币切换 (独立) -->
                         <button onclick="toggleModalCurrency()" class="text-[9px] font-medium bg-blue-50 hover:bg-blue-100 text-blue-600 px-2 py-1 rounded-full border border-blue-200 transition flex items-center gap-1">
                             <i class="ph-bold ph-currency-circle-dollar text-sm"></i> <span id="modal-currency-label">USD</span>
                         </button>
@@ -950,7 +1119,7 @@
     <!-- CART -->
     <div id="drawer" class="fixed inset-y-0 right-0 w-full sm:w-[420px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col border-l border-slate-200">
         <div class="cart-header p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-shrink-0">
-            <h3 class="font-black text-lg text-slate-900 tracking-tight">📦 Tu Pedido</h3>
+            <h3 class="font-black text-lg text-slate-900 tracking-tight">📦 RESUMEN DE PEDIDO</h3>
             <button onclick="toggCart()" class="w-8 h-8 bg-white border border-slate-200 rounded-full text-slate-500 hover:text-rose-500 shadow-sm transition-colors flex items-center justify-center">
                 <i class="ph-bold ph-x"></i>
             </button>
@@ -1037,7 +1206,6 @@
         function parseNumber(str) { if (!str) return 0; const cleaned = str.toString().replace(/[$]/g, '').replace(/,/g,
             '.').trim(); return parseFloat(cleaned) || 0; }
 
-        // 格式化金额，可指定货币
         function formatCurrency(amount, currency) {
             const cur = currency || s.cur;
             if (cur === 'VES') return `Bs ${(amount * getTasa()).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -1057,15 +1225,16 @@
             sr: '',
             tg: '',
             br: '',
-            cur: 'USD', // 全局货币
-            modalCur: 'USD', // 模态框独立货币
+            cur: 'USD',
+            modalCur: 'USD',
             mod: null,
             del: 'nacional',
             pay: 'pago_movil_bs',
             page: 1,
             priceSort: '',
             loading: false,
-            loadError: false
+            loadError: false,
+            _defaultCategorySet: false
         };
 
         let currentTasa = CONFIG.TASA;
@@ -1239,7 +1408,7 @@
         }
 
         // ============================================================
-        // MODAL CURRENCY TOGGLE (独立，不影响全局)
+        // MODAL CURRENCY TOGGLE (独立)
         // ============================================================
         function toggleModalCurrency() {
             s.modalCur = s.modalCur === 'USD' ? 'VES' : 'USD';
@@ -1259,8 +1428,8 @@
             closeM();
             setTimeout(() => {
                 s.l1 = parts[0] || 'Todo';
-                s.l2 = parts[1] || '';
-                s.l3 = parts[2] || '';
+                s.l2 = '';
+                s.l3 = '';
                 s.sr = '';
                 s.tg = '';
                 s.br = '';
@@ -1427,7 +1596,31 @@
         function renderCatalog() {
             if (s.loading) return;
             renderMenuCategories();
+            renderCategoryTabs();
             renderProductGrid();
+        }
+
+        // ============================================================
+        // RENDER CATEGORY TABS (仅四大分类)
+        // ============================================================
+        function renderCategoryTabs() {
+            const container = document.getElementById('category-tabs');
+            if (!container) return;
+            const categories = [
+                { label: 'Iluminación', icon: 'ph-fill ph-lightbulb', key: 'iluminacion' },
+                { label: 'Ferretería', icon: 'ph-fill ph-wrench', key: 'ferreteria' },
+                { label: 'Electrónica', icon: 'ph-fill ph-plug', key: 'electronic' },
+                { label: 'Papelería', icon: 'ph-fill ph-books', key: 'papeleria' }
+            ];
+            let html = '';
+            categories.forEach(cat => {
+                const isActive = s.l1 !== 'Todo' && normalize(s.l1).includes(cat.key);
+                const activeClass = isActive ? 'active-cat' : '';
+                html += `<button class="category-tab ${activeClass}" onclick="filterCategory('${cat.key}')">
+                    <i class="${cat.icon}"></i> ${cat.label}
+                </button>`;
+            });
+            container.innerHTML = html;
         }
 
         // ============================================================
@@ -1659,6 +1852,7 @@
             }
             grid.innerHTML = htmlString;
             renderPagination(totalPages);
+            renderCategoryTabs();
         }
 
         // ============================================================
@@ -1686,7 +1880,6 @@
             const p = s.p.find(x => x.id === id);
             if (!p) return;
             s.mod = id;
-            // 同步模态货币为当前全局货币
             s.modalCur = s.cur;
             const isAgotado = p.stock <= 0;
             const img = $('m-img');
@@ -1718,14 +1911,12 @@
                 infoText = $('m-info');
             if (p.info) { infoText.textContent = p.info.replace(/\//g, '\n');
                 infoBox.classList.remove('hidden'); } else infoBox.classList.add('hidden');
-            // 更新货币标签
             const label = $('modal-currency-label');
             if (label) label.textContent = s.modalCur === 'USD' ? 'VES' : 'USD';
             updateModalPrices();
             const qty = $('m-qty');
             if (qty) qty.value = s.c[p.id] || 0;
             document.getElementById('usdPriceValue').textContent = p.usdPrice ? p.usdPrice.toFixed(2) : p.pd.toFixed(2);
-            // 重置USD按钮状态
             usdVisible = false;
             const badge = document.getElementById('usdPriceBadge'),
                 btn = document.getElementById('usdRevealBtn');
@@ -1746,7 +1937,6 @@
             if (!p) return;
             const priceGrid = $('m-price-grid');
             if (!priceGrid) return;
-            // 使用模态独立货币 s.modalCur
             const cur = s.modalCur;
             if (cur === 'VES') {
                 priceGrid.className = 'flex flex-col gap-1.5 mb-6 f-int';
@@ -2046,6 +2236,20 @@
             if (tasa) tasa.classList.toggle('hidden', isHome);
             const truck = $('h-truck');
             if (truck) truck.classList.toggle('hidden', !isHome);
+
+            if (view === 'catalog' && !s._defaultCategorySet && s.p.length > 0) {
+                s._defaultCategorySet = true;
+                const ilum = s.p.find(p => normalize(p.l1).includes('iluminacion'));
+                if (ilum) {
+                    s.l1 = ilum.l1;
+                    s.l2 = '';
+                    s.l3 = '';
+                    s.tg = '';
+                    s.br = '';
+                    s.page = 1;
+                    renderCatalog();
+                }
+            }
         }
 
         // ============================================================
@@ -2071,22 +2275,7 @@
             }
             renderProductGrid();
             updateCartUI();
-            // 如果模态打开，刷新模态价格（使用模态独立货币，但背景刷新）
-            if (s.mod) {
-                // 不改变 modalCur，但需要刷新显示，因为全局变化不影响模态，但我们希望模态保持独立。
-                // 但用户可能期望模态货币与全局同步？我们设计为独立，所以不自动同步。
-                // 这里我们保持模态不变，但用户可在模态内切换。
-                // 如果希望模态跟随全局，可在此更新 modalCur，但根据需求，我们保持独立。
-                // 为了用户体验，当全局切换时，模态若打开，我们可以提示或保持原样，但这里保持独立。
-                // 但我们可以在模态打开时，同步 modalCur 为当前全局，但用户已切换过模态，则保留。
-                // 这里我们不做自动同步，以免覆盖用户选择。
-                // 但为了更一致，若模态刚打开时未手动切换，可随全局变化，此处简单处理：如果模态打开且 modalCur 仍等于旧全局，则更新。
-                // 我们加一个判断：如果 modalCur 与旧全局相同，则跟随新全局。
-                // 简单起见，我们只更新模态显示，但 modalCur 不变。
-                // 更好：当全局切换时，如果模态打开且 modalCur 与 s.cur 不同，不改变；否则同步。
-                // 这里我们简单处理：只更新显示，但 modalCur 不变。
-                updateModalPrices();
-            }
+            if (s.mod) updateModalPrices();
         }
 
         // ============================================================
@@ -2274,7 +2463,6 @@
             setDel(s.del);
             setPay(s.pay);
             document.getElementById('tasaBar').style.display = 'none';
-            // 初始货币开关状态
             const slider = $('cur-slider'),
                 usdLbl = $('cur-usd-lbl'),
                 vesLbl = $('cur-ves-lbl');
