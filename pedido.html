@@ -214,7 +214,7 @@
         // ========== CONFIG ==========
         const CONFIG = {
             CSV_URL: 'https://docs.google.com/spreadsheets/d/11P_SClE2hNTn5g-Eq2GRpQBA83q71RityFaAkFNB554/export?format=csv',
-            WHATSAPP_NUMBER: '04128538888'
+            WHATSAPP_NUMBER: '5804128538888'
         };
 
         // ========== ESTADO ==========
@@ -567,16 +567,15 @@
             items.forEach((item, idx) => {
                 const qty = counts[item.id] || 0;
                 msg += `${idx+1}. *${item.id}* - ${item.name}\n`;
-                msg += `   📦 Stock: ${item.stock}  |  ✏️ Contado: ${qty}\n`;
+                msg += `Pedido/UND: ${qty}\n`;
                 if (item.brand) msg += `   🏷️ Marca: ${item.brand}\n`;
                 msg += `\n`;
             });
 
             msg += `───────────────────\n`;
             const totalQty = items.reduce((sum, i) => sum + (counts[i.id] || 0), 0);
-            msg += `📦 Total productos: ${items.length}\n`;
-            msg += `🔢 Total unidades: ${totalQty}\n`;
-            msg += `\n🔹 Enviado desde Electroluz PV Point`;
+            msg += `Total productos: ${items.length}\n`;
+            msg += `Pedido Nuevo Electroluz PV`;
 
             const url = `https://wa.me/${CONFIG.WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
             window.open(url, '_blank');
