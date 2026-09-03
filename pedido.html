@@ -72,11 +72,25 @@
         .stock-low { background: #fef3c7; color: #92400e; }
         .stock-ok { background: #dcfce7; color: #166534; }
 
-        .filter-chip { padding: 0.15rem 0.6rem; border-radius: 9999px; font-size: 0.5rem; font-weight: 700; background: white; border: 1.5px solid #e2e8f0; color: #475569; cursor: pointer; transition: 0.2s; }
+        .filter-chip { 
+            padding: 0.15rem 0.6rem; 
+            border-radius: 9999px; 
+            font-size: 0.5rem; 
+            font-weight: 700; 
+            background: white; 
+            border: 1.5px solid #e2e8f0; 
+            color: #475569; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            white-space: nowrap;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
         .filter-chip.active { background: #1e293b; border-color: #1e293b; color: white; }
         .filter-chip:hover { background: #f1f5f9; }
         @media (min-width: 640px) {
-            .filter-chip { font-size: 0.7rem; padding: 0.2rem 1rem; }
+            .filter-chip { font-size: 0.7rem; padding: 0.2rem 1rem; max-width: 250px; }
         }
 
         /* 结算面板 */
@@ -89,6 +103,7 @@
         .checkout-item .left { display: flex; gap: 0.5rem; flex-wrap: wrap; }
         .checkout-item .right { font-weight: 700; }
         .checkout-total { margin-top: 1rem; padding-top: 0.8rem; border-top: 2px solid #e2e8f0; display: flex; justify-content: space-between; font-weight: 800; font-size: 1rem; }
+        .checkout-empresa { font-size: 0.65rem; color: #64748b; margin-top: 0.25rem; padding: 0.25rem 0.5rem; background: #f1f5f9; border-radius: 0.3rem; }
         @media (max-width: 640px) {
             .checkout-panel { padding: 1rem; max-height: 90vh; }
             .checkout-item { font-size: 0.65rem; }
@@ -155,9 +170,9 @@
     <!-- MAIN -->
     <main class="flex-1 w-full max-w-7xl mx-auto px-1.5 sm:px-4 py-1.5 sm:py-6">
 
-        <!-- 筛选栏 + Marca + 搜索框 -->
+        <!-- 筛选栏 -->
         <div class="bg-white p-1.5 sm:p-3 rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 flex flex-col gap-1.5 sm:gap-2 mb-1.5 sm:mb-4">
-            <!-- 搜索框 (新增) -->
+            <!-- 搜索框 -->
             <div class="w-full relative">
                 <i class="ph-bold ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[0.65rem] sm:text-sm"></i>
                 <input type="text" id="searchInput" placeholder="Buscar por código, descripción o marca..." 
@@ -171,6 +186,7 @@
                 <button class="filter-chip" data-filter="zero" onclick="setFilter('zero')">Stock 0</button>
                 <button class="filter-chip" data-filter="low" onclick="setFilter('low')">Stock bajo (≤5)</button>
             </div>
+            
             <div class="flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-1.5">
                 <span class="text-[0.45rem] sm:text-[0.6rem] font-black text-slate-400 uppercase">Marca:</span>
                 <button class="filter-chip active" data-brand="" onclick="setBrandFilter('')">Todas</button>
@@ -178,6 +194,17 @@
                 <button class="filter-chip" data-brand="WADFOW" onclick="setBrandFilter('WADFOW')">WADFOW</button>
                 <button class="filter-chip" data-brand="VERT" onclick="setBrandFilter('VERT')">VERT</button>
             </div>
+
+            <!-- Empresa 筛选 (antes Proveedor) -->
+            <div class="flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-1.5" id="empresa-filter-container">
+                <span class="text-[0.45rem] sm:text-[0.6rem] font-black text-slate-400 uppercase">Empresa:</span>
+                <button class="filter-chip active" data-empresa="" onclick="setEmpresaFilter('')">Todos</button>
+                <div id="empresa-chips" class="flex flex-wrap gap-1.5">
+                    <!-- 动态生成 empresa 按钮 -->
+                    <span class="text-[0.5rem] text-slate-400">Cargando empresas...</span>
+                </div>
+            </div>
+
             <div class="flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-1.5">
                 <span class="text-[0.45rem] sm:text-[0.6rem] font-black text-slate-400 uppercase">Orden:</span>
                 <button class="filter-chip active" data-sort="default" onclick="setSort('default')">Por defecto</button>
@@ -196,12 +223,13 @@
                             <th class="text-left">CÓD</th>
                             <th class="text-left">DESCRIPCIÓN</th>
                             <th class="text-left">M</th>
+                            <th class="text-left">Empresa</th>
                             <th class="text-center">Stock</th>
                             <th class="text-center">点货</th>
                         </tr>
                     </thead>
                     <tbody id="inventory-body">
-                        <tr><td colspan="6" class="text-center py-4 sm:py-8 text-[0.5rem] sm:text-sm text-slate-400">Cargando productos...</td></tr>
+                        <tr><td colspan="7" class="text-center py-4 sm:py-8 text-[0.5rem] sm:text-sm text-slate-400">Cargando productos...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -225,18 +253,52 @@
             WHATSAPP_NUMBER: '5804128538888'
         };
 
+        // ========== 本地测试数据（使用 Empresa 列名） ==========
+        const TEST_DATA = `Codigo,Descripcion,Almacen_1,Costo,Otro,Detal,Precio1,Grupo,Empresa
+CAS-14,CALCULADORA CASIO FX-82MS 2ND EDITION,12,16.23,31.65,40.58,34.08,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+887RGB,CORNETA 1X100,8,2.63,5.13,6.57,5.52,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+X-997,CORNETA 1X100,9,3.26,6.24,8,6.72,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+PV-633,CORNETA 1X12,11,19.32,37.44,48,40.32,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+AO-82,CORNETA 1X20,10,13.71,26.73,34.28,28.79,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+SZ-1950BT,CORNETA 1X24,12,10.51,20.49,26.28,22.07,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+SZ-1951BT,CORNETA 1X24,11,10.63,20.73,26.58,22.32,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+SZ-1949BT,CORNETA 1X24,12,9.03,17.61,22.58,18.96,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+SZ-F666,CORNETA 1X30,11,7.09,13.83,17.73,14.89,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+PV-665,CORNETA 1X30,11,6.74,13.14,16.85,14.15,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+AO-662,CORNETA 1X30,11,6.17,12.03,15.42,12.96,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+X-502,CORNETA 1X30,11,6.86,16.55,21.15,17.77,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+PV-668,CORNETA 1X40,6,8.46,16.15,21.15,17.77,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+X-701,CORNETA 1X40,3,6.17,12.03,15.42,12.96,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+SZ-25MINI,CORNETA 1X50,9,4,7.8,10,8.4,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+SZ-S580,CORNETA 1X50,11,11.54,22.85,28.85,24.23,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+S28,CORNETA 1X50,12,9.14,17.82,22.85,19.19,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+X-508,CORNETA 1X50,8,4.91,9.57,12.28,10.31,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+X-922,CORNETA 1X50,4,4.87,9.81,11.42,9.6,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+SZ-YD69,CORNETA 1X60,10,4.57,8.93,11.42,9.6,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+ZF-30FT,EXTENSION NARANJA 30FT 1X20U ZF-30FT,15,2.53,4.93,6.32,5.31,OTROS,J505574140 ORIENTE DISTRIBUCION C.A.
+MH-61,GUANTES CON LINTERNA LED DE 2W COLOR NEGRO,7,4.17,7.38,8.61,7.38,INGOC,J505572220 BELMENGY, C.A.
+WKKK131,SET DE 3 CUCHILLO DE COCINA (8/5/3.5),3,2.47,4.45,5.19,4.45,INGO,J505572220 BELMENGY, C.A.
+WWV1822,VALVULA DE BOLA DE PVC PEGABLE 1/2",0,0.54,0.97,1.13,0.97,INGO,J505572220 BELMENGY, C.A.
+928116,ABRAZADERA DANNI 16MM 1X12U 928116,34,0.43,0.84,1.07,0.9,OTROS,J505574140 ORIENTE DISTRIBUCION C.A.
+928125,ABRAZADERA DANNI 25MM 1X12U 928125,35,0.43,0.84,1.07,0.9,OTROS,J505574140 ORIENTE DISTRIBUCION C.A.
+MG-0054,ABRE VINO,18,2.07,4.04,5.18,4.35,OTROS,J504750824 LASER LED, C.A.
+B-3339,ABRELATAS 1X96 ZAN FENG,1,1.83,3.57,4.58,3.84,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.
+AKMG6020,ACCESORIOS PARA DRIMER(20UND) PARA (PIEDRA),2,2.34,4.21,4.91,4.21,INGO,J505572220 BELMENGY, C.A.
+AKMG5031,ACCESORIOS PARA DRIMER(32UND) PARA(LIADO Y PU),2,2.72,4.59,5.71,4.9,INGO,J505572220 BELMENGY, C.A.
+AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,INGO,J505572220 BELMENGY, C.A.`;
+
         // ========== ESTADO ==========
         let products = [];
         let filtered = [];
         let currentPage = 1;
         const perPage = 15;
-        let filterMode = 'all';       // 'all', 'zero', 'low'
-        let brandFilter = '';         // '' = todas
-        let sortMode = 'default';     // 'default', 'qty-asc', 'qty-desc'
-        let searchTerm = '';          // búsqueda
-
-        // 点货数据: { id: cantidad }
+        let filterMode = 'all';
+        let brandFilter = '';
+        let empresaFilter = '';
+        let sortMode = 'default';
+        let searchTerm = '';
         let counts = {};
+        let empresasSet = new Set();
 
         // ========== UTILIDADES ==========
         function sanitize(str) { if (!str) return ''; const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }; return str.toString().replace(/[&<>"']/g, m => map[m]); }
@@ -258,45 +320,52 @@
                 const res = await fetch(CONFIG.CSV_URL);
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 const text = await res.text();
-                if (text.toLowerCase().includes('<html')) { 
-                    toast('Error: Google Sheet no disponible', true);
-                    document.getElementById('inventory-body').innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">Error: CSV no disponible</td></tr>';
-                    return;
-                }
+                if (text.toLowerCase().includes('<html')) throw new Error('无法获取数据');
                 parseCSV(text);
-            } catch (e) { 
-                toast('Error cargando: ' + e.message, true);
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">Error: ' + e.message + '</td></tr>';
+                toast('✅ Datos cargados correctamente');
+            } catch (e) {
+                console.warn('使用本地测试数据:', e.message);
+                parseCSV(TEST_DATA);
+                toast('⚠️ Usando datos de prueba locales', true);
             }
         }
 
         function parseCSV(text) {
             const lines = text.split(/\r?\n/);
             if (lines.length < 2) {
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">CSV vacío</td></tr>';
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="7" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">CSV vacío</td></tr>';
                 return;
             }
             
-            const headers = lines[0].split(',').map(normalize);
-            const findIdx = (...names) => { const n = names.map(normalize); return headers.findIndex(h => n.some(x => h.includes(x))); };
+            // 解析表头 - 清理引号和空格
+            const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
+            console.log('📋 Headers detectados:', headers);
+            
+            // 查找各列索引 - 重点查找 Empresa
+            const idxCode = headers.findIndex(h => /codigo|id|cód/i.test(h));
+            const idxName = headers.findIndex(h => /descripcion|nombre|producto/i.test(h));
+            const idxStock = headers.findIndex(h => /almacen_1|stock|cant|inv/i.test(h));
+            const idxEmpresa = headers.findIndex(h => /empresa|proveedor|prov|supplier/i.test(h));
+            const idxBrand = headers.findIndex(h => /grupo|marca|brand/i.test(h));
+            const idxImage = headers.findIndex(h => /images|img|url|imagen|foto/i.test(h));
 
-            const idxCode = findIdx('cod', 'codigo', 'id');
-            const idxName = findIdx('desc', 'nombre', 'producto');
-            const idxBrand = findIdx('marc', 'brand');
-            const idxStock = findIdx('stock', 'cant', 'inv', 'disp', 'cantidad');
-            const idxImage = findIdx('images', 'img', 'url', 'imagen');
+            console.log('🔍 Índices encontrados:', { idxCode, idxName, idxStock, idxEmpresa, idxBrand, idxImage });
 
             if (idxCode === -1) {
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">No se encontró columna de código</td></tr>';
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="7" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">No se encontró columna de código</td></tr>';
                 return;
             }
 
             products = [];
+            empresasSet = new Set();
+
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
                 let row = lines[i];
+                // 处理引号内的逗号
                 while ((row.match(/"/g) || []).length % 2 !== 0 && i < lines.length - 1) row += " " + lines[++i];
-                const values = []; let cur = '', inside = false;
+                const values = []; 
+                let cur = '', inside = false;
                 for (let ch of row) {
                     if (ch === '"') inside = !inside;
                     else if (ch === ',' && !inside) { values.push(cur.trim()); cur = ''; }
@@ -304,30 +373,58 @@
                 }
                 values.push(cur.trim());
 
+                // 确保 values 长度与 headers 匹配
+                while (values.length < headers.length) values.push('');
+                
                 const code = idxCode !== -1 ? values[idxCode] : '';
                 if (!code) continue;
+                
                 const name = idxName !== -1 ? values[idxName] : 'Sin nombre';
-                const brand = idxBrand !== -1 ? values[idxBrand] : '';
                 const stock = idxStock !== -1 ? parseNumber(values[idxStock]) : 0;
+                let empresa = idxEmpresa !== -1 ? values[idxEmpresa] : '';
+                let brand = idxBrand !== -1 ? values[idxBrand] : '';
+                
+                // 清理数据
+                empresa = empresa.replace(/^["\s]+|["\s]+$/g, '').trim();
+                brand = brand.replace(/^["\s]+|["\s]+$/g, '').trim().toUpperCase();
+                
+                // 如果品牌为空，尝试从Empresa提取
+                if (!brand && empresa) {
+                    const provMatch = empresa.match(/^([A-Z0-9]+)\s/);
+                    if (provMatch) brand = provMatch[1];
+                }
+                
                 const image = idxImage !== -1 ? values[idxImage] : '';
+
+                // 添加到 empresa 集合（只添加非空）
+                if (empresa && empresa.length > 0) {
+                    empresasSet.add(empresa);
+                }
 
                 products.push({
                     id: sanitize(code),
                     name: sanitize(name),
-                    brand: sanitize(brand).toUpperCase(),
+                    brand: sanitize(brand),
                     stock: stock,
+                    empresa: sanitize(empresa),
                     image: sanitize(image)
                 });
             }
             
             if (products.length === 0) {
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-amber-500 font-bold text-[0.5rem] sm:text-sm">No se encontraron productos</td></tr>';
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="7" class="text-center py-4 sm:py-8 text-amber-500 font-bold text-[0.5rem] sm:text-sm">No se encontraron productos</td></tr>';
                 return;
             }
 
+            // 打印调试信息
+            console.log(`✅ Productos cargados: ${products.length}`);
+            console.log(`📦 Empresas encontradas (${empresasSet.size}):`, Array.from(empresasSet));
+
             products.sort((a, b) => a.id.localeCompare(b.id));
-            // 初始化 counts
             products.forEach(p => { counts[p.id] = 0; });
+
+            // 生成 Empresa 筛选按钮
+            renderEmpresaChips();
 
             filtered = [...products];
             applyFiltersAndSort();
@@ -335,17 +432,47 @@
             updateCheckoutBadge();
         }
 
-        // ========== FILTROS Y ORDEN + BÚSQUEDA ==========
+        // ========== 生成 Empresa 筛选按钮 ==========
+        function renderEmpresaChips() {
+            const container = document.getElementById('empresa-chips');
+            if (!container) return;
+            
+            // 清空容器
+            container.innerHTML = '';
+            
+            if (empresasSet.size === 0) {
+                container.innerHTML = '<span class="text-[0.5rem] text-slate-400">No hay empresas</span>';
+                return;
+            }
+            
+            const sorted = Array.from(empresasSet).sort();
+            sorted.forEach(emp => {
+                // 缩短显示名称（保留前25个字符）
+                const shortName = emp.length > 25 ? emp.substring(0, 22) + '…' : emp;
+                const btn = document.createElement('button');
+                btn.className = 'filter-chip';
+                btn.dataset.empresa = emp;
+                btn.textContent = shortName;
+                btn.title = emp; // 完整名称显示在tooltip
+                btn.onclick = function() { setEmpresaFilter(emp); };
+                container.appendChild(btn);
+            });
+            
+            console.log(`✅ 已生成 ${empresasSet.size} 个 empresa 按钮`);
+        }
+
+        // ========== FILTROS Y ORDEN ==========
         function applyFiltersAndSort() {
             let data = [...products];
 
-            // Búsqueda (por código, nombre o marca)
+            // Búsqueda
             if (searchTerm.trim() !== '') {
                 const term = normalize(searchTerm);
                 data = data.filter(p => 
                     normalize(p.id).includes(term) ||
                     normalize(p.name).includes(term) ||
-                    normalize(p.brand).includes(term)
+                    normalize(p.brand).includes(term) ||
+                    normalize(p.empresa).includes(term)
                 );
             }
 
@@ -361,6 +488,11 @@
                 data = data.filter(p => p.brand === brandFilter);
             }
 
+            // Filtro empresa
+            if (empresaFilter) {
+                data = data.filter(p => p.empresa === empresaFilter);
+            }
+
             // Orden
             if (sortMode === 'qty-asc') {
                 data.sort((a, b) => a.stock - b.stock);
@@ -373,7 +505,6 @@
             filtered = data;
         }
 
-        // Nueva función para búsqueda
         function applySearch() {
             const input = document.getElementById('searchInput');
             searchTerm = input.value;
@@ -402,6 +533,22 @@
             renderInventory();
         }
 
+        function setEmpresaFilter(empresa) {
+            empresaFilter = empresa;
+            // 更新所有 empresa 按钮的状态
+            document.querySelectorAll('.filter-chip[data-empresa]').forEach(el => {
+                el.classList.toggle('active', el.dataset.empresa === empresa);
+            });
+            // 更新 "Todos" 按钮
+            const todosBtn = document.querySelector('.filter-chip[data-empresa=""]');
+            if (todosBtn) {
+                todosBtn.classList.toggle('active', empresa === '');
+            }
+            currentPage = 1;
+            applyFiltersAndSort();
+            renderInventory();
+        }
+
         function setSort(mode) {
             sortMode = mode;
             document.querySelectorAll('.filter-chip[data-sort]').forEach(el => {
@@ -419,7 +566,7 @@
             if (!tbody) return;
 
             if (products.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-slate-400 text-[0.5rem] sm:text-sm">Cargando productos...</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 sm:py-8 text-slate-400 text-[0.5rem] sm:text-sm">Cargando productos...</td></tr>';
                 return;
             }
 
@@ -449,12 +596,15 @@
                 else if (p.stock <= 5) stockBadge = `<span class="stock-badge stock-low">${p.stock}</span>`;
                 else stockBadge = `<span class="stock-badge stock-ok">${p.stock}</span>`;
 
+                const empDisplay = p.empresa && p.empresa.length > 20 ? p.empresa.substring(0, 18) + '…' : p.empresa;
+
                 html += `
                     <tr>
                         <td><img src="${imgSrc}" class="thumb" onclick="openImageModal('${imgSrc}')" loading="lazy" onerror="this.src='data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 48 48\'%3e%3crect width=\'48\' height=\'48\' fill=\'%23f1f5f9\'/%3e%3ctext x=\'24\' y=\'24\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'6\' fill=\'%2394a3b8\'%3eSin%3c/text%3e%3c/svg%3e'" /></td>
                         <td><span class="code-pill">${p.id}</span></td>
                         <td class="font-medium text-slate-800 text-[0.5rem] sm:text-sm">${p.name}</td>
                         <td class="text-[0.5rem] sm:text-xs font-black italic text-slate-600">${p.brand || '—'}</td>
+                        <td class="text-[0.4rem] sm:text-[0.55rem] text-slate-500 max-w-[60px] sm:max-w-[120px] truncate" title="${sanitize(p.empresa)}">${sanitize(empDisplay) || '—'}</td>
                         <td class="text-center">${stockBadge}</td>
                         <td class="text-center">
                             <div class="qty-wrapper">
@@ -531,20 +681,30 @@
 
             let html = '';
             let total = 0;
+            const grouped = {};
             items.forEach(p => {
-                const qty = counts[p.id] || 0;
-                total += qty;
-                html += `
-                    <div class="checkout-item">
-                        <div class="left">
-                            <span class="font-bold">${p.id}</span>
-                            <span>${p.name}</span>
-                            <span class="text-slate-400 text-[0.6rem]">${p.brand || ''}</span>
-                        </div>
-                        <div class="right">${qty}</div>
-                    </div>
-                `;
+                const key = p.empresa || 'Sin Empresa';
+                if (!grouped[key]) grouped[key] = [];
+                grouped[key].push(p);
             });
+
+            for (const [emp, prods] of Object.entries(grouped)) {
+                html += `<div class="checkout-empresa font-bold">🏢 ${emp}</div>`;
+                prods.forEach(p => {
+                    const qty = counts[p.id] || 0;
+                    total += qty;
+                    html += `
+                        <div class="checkout-item">
+                            <div class="left">
+                                <span class="font-bold">${p.id}</span>
+                                <span>${p.name}</span>
+                                <span class="text-slate-400 text-[0.6rem]">${p.brand || ''}</span>
+                            </div>
+                            <div class="right">${qty}</div>
+                        </div>
+                    `;
+                });
+            }
             list.innerHTML = html;
             totalQty.textContent = total;
             totalEl.classList.remove('hidden');
@@ -578,7 +738,7 @@
             document.getElementById('imageModal').classList.remove('active');
         }
 
-        // ========== WHATSAPP (Español) ==========
+        // ========== WHATSAPP ==========
         function sendWhatsApp() {
             const items = products.filter(p => (counts[p.id] || 0) > 0);
             if (items.length === 0) {
@@ -590,17 +750,32 @@
             msg += `📅 ${new Date().toLocaleString('es-ES')}\n`;
             msg += `───────────────────\n\n`;
 
-            items.forEach((item, idx) => {
-                const qty = counts[item.id] || 0;
-                msg += `${idx+1}. *${item.id}* - ${item.name}\n`;
-                msg += `Pedido/UND: ${qty}\n`;
-                if (item.brand) msg += `   🏷️ Marca: ${item.brand}\n`;
-                msg += `\n`;
+            const grouped = {};
+            items.forEach(p => {
+                const key = p.empresa || 'Sin Empresa';
+                if (!grouped[key]) grouped[key] = [];
+                grouped[key].push(p);
             });
 
-            msg += `───────────────────\n`;
+            let idx = 1;
+            for (const [emp, prods] of Object.entries(grouped)) {
+                msg += `🏢 *EMPRESA: ${emp}*\n`;
+                msg += `───────────────────\n`;
+                prods.forEach(p => {
+                    const qty = counts[p.id] || 0;
+                    msg += `${idx}. *${p.id}* - ${p.name}\n`;
+                    msg += `   Cantidad: ${qty}\n`;
+                    if (p.brand) msg += `   Marca: ${p.brand}\n`;
+                    msg += `\n`;
+                    idx++;
+                });
+                msg += `───────────────────\n\n`;
+            }
+
             const totalQty = items.reduce((sum, i) => sum + (counts[i.id] || 0), 0);
             msg += `Total productos: ${items.length}\n`;
+            msg += `Total unidades: ${totalQty}\n`;
+            msg += `───────────────────\n`;
             msg += `Pedido Nuevo Electroluz PV`;
 
             const url = `https://wa.me/${CONFIG.WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
