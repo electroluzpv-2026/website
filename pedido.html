@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>点货 · Electroluz PV</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: #f1f5f9; color: #0f172a; }
+        .f-int { font-family: 'Inter', sans-serif; }
+        .f-num { font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; }
+        .hide-sc::-webkit-scrollbar { display: none; }
+        .hide-sc { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .code-pill { display: inline-block; padding: 0.05rem 0.4rem; border-radius: 9999px; border: 1.5px solid #3b82f6; background: white; color: #1e293b; font-size: 0.55rem; font-weight: 600; white-space: nowrap; }
+        .fade-in { animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+        .thumb { width: 36px; height: 36px; object-fit: contain; background: #f8fafc; border-radius: 0.4rem; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.2s; }
+        .thumb:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        @media (min-width: 640px) {
+            .thumb { width: 48px; height: 48px; }
+        }
+
+        .image-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 1rem; }
+        .image-modal.active { display: flex; }
+        .image-modal img { max-width: 95vw; max-height: 85vh; border-radius: 1rem; box-shadow: 0 20px 60px rgba(0,0,0,0.5); object-fit: contain; background: white; padding: 0.5rem; }
+
+        .qty-wrapper { display: flex; align-items: center; gap: 0.15rem; justify-content: center; }
+        .qty-wrapper .qty-btn { width: 22px; height: 22px; border-radius: 0.3rem; border: 1px solid #e2e8f0; background: white; color: #475569; font-weight: 700; font-size: 0.6rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; touch-action: manipulation; user-select: none; }
+        .qty-wrapper .qty-btn:active { background: #e2e8f0; transform: scale(0.9); }
+        .qty-wrapper .qty-btn:hover { background: #f1f5f9; }
+        .qty-wrapper .qty-input-mobile { width: 32px; text-align: center; border: 1px solid #e2e8f0; border-radius: 0.3rem; padding: 0.1rem 0; font-weight: 700; font-size: 0.6rem; background: white; }
+        .qty-wrapper .qty-input-mobile:focus { outline: none; border-color: #3b82f6; ring: 2px solid #3b82f6; }
+        @media (min-width: 640px) {
+            .qty-wrapper .qty-btn { width: 28px; height: 28px; font-size: 0.8rem; }
+            .qty-wrapper .qty-input-mobile { width: 44px; font-size: 0.85rem; padding: 0.15rem 0; }
+        }
+
+        .inventory-table th { background: #f1f5f9; border-bottom: 2px solid #e2e8f0; font-size: 0.55rem; padding: 0.3rem 0.3rem; }
+        .inventory-table td { border-bottom: 1px solid #e2e8f0; padding: 0.25rem 0.25rem; font-size: 0.6rem; }
+        .inventory-table tr:hover td { background: #f8fafc; }
+        @media (min-width: 640px) {
+            .inventory-table th { font-size: 0.7rem; padding: 0.5rem 0.75rem; }
+            .inventory-table td { font-size: 0.85rem; padding: 0.5rem 0.75rem; }
+        }
+
+        .search-input { font-size: 0.7rem; padding: 0.4rem 0.6rem; }
+        @media (min-width: 640px) {
+            .search-input { font-size: 0.9rem; padding: 0.6rem 0.8rem; }
+        }
+
+        .header-title { font-size: 0.8rem; }
+        .header-sub { font-size: 0.45rem; }
+        @media (min-width: 640px) {
+            .header-title { font-size: 1.1rem; }
+            .header-sub { font-size: 0.6rem; }
+        }
+
+        .whatsapp-btn { background: #25D366; color: white; border: none; padding: 0.3rem 0.8rem; border-radius: 0.5rem; font-weight: 700; font-size: 0.6rem; display: flex; align-items: center; gap: 0.3rem; transition: 0.2s; }
+        .whatsapp-btn:hover { background: #1ebe5c; transform: scale(1.02); }
+        @media (min-width: 640px) {
+            .whatsapp-btn { padding: 0.4rem 1.2rem; font-size: 0.8rem; }
+        }
+
+        .stock-badge { font-size: 0.5rem; padding: 0.05rem 0.4rem; border-radius: 9999px; font-weight: 700; }
+        .stock-zero { background: #fee2e2; color: #991b1b; }
+        .stock-low { background: #fef3c7; color: #92400e; }
+        .stock-ok { background: #dcfce7; color: #166534; }
+
+        .filter-chip { padding: 0.15rem 0.6rem; border-radius: 9999px; font-size: 0.5rem; font-weight: 700; background: white; border: 1.5px solid #e2e8f0; color: #475569; cursor: pointer; transition: 0.2s; }
+        .filter-chip.active { background: #1e293b; border-color: #1e293b; color: white; }
+        .filter-chip:hover { background: #f1f5f9; }
+        @media (min-width: 640px) {
+            .filter-chip { font-size: 0.7rem; padding: 0.2rem 1rem; }
+        }
+
+        /* 结算面板 */
+        .checkout-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 1rem; }
+        .checkout-overlay.active { display: flex; }
+        .checkout-panel { background: white; border-radius: 1.5rem; max-width: 700px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; }
+        .checkout-panel .close-btn { position: sticky; top: 0; float: right; background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 9999px; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .checkout-panel .close-btn:hover { background: #e2e8f0; }
+        .checkout-item { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid #f1f5f9; font-size: 0.75rem; }
+        .checkout-item .left { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .checkout-item .right { font-weight: 700; }
+        .checkout-total { margin-top: 1rem; padding-top: 0.8rem; border-top: 2px solid #e2e8f0; display: flex; justify-content: space-between; font-weight: 800; font-size: 1rem; }
+        @media (max-width: 640px) {
+            .checkout-panel { padding: 1rem; max-height: 90vh; }
+            .checkout-item { font-size: 0.65rem; }
+        }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <!-- HEADER -->
+    <header class="bg-[#242629] sticky top-0 z-40 shadow-md border-b border-white/5">
+        <div class="border-b border-white/5 bg-[#191a1d] px-2 py-0.5 flex justify-between text-[0.45rem] sm:text-[0.6rem] font-bold text-slate-400 f-int">
+            <span>RIF J507436055</span>
+            <span>Electroluz PV · 点货</span>
+        </div>
+        <div class="max-w-7xl mx-auto px-2 py-1.5 flex justify-between items-center">
+            <div class="flex items-center gap-1.5 cursor-pointer" onclick="location.reload()">
+                <div class="w-7 h-7 sm:w-10 sm:h-10 bg-white rounded-lg flex items-center justify-center p-0.5 shadow-lg"><img src="https://pub-db6d95a9369746c6ae9e956ab6f6ebe7.r2.dev/logo%20pv.png" class="w-full h-full object-cover" alt="logo"></div>
+                <div>
+                    <h1 class="text-white font-black header-title leading-tight">Electroluz PV</h1>
+                    <p class="text-slate-400 header-sub font-black tracking-[0.15em] uppercase mt-0">点货 · INVENTARIO</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <button onclick="openCheckout()" class="bg-amber-500 hover:bg-amber-400 text-white px-2 py-0.5 sm:px-3 sm:py-1 rounded-lg font-bold text-[0.5rem] sm:text-sm flex items-center gap-0.5 transition">
+                    <i class="ph-bold ph-shopping-cart text-[0.6rem] sm:text-base"></i> <span class="hidden sm:inline">结算</span>
+                    <span id="checkout-badge" class="bg-rose-500 text-white text-[0.4rem] sm:text-[0.6rem] rounded-full px-1.5 py-0.5 ml-0.5">0</span>
+                </button>
+                <button onclick="sendWhatsApp()" class="whatsapp-btn">
+                    <i class="ph-bold ph-whatsapp-logo text-[0.7rem] sm:text-base"></i> <span class="hidden sm:inline">Enviar</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- TOAST -->
+    <div id="toast" class="hidden fixed top-6 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full text-white font-bold text-[0.6rem] sm:text-sm shadow-2xl z-50 flex items-center gap-1.5 transition-all duration-300"></div>
+
+    <!-- IMAGE MODAL -->
+    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+        <img id="modalImage" src="" alt="Producto" />
+    </div>
+
+    <!-- CHECKOUT PANEL -->
+    <div id="checkoutOverlay" class="checkout-overlay" onclick="if(event.target===this) closeCheckout()">
+        <div class="checkout-panel">
+            <button class="close-btn" onclick="closeCheckout()">✕</button>
+            <h2 class="text-xl font-black mb-3 flex items-center gap-2"><i class="ph-bold ph-clipboard-text"></i> Resumen de点货</h2>
+            <div id="checkoutList" class="space-y-0.5">
+                <div class="text-slate-400 text-center py-4">No hay productos点货</div>
+            </div>
+            <div id="checkoutTotal" class="checkout-total hidden">
+                <span>Total</span>
+                <span id="checkoutTotalQty">0</span>
+            </div>
+            <div class="mt-3 flex gap-2">
+                <button onclick="clearAllCounts()" class="flex-1 bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold py-2 rounded-lg text-sm transition">Vaciar todo</button>
+                <button onclick="closeCheckout(); sendWhatsApp();" class="flex-1 bg-green-600 hover:bg-green-500 text-white font-bold py-2 rounded-lg text-sm transition flex items-center justify-center gap-1">
+                    <i class="ph-bold ph-whatsapp-logo"></i> Enviar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <main class="flex-1 w-full max-w-7xl mx-auto px-1.5 sm:px-4 py-1.5 sm:py-6">
+
+        <!-- 筛选栏 + Marca -->
+        <div class="bg-white p-1.5 sm:p-3 rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 flex flex-col gap-1.5 sm:gap-2 mb-1.5 sm:mb-4">
+            <div class="flex flex-wrap items-center gap-1.5">
+                <span class="text-[0.45rem] sm:text-[0.6rem] font-black text-slate-400 uppercase">Mostrar:</span>
+                <button class="filter-chip active" data-filter="all" onclick="setFilter('all')">Todos</button>
+                <button class="filter-chip" data-filter="zero" onclick="setFilter('zero')">Stock 0</button>
+                <button class="filter-chip" data-filter="low" onclick="setFilter('low')">Stock bajo (≤5)</button>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-1.5">
+                <span class="text-[0.45rem] sm:text-[0.6rem] font-black text-slate-400 uppercase">Marca:</span>
+                <button class="filter-chip active" data-brand="" onclick="setBrandFilter('')">Todas</button>
+                <button class="filter-chip" data-brand="INGCO" onclick="setBrandFilter('INGCO')">INGCO</button>
+                <button class="filter-chip" data-brand="WADFOW" onclick="setBrandFilter('WADFOW')">WADFOW</button>
+                <button class="filter-chip" data-brand="VERT" onclick="setBrandFilter('VERT')">VERT</button>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-1.5">
+                <span class="text-[0.45rem] sm:text-[0.6rem] font-black text-slate-400 uppercase">Orden:</span>
+                <button class="filter-chip active" data-sort="default" onclick="setSort('default')">Por defecto</button>
+                <button class="filter-chip" data-sort="qty-asc" onclick="setSort('qty-asc')">Cant ⬆</button>
+                <button class="filter-chip" data-sort="qty-desc" onclick="setSort('qty-desc')">Cant ⬇</button>
+            </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="inventory-table w-full text-[0.5rem] sm:text-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-left">IMG</th>
+                            <th class="text-left">CÓD</th>
+                            <th class="text-left">DESCRIPCIÓN</th>
+                            <th class="text-left">M</th>
+                            <th class="text-center">Stock</th>
+                            <th class="text-center">点货</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-body">
+                        <tr><td colspan="6" class="text-center py-4 sm:py-8 text-[0.5rem] sm:text-sm text-slate-400">Cargando productos...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="no-results" class="hidden py-6 sm:py-12 text-center text-slate-400">
+                <i class="ph-bold ph-magnifying-glass text-2xl sm:text-3xl block mb-1 sm:mb-2"></i>
+                <span class="font-bold text-[0.6rem] sm:text-sm">No hay productos que coincidan</span>
+            </div>
+        </div>
+
+        <div id="pagination" class="flex justify-center items-center gap-2 sm:gap-4 mt-2 sm:mt-6 text-[0.6rem] sm:text-sm font-bold text-slate-600">
+            <button id="prev-page" onclick="changePage(-1)" class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center"><i class="ph-bold ph-caret-left text-[0.5rem] sm:text-base"></i></button>
+            <span id="page-info">Página 1 de 1</span>
+            <button id="next-page" onclick="changePage(1)" class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center"><i class="ph-bold ph-caret-right text-[0.5rem] sm:text-base"></i></button>
+        </div>
+    </main>
+
+    <script>
+        // ========== CONFIG ==========
+        const CONFIG = {
+            CSV_URL: 'https://docs.google.com/spreadsheets/d/11P_SClE2hNTn5g-Eq2GRpQBA83q71RityFaAkFNB554/export?format=csv',
+            WHATSAPP_NUMBER: '04128538888'
+        };
+
+        // ========== ESTADO ==========
+        let products = [];
+        let filtered = [];
+        let currentPage = 1;
+        const perPage = 15;
+        let filterMode = 'all';       // 'all', 'zero', 'low'
+        let brandFilter = '';         // '' = todas
+        let sortMode = 'default';     // 'default', 'qty-asc', 'qty-desc'
+
+        // 点货数据: { id: cantidad }
+        let counts = {};
+
+        // ========== UTILIDADES ==========
+        function sanitize(str) { if (!str) return ''; const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }; return str.toString().replace(/[&<>"']/g, m => map[m]); }
+        function normalize(str) { return str ? str.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase() : ''; }
+        function parseNumber(str) { if (!str) return 0; const cleaned = str.toString().replace(/[$]/g, '').replace(/,/g, '.').trim(); return parseFloat(cleaned) || 0; }
+
+        function toast(msg, isErr = false) {
+            const el = document.getElementById('toast');
+            if (!el) return;
+            el.innerHTML = `<i class="ph-fill ${isErr ? 'ph-warning-circle' : 'ph-check-circle'} text-[0.5rem] sm:text-base"></i> ${sanitize(msg)}`;
+            el.className = `fixed top-6 left-1/2 -translate-x-1/2 px-3 sm:px-6 py-1.5 sm:py-3 rounded-full text-white font-bold text-[0.6rem] sm:text-sm shadow-2xl z-50 flex items-center gap-1.5 sm:gap-2 transition-all duration-300 ${isErr ? 'bg-rose-500' : 'bg-slate-800'}`;
+            setTimeout(() => el.classList.add('-translate-y-12', 'opacity-0'), 2500);
+            setTimeout(() => el.className = 'hidden', 2800);
+        }
+
+        // ========== CARGAR DATOS ==========
+        async function fetchCSV() {
+            try {
+                const res = await fetch(CONFIG.CSV_URL);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const text = await res.text();
+                if (text.toLowerCase().includes('<html')) { 
+                    toast('Error: Google Sheet no disponible', true);
+                    document.getElementById('inventory-body').innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">Error: CSV no disponible</td></tr>';
+                    return;
+                }
+                parseCSV(text);
+            } catch (e) { 
+                toast('Error cargando: ' + e.message, true);
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">Error: ' + e.message + '</td></tr>';
+            }
+        }
+
+        function parseCSV(text) {
+            const lines = text.split(/\r?\n/);
+            if (lines.length < 2) {
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">CSV vacío</td></tr>';
+                return;
+            }
+            
+            const headers = lines[0].split(',').map(normalize);
+            const findIdx = (...names) => { const n = names.map(normalize); return headers.findIndex(h => n.some(x => h.includes(x))); };
+
+            const idxCode = findIdx('cod', 'codigo', 'id');
+            const idxName = findIdx('desc', 'nombre', 'producto');
+            const idxBrand = findIdx('marc', 'brand');
+            const idxStock = findIdx('stock', 'cant', 'inv', 'disp', 'cantidad');
+            const idxImage = findIdx('images', 'img', 'url', 'imagen');
+
+            if (idxCode === -1) {
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">No se encontró columna de código</td></tr>';
+                return;
+            }
+
+            products = [];
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                let row = lines[i];
+                while ((row.match(/"/g) || []).length % 2 !== 0 && i < lines.length - 1) row += " " + lines[++i];
+                const values = []; let cur = '', inside = false;
+                for (let ch of row) {
+                    if (ch === '"') inside = !inside;
+                    else if (ch === ',' && !inside) { values.push(cur.trim()); cur = ''; }
+                    else cur += ch;
+                }
+                values.push(cur.trim());
+
+                const code = idxCode !== -1 ? values[idxCode] : '';
+                if (!code) continue;
+                const name = idxName !== -1 ? values[idxName] : 'Sin nombre';
+                const brand = idxBrand !== -1 ? values[idxBrand] : '';
+                const stock = idxStock !== -1 ? parseNumber(values[idxStock]) : 0;
+                const image = idxImage !== -1 ? values[idxImage] : '';
+
+                products.push({
+                    id: sanitize(code),
+                    name: sanitize(name),
+                    brand: sanitize(brand).toUpperCase(),
+                    stock: stock,
+                    image: sanitize(image)
+                });
+            }
+            
+            if (products.length === 0) {
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-amber-500 font-bold text-[0.5rem] sm:text-sm">No se encontraron productos</td></tr>';
+                return;
+            }
+
+            products.sort((a, b) => a.id.localeCompare(b.id));
+            // 初始化 counts
+            products.forEach(p => { counts[p.id] = 0; });
+
+            filtered = [...products];
+            applyFiltersAndSort();
+            renderInventory();
+            updateCheckoutBadge();
+        }
+
+        // ========== FILTROS Y ORDEN ==========
+        function applyFiltersAndSort() {
+            let data = [...products];
+
+            // Filtro stock
+            if (filterMode === 'zero') {
+                data = data.filter(p => p.stock === 0);
+            } else if (filterMode === 'low') {
+                data = data.filter(p => p.stock <= 5 && p.stock > 0);
+            }
+
+            // Filtro marca
+            if (brandFilter) {
+                data = data.filter(p => p.brand === brandFilter);
+            }
+
+            // Orden
+            if (sortMode === 'qty-asc') {
+                data.sort((a, b) => a.stock - b.stock);
+            } else if (sortMode === 'qty-desc') {
+                data.sort((a, b) => b.stock - a.stock);
+            } else {
+                data.sort((a, b) => a.id.localeCompare(b.id));
+            }
+
+            filtered = data;
+        }
+
+        function setFilter(mode) {
+            filterMode = mode;
+            document.querySelectorAll('.filter-chip[data-filter]').forEach(el => {
+                el.classList.toggle('active', el.dataset.filter === mode);
+            });
+            currentPage = 1;
+            applyFiltersAndSort();
+            renderInventory();
+        }
+
+        function setBrandFilter(brand) {
+            brandFilter = brand;
+            document.querySelectorAll('.filter-chip[data-brand]').forEach(el => {
+                el.classList.toggle('active', el.dataset.brand === brand);
+            });
+            currentPage = 1;
+            applyFiltersAndSort();
+            renderInventory();
+        }
+
+        function setSort(mode) {
+            sortMode = mode;
+            document.querySelectorAll('.filter-chip[data-sort]').forEach(el => {
+                el.classList.toggle('active', el.dataset.sort === mode);
+            });
+            currentPage = 1;
+            applyFiltersAndSort();
+            renderInventory();
+        }
+
+        // ========== RENDER TABLA ==========
+        function renderInventory() {
+            const tbody = document.getElementById('inventory-body');
+            const noRes = document.getElementById('no-results');
+            if (!tbody) return;
+
+            if (products.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 sm:py-8 text-slate-400 text-[0.5rem] sm:text-sm">Cargando productos...</td></tr>';
+                return;
+            }
+
+            const data = filtered;
+            const total = data.length;
+            const totalPages = Math.ceil(total / perPage);
+            if (currentPage > totalPages) currentPage = totalPages || 1;
+            const start = (currentPage - 1) * perPage;
+            const pageItems = data.slice(start, start + perPage);
+
+            if (total === 0) {
+                tbody.innerHTML = '';
+                noRes.classList.remove('hidden');
+                document.getElementById('pagination').classList.add('hidden');
+                return;
+            }
+            noRes.classList.add('hidden');
+            document.getElementById('pagination').classList.remove('hidden');
+
+            let html = '';
+            pageItems.forEach(p => {
+                const currentQty = counts[p.id] || 0;
+                const imgSrc = p.image && p.image.trim() !== '' ? p.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"%3e%3crect width="48" height="48" fill="%23f1f5f9"/%3e%3ctext x="24" y="24" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="6" fill="%2394a3b8"%3eSin%3c/text%3e%3c/svg%3e';
+                
+                let stockBadge = '';
+                if (p.stock === 0) stockBadge = '<span class="stock-badge stock-zero">0</span>';
+                else if (p.stock <= 5) stockBadge = `<span class="stock-badge stock-low">${p.stock}</span>`;
+                else stockBadge = `<span class="stock-badge stock-ok">${p.stock}</span>`;
+
+                html += `
+                    <tr>
+                        <td><img src="${imgSrc}" class="thumb" onclick="openImageModal('${imgSrc}')" loading="lazy" onerror="this.src='data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 48 48\'%3e%3crect width=\'48\' height=\'48\' fill=\'%23f1f5f9\'/%3e%3ctext x=\'24\' y=\'24\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'6\' fill=\'%2394a3b8\'%3eSin%3c/text%3e%3c/svg%3e'" /></td>
+                        <td><span class="code-pill">${p.id}</span></td>
+                        <td class="font-medium text-slate-800 text-[0.5rem] sm:text-sm">${p.name}</td>
+                        <td class="text-[0.5rem] sm:text-xs font-black italic text-slate-600">${p.brand || '—'}</td>
+                        <td class="text-center">${stockBadge}</td>
+                        <td class="text-center">
+                            <div class="qty-wrapper">
+                                <button class="qty-btn" onclick="adjustCount('${p.id}', -1)" type="button">−</button>
+                                <input type="number" class="qty-input-mobile" id="count_${p.id}" value="${currentQty}" min="0" 
+                                    onchange="updateCount('${p.id}', this.value)" 
+                                    onfocus="this.select()"
+                                    inputmode="numeric"
+                                    pattern="[0-9]*" />
+                                <button class="qty-btn" onclick="adjustCount('${p.id}', 1)" type="button">+</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+            updateCheckoutBadge();
+
+            document.getElementById('page-info').textContent = `Página ${currentPage} de ${totalPages || 1}`;
+            document.getElementById('prev-page').disabled = currentPage <= 1;
+            document.getElementById('next-page').disabled = currentPage >= totalPages;
+        }
+
+        // ========== 点货操作 ==========
+        function adjustCount(id, delta) {
+            const input = document.getElementById(`count_${id}`);
+            if (!input) return;
+            let val = parseInt(input.value) || 0;
+            val = Math.max(0, val + delta);
+            input.value = val;
+            updateCount(id, val);
+        }
+
+        function updateCount(id, val) {
+            const num = parseInt(val);
+            if (isNaN(num) || num < 0) {
+                counts[id] = 0;
+            } else {
+                counts[id] = num;
+            }
+            const input = document.getElementById(`count_${id}`);
+            if (input) input.value = counts[id];
+            updateCheckoutBadge();
+        }
+
+        function changePage(delta) {
+            const total = filtered.length;
+            const totalPages = Math.ceil(total / perPage);
+            const newPage = currentPage + delta;
+            if (newPage < 1 || newPage > totalPages) return;
+            currentPage = newPage;
+            renderInventory();
+        }
+
+        // ========== CHECKOUT ==========
+        function updateCheckoutBadge() {
+            const total = Object.values(counts).reduce((sum, v) => sum + v, 0);
+            document.getElementById('checkout-badge').textContent = total;
+        }
+
+        function openCheckout() {
+            const overlay = document.getElementById('checkoutOverlay');
+            const list = document.getElementById('checkoutList');
+            const totalEl = document.getElementById('checkoutTotal');
+            const totalQty = document.getElementById('checkoutTotalQty');
+
+            const items = products.filter(p => (counts[p.id] || 0) > 0);
+            if (items.length === 0) {
+                list.innerHTML = '<div class="text-slate-400 text-center py-4">No hay productos点货</div>';
+                totalEl.classList.add('hidden');
+                overlay.classList.add('active');
+                return;
+            }
+
+            let html = '';
+            let total = 0;
+            items.forEach(p => {
+                const qty = counts[p.id] || 0;
+                total += qty;
+                html += `
+                    <div class="checkout-item">
+                        <div class="left">
+                            <span class="font-bold">${p.id}</span>
+                            <span>${p.name}</span>
+                            <span class="text-slate-400 text-[0.6rem]">${p.brand || ''}</span>
+                        </div>
+                        <div class="right">${qty}</div>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+            totalQty.textContent = total;
+            totalEl.classList.remove('hidden');
+            overlay.classList.add('active');
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkoutOverlay').classList.remove('active');
+        }
+
+        function clearAllCounts() {
+            if (!confirm('¿Vaciar todos los conteos?')) return;
+            products.forEach(p => { counts[p.id] = 0; });
+            // 刷新所有input
+            products.forEach(p => {
+                const input = document.getElementById(`count_${p.id}`);
+                if (input) input.value = 0;
+            });
+            updateCheckoutBadge();
+            closeCheckout();
+            toast('Conteos vaciados');
+        }
+
+        // ========== IMAGEN ==========
+        function openImageModal(src) {
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('modalImage');
+            img.src = src;
+            modal.classList.add('active');
+        }
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        // ========== WHATSAPP (Español) ==========
+        function sendWhatsApp() {
+            const items = products.filter(p => (counts[p.id] || 0) > 0);
+            if (items.length === 0) {
+                toast('No hay productos点货', true);
+                return;
+            }
+
+            // Mensaje en español
+            let msg = '📋 *Nuevo Pedido - Electroluz PV*\n';
+            msg += `📅 ${new Date().toLocaleString('es-ES')}\n`;
+            msg += `───────────────────\n\n`;
+
+            items.forEach((item, idx) => {
+                const qty = counts[item.id] || 0;
+                msg += `${idx+1}. *${item.id}* - ${item.name}\n`;
+                msg += `   📦 Stock: ${item.stock}  |  ✏️ Contado: ${qty}\n`;
+                if (item.brand) msg += `   🏷️ Marca: ${item.brand}\n`;
+                msg += `\n`;
+            });
+
+            msg += `───────────────────\n`;
+            const totalQty = items.reduce((sum, i) => sum + (counts[i.id] || 0), 0);
+            msg += `📦 Total productos: ${items.length}\n`;
+            msg += `🔢 Total unidades: ${totalQty}\n`;
+            msg += `\n🔹 Enviado desde Electroluz PV Point`;
+
+            const url = `https://wa.me/${CONFIG.WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+            toast('📤 Abriendo WhatsApp...');
+            closeCheckout();
+        }
+
+        // ========== INICIO ==========
+        window.onload = function() {
+            fetchCSV();
+        };
+    </script>
+</body>
+</html>
