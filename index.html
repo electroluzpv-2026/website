@@ -50,7 +50,7 @@
             margin: 0;
         }
 
-        /* ===== 品牌按钮（保留） ===== */
+        /* ===== 品牌按钮 ===== */
         .b-ing {
             color: #FFCC00;
             transition: 0.3s;
@@ -729,89 +729,147 @@
             max-height: 800px;
         }
 
-        /* ===== 搜索框品牌色 ===== */
-        .search-input {
-            border: 2px solid #cb0e4c;
-            transition: all 0.2s;
+        /* ===== 搜索框 - 全新高级清新设计 ===== */
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 120px;
         }
-        .search-input:focus {
-            border-color: #0c83cd;
-            box-shadow: 0 0 0 3px rgba(12, 131, 205, 0.2);
+        .search-wrapper .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 18px;
+            transition: color 0.3s ease;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .search-wrapper:focus-within .search-icon {
+            color: #0c83cd;
+        }
+        .search-input-modern {
+            width: 100%;
+            background: #ffffff;
+            border: 2px solid #e8ecf1;
+            border-radius: 16px;
+            padding: 12px 44px 12px 48px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            color: #0f172a;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             outline: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            letter-spacing: 0.01em;
+        }
+        .search-input-modern::placeholder {
+            color: #a8b3c7;
+            font-weight: 400;
+            letter-spacing: 0.01em;
+        }
+        .search-input-modern:hover {
+            border-color: #cdd5e0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+        .search-input-modern:focus {
+            border-color: #0c83cd;
+            box-shadow: 0 4px 20px rgba(12, 131, 205, 0.12), 0 0 0 4px rgba(12, 131, 205, 0.06);
+            background: #ffffff;
+        }
+        .search-input-modern:focus::placeholder {
+            color: #c5cedb;
+        }
+        .search-clear-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f1f4f9;
+            border: none;
+            color: #94a3b8;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            z-index: 2;
+        }
+        .search-clear-btn:hover {
+            background: #e2e8f0;
+            color: #475569;
+        }
+        .search-clear-btn.visible {
+            display: flex;
         }
 
-        /* ===== 磨砂玻璃质感图标按钮 ===== */
+        /* 磨砂菜单按钮 */
         .icon-frost {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            color: white;
+            border: 1px solid rgba(203, 213, 225, 0.35);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            color: #1e293b;
             flex-shrink: 0;
             transition: all 0.25s ease;
             cursor: pointer;
         }
         .icon-frost:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: scale(1.04);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #0c83cd;
+            box-shadow: 0 4px 16px rgba(12, 131, 205, 0.08);
+            transform: scale(1.02);
         }
         .icon-frost:active {
             transform: scale(0.96);
         }
         .icon-frost i {
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.9);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            font-size: 20px;
+            color: #1e293b;
+            transition: color 0.2s;
         }
-        /* 搜索框内的小图标（磨砂） */
-        .icon-frost-sm {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            color: white;
-            flex-shrink: 0;
-            pointer-events: none;
-            transition: all 0.2s;
+        .icon-frost:hover i {
+            color: #0c83cd;
         }
-        .icon-frost-sm i {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-        /* 移动端适配 */
+
         @media (max-width: 640px) {
             .icon-frost {
-                width: 34px;
-                height: 34px;
+                width: 36px;
+                height: 36px;
+                border-radius: 12px;
             }
             .icon-frost i {
-                font-size: 16px;
+                font-size: 17px;
             }
-            .icon-frost-sm {
-                width: 26px;
-                height: 26px;
+            .search-input-modern {
+                padding: 10px 38px 10px 40px;
+                font-size: 13px;
+                border-radius: 14px;
             }
-            .icon-frost-sm i {
+            .search-wrapper .search-icon {
+                left: 12px;
+                font-size: 15px;
+            }
+            .search-clear-btn {
+                width: 24px;
+                height: 24px;
                 font-size: 12px;
+                right: 8px;
             }
         }
 
-        /* ===== 新颖的分类标签样式 ===== */
+        /* ===== 分类标签 - 已移除筛选功能，仅保留视觉 ===== */
         .category-tab {
             flex-shrink: 0;
             display: inline-flex;
@@ -825,18 +883,14 @@
             color: #1e293b;
             border: 2px solid transparent;
             transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-            cursor: pointer;
+            cursor: default;
             white-space: nowrap;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
             user-select: none;
+            opacity: 0.7;
         }
         .category-tab i {
             font-size: 1rem;
-        }
-        .category-tab:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-            background: #e9edf2;
         }
         .category-tab.active-cat {
             background: #cb0e4c;
@@ -844,10 +898,8 @@
             border-color: #cb0e4c;
             box-shadow: 0 8px 24px rgba(203, 14, 76, 0.25);
             transform: scale(1.03);
-        }
-        .category-tab.active-cat:hover {
-            background: #b00d42;
-            box-shadow: 0 10px 28px rgba(203, 14, 76, 0.35);
+            opacity: 1;
+            cursor: default;
         }
         @media (max-width: 640px) {
             .category-tab {
@@ -928,7 +980,7 @@
                 </div>
             </div>
             <div class="flex items-center gap-1 sm:gap-3">
-                <button onclick="setView('catalog')" class="hidden sm:flex items-center gap-1 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 text-white px-3 py-1 rounded-lg font-black text-[9px] shadow-md border border-white/10 transition-all uppercase tracking-widest">
+                <button onclick="goToCatalog()" class="hidden sm:flex items-center gap-1 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 text-white px-3 py-1 rounded-lg font-black text-[9px] shadow-md border border-white/10 transition-all uppercase tracking-widest">
                     <i class="ph-bold ph-book-open text-sm"></i> CATÁLOGO
                 </button>
                 <div id="h-social" class="flex items-center gap-1">
@@ -968,7 +1020,7 @@
                 <h2 class="text-2xl sm:text-4xl lg:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-md">Tu distribuidora de <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-cyan-300">iluminación, ferretería y electrónica.</span></h2>
                 <p class="text-slate-300 text-base sm:text-lg leading-relaxed f-int max-w-xl font-medium drop-shadow-sm">Abastecemos a empresas y particulares en toda Venezuela. Financiamiento disponible con <strong class="text-amber-400">Cashea (Inicial + 3 cuotas)</strong>.</p>
                 <div class="flex flex-wrap gap-3 sm:gap-4 pt-2 sm:pt-4">
-                    <button onclick="setView('catalog')" class="bg-blue-600 hover:bg-blue-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-black text-sm shadow-[0_0_20px_rgba(37,99,235,0.4)] flex items-center gap-2 group border border-blue-400/50 transition-all tracking-widest uppercase"><span class="w-2 h-2 rounded-full bg-white/80 animate-pulse"></span> EXPLORAR CATÁLOGO <i class="ph-bold ph-arrow-right group-hover:translate-x-1 transition-transform text-lg"></i></button>
+                    <button onclick="goToCatalog()" class="bg-blue-600 hover:bg-blue-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-black text-sm shadow-[0_0_20px_rgba(37,99,235,0.4)] flex items-center gap-2 group border border-blue-400/50 transition-all tracking-widest uppercase"><span class="w-2 h-2 rounded-full bg-white/80 animate-pulse"></span> EXPLORAR CATÁLOGO <i class="ph-bold ph-arrow-right group-hover:translate-x-1 transition-transform text-lg"></i></button>
                     <a href="https://wa.me/584223888007" target="_blank" class="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-sm flex items-center gap-2 backdrop-blur-sm transition-all tracking-widest uppercase"><i class="ph-fill ph-whatsapp-logo text-xl text-emerald-400"></i> COTIZACIÓN</a>
                 </div>
             </div>
@@ -1017,7 +1069,7 @@
                 <div class="flex flex-wrap gap-3"><span class="bg-[#0b1121] text-white px-4 py-2.5 rounded-lg font-bold text-sm shadow-md">RIF J507436055</span><span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2.5 rounded-lg font-bold text-sm">Lun - Sáb: 8:30 AM – 6:00 PM</span></div>
             </div>
             <div class="h-64 sm:h-96 w-full rounded-[2rem] overflow-hidden shadow-lg border border-slate-200">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3922.9610255094144!2d-66.90973692519916!3d10.503735989628947!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTDCsDMwJzEzLjUiTiA2NsKwNTQnMjUuOCJX!5e0!3m2!1szh-CN!2sve!4v1788108354107!5m2!1szh-CN!2sve" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3922.9610255094144!2d-66.90973692519916!3d10.503735989628947!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTDCsDMwJzEzLjUiTiA2NsKw54JzMjUuOCJX!5e0!3m2!1szh-CN!2sve!4v1788108354107!5m2!1szh-CN!2sve" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </section>
         <footer class="bg-[#070b15] py-8 text-slate-500 text-xs f-int border-t border-white/5">
@@ -1028,32 +1080,26 @@
     <!-- CATALOG -->
     <main id="v-cat" class="hidden flex-1 w-full bg-slate-50 p-2 sm:p-4 lg:p-6 pb-24">
         <div class="max-w-[1400px] mx-auto space-y-3">
-            <!-- 搜索栏 + 分类滚动栏 -->
-            <div class="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200">
-                <!-- 搜索框行 -->
+            <!-- 搜索栏（已移除分类标签筛选） -->
+            <div class="bg-white/80 backdrop-blur-sm p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200/70">
                 <div class="flex items-center gap-2 flex-wrap">
                     <!-- 菜单按钮：磨砂质感 -->
                     <button onclick="openMenu()" class="icon-frost" aria-label="Abrir menú">
                         <i class="ph-bold ph-list"></i>
                     </button>
-                    <div class="flex-1 relative min-w-[120px]">
-                        <!-- 搜索图标：磨砂质感 -->
-                        <div class="absolute left-2 top-1/2 -translate-y-1/2 icon-frost-sm">
-                            <i class="ph-bold ph-magnifying-glass"></i>
-                        </div>
-                        <input type="text" id="s-input" placeholder="Buscar por código, producto o marca..." oninput="debouncedSearch(this.value)" class="search-input w-full bg-white border-2 border-[#cb0e4c] rounded-xl pl-11 pr-8 py-2.5 text-sm f-int transition-all focus:border-[#0c83cd] focus:ring-2 focus:ring-[#0c83cd]/20">
-                        <button id="s-clear" onclick="clrSearch()" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-full flex items-center justify-center transition-colors">
-                            <i class="ph-bold ph-x text-xs"></i>
+                    <!-- 搜索框：高级清新设计 -->
+                    <div class="search-wrapper">
+                        <i class="ph-bold ph-magnifying-glass search-icon"></i>
+                        <input type="text" id="s-input" placeholder="Buscar por código, producto o marca..." oninput="debouncedSearch(this.value)" class="search-input-modern" autocomplete="off">
+                        <button id="s-clear" class="search-clear-btn" onclick="clrSearch()">
+                            <i class="ph-bold ph-x"></i>
                         </button>
                     </div>
+                    <!-- 排序按钮 -->
                     <div class="flex items-center gap-1 shrink-0">
-                        <button class="price-sort-btn" onclick="setPriceSort('asc')">↑</button>
-                        <button class="price-sort-btn" onclick="setPriceSort('desc')">↓</button>
+                        <button class="price-sort-btn" onclick="setPriceSort('asc')" title="Menor precio">↑</button>
+                        <button class="price-sort-btn" onclick="setPriceSort('desc')" title="Mayor precio">↓</button>
                     </div>
-                </div>
-                <!-- 四大分类标签 -->
-                <div id="category-tabs" class="flex gap-3 overflow-x-auto py-3 hide-sc scroll-smooth mt-2">
-                    <!-- 由 JS 动态生成 -->
                 </div>
             </div>
 
@@ -1235,7 +1281,7 @@
             priceSort: '',
             loading: false,
             loadError: false,
-            _defaultCategorySet: true // 改为 true，不再自动筛选
+            _defaultCategorySet: true
         };
 
         let currentTasa = CONFIG.TASA;
@@ -1597,31 +1643,18 @@
         function renderCatalog() {
             if (s.loading) return;
             renderMenuCategories();
-            renderCategoryTabs();
             renderProductGrid();
         }
 
         // ============================================================
-        // RENDER CATEGORY TABS (仅四大分类)
+        // RENDER CATEGORY TABS ———— 已移除筛选功能
         // ============================================================
         function renderCategoryTabs() {
             const container = document.getElementById('category-tabs');
-            if (!container) return;
-            const categories = [
-                { label: 'Iluminación', icon: 'ph-fill ph-lightbulb', key: 'iluminacion' },
-                { label: 'Ferretería', icon: 'ph-fill ph-wrench', key: 'ferreteria' },
-                { label: 'Electrónica', icon: 'ph-fill ph-plug', key: 'electronic' },
-                { label: 'Papelería', icon: 'ph-fill ph-books', key: 'papeleria' }
-            ];
-            let html = '';
-            categories.forEach(cat => {
-                const isActive = s.l1 !== 'Todo' && normalize(s.l1).includes(cat.key);
-                const activeClass = isActive ? 'active-cat' : '';
-                html += `<button class="category-tab ${activeClass}" onclick="filterCategory('${cat.key}')">
-                    <i class="${cat.icon}"></i> ${cat.label}
-                </button>`;
-            });
-            container.innerHTML = html;
+            if (container) {
+                container.innerHTML = '';
+                container.style.display = 'none';
+            }
         }
 
         // ============================================================
@@ -1853,7 +1886,6 @@
             }
             grid.innerHTML = htmlString;
             renderPagination(totalPages);
-            renderCategoryTabs();
         }
 
         // ============================================================
@@ -2193,7 +2225,7 @@
         function updS(v) {
             s.sr = normalize(v);
             const clearBtn = $('s-clear');
-            if (clearBtn) clearBtn.classList.toggle('hidden', v.length === 0);
+            if (clearBtn) clearBtn.classList.toggle('visible', v.length > 0);
             if (v) { s.l1 = 'Todo';
                 s.l2 = s.l3 = ''; }
             s.page = 1;
@@ -2237,12 +2269,14 @@
             if (tasa) tasa.classList.toggle('hidden', isHome);
             const truck = $('h-truck');
             if (truck) truck.classList.toggle('hidden', !isHome);
+        }
 
-            // 不再自动筛选，保持 Todo
-            if (view === 'catalog' && !s._defaultCategorySet) {
-                s._defaultCategorySet = true;
-                // 保持 s.l1 = 'Todo'
-            }
+        // ============================================================
+        // GO TO CATALOG (reset filters first)
+        // ============================================================
+        function goToCatalog() {
+            clrF();            // 重置所有筛选（分类、搜索、标签、品牌等）
+            setView('catalog');
         }
 
         // ============================================================
@@ -2410,6 +2444,7 @@
         // EXPOSE GLOBALS
         // ============================================================
         window.setView = setView;
+        window.goToCatalog = goToCatalog;
         window.toggleCurrency = toggleCurrency;
         window.toggleModalCurrency = toggleModalCurrency;
         window.updateModalPrices = updateModalPrices;
