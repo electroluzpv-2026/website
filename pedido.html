@@ -45,13 +45,41 @@
         .inventory-table th { background: #f1f5f9; border-bottom: 2px solid #e2e8f0; font-size: 0.5rem; padding: 0.3rem 0.2rem; white-space: nowrap; }
         .inventory-table td { border-bottom: 1px solid #e2e8f0; padding: 0.3rem 0.2rem; font-size: 0.55rem; vertical-align: middle; }
         .inventory-table tr:hover td { background: #f8fafc; }
-        /* 手机端文字换行，字体稍小 */
+        /* 手机端：每个产品两行信息 */
         @media (max-width: 640px) {
-            .inventory-table th { font-size: 0.45rem; padding: 0.2rem 0.1rem; }
-            .inventory-table td { font-size: 0.5rem; padding: 0.2rem 0.1rem; word-break: break-word; }
-            .inventory-table .desc-cell { min-width: 60px; max-width: 80px; }
-            .inventory-table .emp-cell { max-width: 50px; }
-            .code-pill { font-size: 0.4rem; padding: 0.05rem 0.3rem; }
+            .inventory-table th { font-size: 0.4rem; padding: 0.15rem 0.1rem; }
+            .inventory-table td { font-size: 0.45rem; padding: 0.15rem 0.1rem; }
+            .inventory-table .desc-cell { 
+                display: block;
+                width: 100%;
+                max-width: 120px;
+                word-break: break-word;
+                line-height: 1.2;
+            }
+            .inventory-table .compact-row {
+                display: flex;
+                flex-direction: column;
+                gap: 0.1rem;
+                padding: 0.15rem 0;
+            }
+            .inventory-table .row-first {
+                display: flex;
+                align-items: center;
+                gap: 0.3rem;
+                flex-wrap: wrap;
+            }
+            .inventory-table .row-second {
+                font-size: 0.4rem;
+                color: #334155;
+                word-break: break-word;
+                line-height: 1.2;
+                padding-left: 0.1rem;
+            }
+            .code-pill { font-size: 0.35rem; padding: 0.05rem 0.25rem; }
+            .thumb { width: 44px; height: 44px; }
+            .qty-wrapper .qty-btn { width: 20px; height: 20px; font-size: 0.5rem; }
+            .qty-wrapper .qty-input-mobile { width: 28px; font-size: 0.5rem; }
+            .stock-badge { font-size: 0.4rem; padding: 0.05rem 0.3rem; }
         }
         @media (min-width: 640px) {
             .inventory-table th { font-size: 0.7rem; padding: 0.5rem 0.5rem; }
@@ -282,17 +310,14 @@
                         <tr>
                             <th class="w-6"><input type="checkbox" id="selectAllCheck" onchange="toggleSelectAll()" class="accent-blue-600 w-3 h-3 sm:w-4 sm:h-4" /></th>
                             <th class="text-left">IMG</th>
-                            <th class="text-left">CÓD</th>
-                            <th class="text-left desc-cell">DESCRIPCIÓN</th>
-                            <th class="text-left">M</th>
-                            <th class="text-left emp-cell">Empresa</th>
+                            <th class="text-left" colspan="2">PRODUCTO</th>
                             <th class="text-center">Stock</th>
                             <th class="text-center">Mayor</th>
                             <th class="text-center">点货</th>
                         </tr>
                     </thead>
                     <tbody id="inventory-body">
-                        <tr><td colspan="9" class="text-center py-4 sm:py-8 text-[0.5rem] sm:text-sm text-slate-400">Cargando productos...</td></tr>
+                        <tr><td colspan="7" class="text-center py-4 sm:py-8 text-[0.5rem] sm:text-sm text-slate-400">Cargando productos...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -385,7 +410,7 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
         function parseCSV(text) {
             const lines = text.split(/\r?\n/);
             if (lines.length < 2) {
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">CSV vacío</td></tr>';
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="7" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">CSV vacío</td></tr>';
                 return;
             }
             
@@ -403,7 +428,7 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             console.log('🔍 Índices:', { idxCode, idxName, idxStock, idxEmpresa, idxBrand, idxImage, idxMayor });
 
             if (idxCode === -1) {
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">No se encontró columna de código</td></tr>';
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="7" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">No se encontró columna de código</td></tr>';
                 return;
             }
 
@@ -452,7 +477,7 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             }
             
             if (products.length === 0) {
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-amber-500 font-bold text-[0.5rem] sm:text-sm">No se encontraron productos</td></tr>';
+                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="7" class="text-center py-4 sm:py-8 text-amber-500 font-bold text-[0.5rem] sm:text-sm">No se encontraron productos</td></tr>';
                 return;
             }
 
@@ -551,7 +576,7 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             const noRes = document.getElementById('no-results');
             if (!tbody) return;
             if (products.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 sm:py-8 text-slate-400 text-[0.5rem] sm:text-sm">Cargando productos...</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 sm:py-8 text-slate-400 text-[0.5rem] sm:text-sm">Cargando productos...</td></tr>';
                 return;
             }
             const data = filtered;
@@ -583,14 +608,21 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                 const mayorDisplay = p.mayor > 0 ? `$${p.mayor.toFixed(2)}` : '—';
                 const empDisplay = p.empresa && p.empresa.length > 20 ? p.empresa.substring(0, 18) + '…' : p.empresa;
 
+                // 手机端两行：第一行短信息，第二行描述
                 html += `
                     <tr class="check-row">
                         <td><input type="checkbox" class="row-check" data-id="${p.id}" ${checked} onchange="toggleRow('${p.id}')" /></td>
                         <td><img src="${imgSrc}" class="thumb" onclick="openImageModal('${imgSrc}')" loading="lazy" onerror="this.src='data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 48 48\'%3e%3crect width=\'48\' height=\'48\' fill=\'%23f1f5f9\'/%3e%3ctext x=\'24\' y=\'24\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'6\' fill=\'%2394a3b8\'%3eSin%3c/text%3e%3c/svg%3e'" /></td>
-                        <td><span class="code-pill">${p.id}</span></td>
-                        <td class="font-medium text-slate-800 text-[0.5rem] sm:text-sm break-words">${p.name}</td>
-                        <td class="text-[0.5rem] sm:text-xs font-black italic text-slate-600">${p.brand || '—'}</td>
-                        <td class="text-[0.4rem] sm:text-[0.55rem] text-slate-500 max-w-[60px] sm:max-w-[120px] truncate" title="${sanitize(p.empresa)}">${sanitize(empDisplay) || '—'}</td>
+                        <td colspan="2">
+                            <div class="compact-row">
+                                <div class="row-first">
+                                    <span class="code-pill">${p.id}</span>
+                                    <span class="font-bold text-slate-700 text-[0.4rem] sm:text-sm">${p.brand || '—'}</span>
+                                    <span class="text-slate-500 text-[0.35rem] sm:text-xs truncate max-w-[60px] sm:max-w-[120px]" title="${sanitize(p.empresa)}">${sanitize(empDisplay) || '—'}</span>
+                                </div>
+                                <div class="row-second">${p.name}</div>
+                            </div>
+                        </td>
                         <td class="text-center">${stockBadge}</td>
                         <td class="text-center font-bold text-[0.5rem] sm:text-sm">${mayorDisplay}</td>
                         <td class="text-center">
