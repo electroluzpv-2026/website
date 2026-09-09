@@ -1411,30 +1411,90 @@
         }
 
         // ============================================================
-        // IMAGE LOAD WITH FALLBACK
+        // IMAGE LOAD WITH FALLBACK + DEBOUNCE
         // ============================================================
+        // 图片加载防抖队列
+        const imageLoadQueue = new Map();
+        let imageLoadTimeout = null;
+
         function loadImageWithFallback(imgElement, url) {
+            if (!imgElement) return;
             if (!url) { imgElement.src = SVG; return; }
             if (url.startsWith('data:') || url.startsWith('http') === false) { imgElement.src = url; return; }
-            imgElement.src = url;
-            if (url.toLowerCase().endsWith('.png')) {
-                const jpgUrl = url.substring(0, url.lastIndexOf('.')) + '.jpg';
-                imgElement.onerror = function() {
-                    if (this.src !== jpgUrl && !this._triedJpg) { this._triedJpg = true;
-                        this.src = jpgUrl; } else { this.src = SVG;
-                        this.classList.remove('mix-blend-multiply'); }
-                };
-            } else if (url.toLowerCase().endsWith('.jpg') || url.toLowerCase().endsWith('.jpeg')) {
-                const pngUrl = url.substring(0, url.lastIndexOf('.')) + '.png';
-                imgElement.onerror = function() {
-                    if (this.src !== pngUrl && !this._triedPng) { this._triedPng = true;
-                        this.src = pngUrl; } else { this.src = SVG;
-                        this.classList.remove('mix-blend-multiply'); }
-                };
-            } else {
-                imgElement.onerror = function() { this.src = SVG;
-                    this.classList.remove('mix-blend-multiply'); };
+
+            // 使用防抖：延迟 50ms 加载，避免短时间内大量图片同时请求
+            const key = imgElement._imgId || (imgElement._imgId = Date.now() + '_' + Math.random().toString(36).substr(2, 6));
+            
+            // 取消之前的加载任务
+            if (imageLoadQueue.has(key)) {
+                clearTimeout(imageLoadQueue.get(key));
+                imageLoadQueue.delete(key);
             }
+
+            // 先显示占位图，防止闪烁
+            if (!imgElement.src || imgElement.src === SVG) {
+                imgElement.src = SVG;
+            }
+
+            // 延迟加载
+            const timer = setTimeout(() => {
+                imageLoadQueue.delete(key);
+                doLoadImage(imgElement, url);
+            }, 50);
+            imageLoadQueue.set(key, timer);
+        }
+
+        function doLoadImage(imgElement, url) {
+            // 使用 Image 对象预加载，防止多次请求
+            const tempImg = new Image();
+            tempImg.crossOrigin = 'anonymous';
+            
+            const onLoad = () => {
+                imgElement.src = url;
+                imgElement.onerror = null;
+                if (!url.toLowerCase().endsWith('.png') && !url.toLowerCase().endsWith('.jpg') && !url.toLowerCase().endsWith('.jpeg')) {
+                    imgElement.classList.remove('mix-blend-multiply');
+                }
+                tempImg.onload = null;
+                tempImg.onerror = null;
+            };
+
+            const onError = () => {
+                // 尝试切换格式
+                if (url.toLowerCase().endsWith('.png')) {
+                    const jpgUrl = url.substring(0, url.lastIndexOf('.')) + '.jpg';
+                    if (!imgElement._triedJpg) {
+                        imgElement._triedJpg = true;
+                        doLoadImage(imgElement, jpgUrl);
+                        return;
+                    }
+                } else if (url.toLowerCase().endsWith('.jpg') || url.toLowerCase().endsWith('.jpeg')) {
+                    const pngUrl = url.substring(0, url.lastIndexOf('.')) + '.png';
+                    if (!imgElement._triedPng) {
+                        imgElement._triedPng = true;
+                        doLoadImage(imgElement, pngUrl);
+                        return;
+                    }
+                }
+                imgElement.src = SVG;
+                imgElement.classList.remove('mix-blend-multiply');
+                imgElement._triedJpg = false;
+                imgElement._triedPng = false;
+                tempImg.onload = null;
+                tempImg.onerror = null;
+            };
+
+            tempImg.onload = onLoad;
+            tempImg.onerror = onError;
+            tempImg.src = url;
+        }
+
+        // 清理防抖队列
+        function clearImageQueue() {
+            for (const [key, timer] of imageLoadQueue) {
+                clearTimeout(timer);
+            }
+            imageLoadQueue.clear();
         }
 
         // ============================================================
@@ -1866,7 +1926,7 @@
               ${isAgotado ? '<div class="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex items-center justify-center pointer-events-none"><span class="border-2 border-rose-500 text-rose-500 font-black text-[10px] px-2 py-1 rounded-lg transform -rotate-12 tracking-widest bg-white/90 shadow-lg">AGOTADO</span></div>' : ''}
               <div class="aspect-square w-full bg-slate-50 relative p-2 flex items-center justify-center border-b border-slate-100 shrink-0 overflow-hidden">
                 ${tagLabel}
-                <img src="${imgUrl}" loading="lazy" class="absolute inset-0 w-full h-full object-contain p-2 mix-blend-multiply ${!isAgotado ? 'group-hover:scale-105' : ''} transition-transform duration-500 z-10" onerror="this.src='${SVG}'; this.classList.remove('mix-blend-multiply');">
+                <img src="${SVG}" loading="lazy" data-src="${imgUrl}" class="absolute inset-0 w-full h-full object-contain p-2 mix-blend-multiply ${!isAgotado ? 'group-hover:scale-105' : ''} transition-transform duration-500 z-10" onerror="this.src='${SVG}'; this.classList.remove('mix-blend-multiply');">
               </div>
               <div class="p-2 sm:p-3 flex flex-col h-full flex-1 relative z-0 bg-white overflow-hidden">
                 <div class="absolute inset-0 pointer-events-none z-0">
@@ -1885,6 +1945,26 @@
             </div>`;
             }
             grid.innerHTML = htmlString;
+
+            // 使用 IntersectionObserver 实现图片懒加载 + 防抖
+            const lazyImages = grid.querySelectorAll('img[data-src]');
+            if (lazyImages.length > 0) {
+                const imageObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            const src = img.getAttribute('data-src');
+                            if (src) {
+                                img.removeAttribute('data-src');
+                                loadImageWithFallback(img, src);
+                            }
+                            imageObserver.unobserve(img);
+                        }
+                    }
+                }, { rootMargin: '200px', threshold: 0.01 });
+                lazyImages.forEach(img => imageObserver.observe(img));
+            }
+
             renderPagination(totalPages);
         }
 
@@ -1916,7 +1996,12 @@
             s.modalCur = s.cur;
             const isAgotado = p.stock <= 0;
             const img = $('m-img');
-            if (img) loadImageWithFallback(img, p.image ? p.image : SVG);
+            if (img) {
+                // 使用防抖加载模态图片
+                img._triedJpg = false;
+                img._triedPng = false;
+                loadImageWithFallback(img, p.image ? p.image : SVG);
+            }
             const mask = $('m-agotado-layer');
             if (mask) mask.style.display = isAgotado ? 'flex' : 'none';
             const catTag = $('m-category-tag');
@@ -2275,7 +2360,7 @@
         // GO TO CATALOG (reset filters first)
         // ============================================================
         function goToCatalog() {
-            clrF();            // 重置所有筛选（分类、搜索、标签、品牌等）
+            clrF();
             setView('catalog');
         }
 
