@@ -911,6 +911,30 @@
                 font-size: 0.8rem;
             }
         }
+
+        /* ===== 产品卡片过渡优化 ===== */
+        .product-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            will-change: transform;
+        }
+        .product-card img {
+            will-change: transform;
+            transition: transform 0.4s ease;
+        }
+
+        /* 防止布局抖动 */
+        .grid {
+            grid-auto-rows: 1fr;
+        }
+        .product-card {
+            height: 100%;
+            min-height: 280px;
+        }
+        @media (max-width: 640px) {
+            .product-card {
+                min-height: 240px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1080,14 +1104,12 @@
     <!-- CATALOG -->
     <main id="v-cat" class="hidden flex-1 w-full bg-slate-50 p-2 sm:p-4 lg:p-6 pb-24">
         <div class="max-w-[1400px] mx-auto space-y-3">
-            <!-- 搜索栏（已移除分类标签筛选） -->
+            <!-- 搜索栏 -->
             <div class="bg-white/80 backdrop-blur-sm p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200/70">
                 <div class="flex items-center gap-2 flex-wrap">
-                    <!-- 菜单按钮：磨砂质感 -->
                     <button onclick="openMenu()" class="icon-frost" aria-label="Abrir menú">
                         <i class="ph-bold ph-list"></i>
                     </button>
-                    <!-- 搜索框：高级清新设计 -->
                     <div class="search-wrapper">
                         <i class="ph-bold ph-magnifying-glass search-icon"></i>
                         <input type="text" id="s-input" placeholder="Buscar por código, producto o marca..." oninput="debouncedSearch(this.value)" class="search-input-modern" autocomplete="off">
@@ -1095,7 +1117,6 @@
                             <i class="ph-bold ph-x"></i>
                         </button>
                     </div>
-                    <!-- 排序按钮 -->
                     <div class="flex items-center gap-1 shrink-0">
                         <button class="price-sort-btn" onclick="setPriceSort('asc')" title="Menor precio">↑</button>
                         <button class="price-sort-btn" onclick="setPriceSort('desc')" title="Mayor precio">↓</button>
@@ -1281,7 +1302,8 @@
             priceSort: '',
             loading: false,
             loadError: false,
-            _defaultCategorySet: true
+            _defaultCategorySet: true,
+            _imageObserver: null // 保存 IntersectionObserver 实例
         };
 
         let currentTasa = CONFIG.TASA;
@@ -1413,46 +1435,44 @@
         // ============================================================
         // IMAGE LOAD WITH FALLBACK + DEBOUNCE
         // ============================================================
-        // 图片加载防抖队列
         const imageLoadQueue = new Map();
-        let imageLoadTimeout = null;
 
         function loadImageWithFallback(imgElement, url) {
             if (!imgElement) return;
             if (!url) { imgElement.src = SVG; return; }
             if (url.startsWith('data:') || url.startsWith('http') === false) { imgElement.src = url; return; }
 
-            // 使用防抖：延迟 50ms 加载，避免短时间内大量图片同时请求
+            // 如果图片已经加载完成且src相同，跳过
+            if (imgElement.src === url && imgElement.complete && imgElement.naturalWidth > 0) return;
+
             const key = imgElement._imgId || (imgElement._imgId = Date.now() + '_' + Math.random().toString(36).substr(2, 6));
-            
-            // 取消之前的加载任务
+
             if (imageLoadQueue.has(key)) {
                 clearTimeout(imageLoadQueue.get(key));
                 imageLoadQueue.delete(key);
             }
 
-            // 先显示占位图，防止闪烁
-            if (!imgElement.src || imgElement.src === SVG) {
+            // 先显示占位图
+            if (!imgElement.src || imgElement.src === SVG || imgElement.src === '') {
                 imgElement.src = SVG;
             }
 
-            // 延迟加载
             const timer = setTimeout(() => {
                 imageLoadQueue.delete(key);
                 doLoadImage(imgElement, url);
-            }, 50);
+            }, 30);
             imageLoadQueue.set(key, timer);
         }
 
         function doLoadImage(imgElement, url) {
-            // 使用 Image 对象预加载，防止多次请求
             const tempImg = new Image();
             tempImg.crossOrigin = 'anonymous';
-            
+
             const onLoad = () => {
                 imgElement.src = url;
                 imgElement.onerror = null;
-                if (!url.toLowerCase().endsWith('.png') && !url.toLowerCase().endsWith('.jpg') && !url.toLowerCase().endsWith('.jpeg')) {
+                if (!url.toLowerCase().endsWith('.png') && !url.toLowerCase().endsWith('.jpg') && !url.toLowerCase()
+                    .endsWith('.jpeg')) {
                     imgElement.classList.remove('mix-blend-multiply');
                 }
                 tempImg.onload = null;
@@ -1460,7 +1480,6 @@
             };
 
             const onError = () => {
-                // 尝试切换格式
                 if (url.toLowerCase().endsWith('.png')) {
                     const jpgUrl = url.substring(0, url.lastIndexOf('.')) + '.jpg';
                     if (!imgElement._triedJpg) {
@@ -1489,7 +1508,6 @@
             tempImg.src = url;
         }
 
-        // 清理防抖队列
         function clearImageQueue() {
             for (const [key, timer] of imageLoadQueue) {
                 clearTimeout(timer);
@@ -1515,7 +1533,7 @@
         }
 
         // ============================================================
-        // MODAL CURRENCY TOGGLE (独立)
+        // MODAL CURRENCY TOGGLE
         // ============================================================
         function toggleModalCurrency() {
             s.modalCur = s.modalCur === 'USD' ? 'VES' : 'USD';
@@ -1560,7 +1578,7 @@
         }
 
         // ============================================================
-        // CSV LOAD (with PapaParse)
+        // CSV LOAD
         // ============================================================
         async function fetchCSV() {
             const grid = $('p-grid');
@@ -1707,7 +1725,7 @@
         }
 
         // ============================================================
-        // RENDER CATEGORY TABS ———— 已移除筛选功能
+        // RENDER CATEGORY TABS ———— 已移除
         // ============================================================
         function renderCategoryTabs() {
             const container = document.getElementById('category-tabs');
@@ -1718,7 +1736,7 @@
         }
 
         // ============================================================
-        // RENDER MENU CATEGORIES (with expandable submenus)
+        // RENDER MENU CATEGORIES
         // ============================================================
         function renderMenuCategories() {
             const container = document.getElementById('menuCategories');
@@ -1803,7 +1821,7 @@
         }
 
         // ============================================================
-        // RENDER PRODUCT GRID
+        // RENDER PRODUCT GRID (优化版 - 减少抖动)
         // ============================================================
         function renderProductGrid() {
             const perPage = getPerPage();
@@ -1854,7 +1872,9 @@
             const startIdx = (s.page - 1) * perPage;
             const paginatedProducts = filtered.slice(startIdx, startIdx + perPage);
 
-            let htmlString = '';
+            // 使用 DocumentFragment 批量构建，减少重排
+            const fragment = document.createDocumentFragment();
+
             for (let i = 0; i < paginatedProducts.length; i++) {
                 const p = paginatedProducts[i];
                 const qty = s.c[p.id] || 0;
@@ -1922,7 +1942,13 @@
                 </div></div>`;
                 }
 
-                htmlString += `<div class="product-card bg-white rounded-xl sm:rounded-2xl border border-slate-200 overflow-hidden flex flex-col shadow-sm hover:shadow-[0_10px_25px_rgba(15,23,42,0.08)] hover:-translate-y-1 transition-all duration-300 group cursor-pointer relative h-full" onclick="openModal('${p.id}')">
+                const card = document.createElement('div');
+                card.className =
+                    `product-card bg-white rounded-xl sm:rounded-2xl border border-slate-200 overflow-hidden flex flex-col shadow-sm hover:shadow-[0_10px_25px_rgba(15,23,42,0.08)] hover:-translate-y-1 transition-all duration-300 group cursor-pointer relative h-full`;
+                card.setAttribute('onclick', `openModal('${p.id}')`);
+                card.style.minHeight = window.innerWidth < 640 ? '240px' : '280px';
+
+                card.innerHTML = `
               ${isAgotado ? '<div class="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex items-center justify-center pointer-events-none"><span class="border-2 border-rose-500 text-rose-500 font-black text-[10px] px-2 py-1 rounded-lg transform -rotate-12 tracking-widest bg-white/90 shadow-lg">AGOTADO</span></div>' : ''}
               <div class="aspect-square w-full bg-slate-50 relative p-2 flex items-center justify-center border-b border-slate-100 shrink-0 overflow-hidden">
                 ${tagLabel}
@@ -1942,28 +1968,34 @@
                   ${dynamicSection}
                 </div>
               </div>
-            </div>`;
+            `;
+                fragment.appendChild(card);
             }
-            grid.innerHTML = htmlString;
 
-            // 使用 IntersectionObserver 实现图片懒加载 + 防抖
-            const lazyImages = grid.querySelectorAll('img[data-src]');
-            if (lazyImages.length > 0) {
-                const imageObserver = new IntersectionObserver((entries) => {
-                    for (const entry of entries) {
-                        if (entry.isIntersecting) {
-                            const img = entry.target;
-                            const src = img.getAttribute('data-src');
-                            if (src) {
-                                img.removeAttribute('data-src');
-                                loadImageWithFallback(img, src);
-                            }
-                            imageObserver.unobserve(img);
-                        }
-                    }
-                }, { rootMargin: '200px', threshold: 0.01 });
-                lazyImages.forEach(img => imageObserver.observe(img));
+            // 清空并一次性添加所有卡片
+            grid.innerHTML = '';
+            grid.appendChild(fragment);
+
+            // 使用 IntersectionObserver 实现图片懒加载
+            if (s._imageObserver) {
+                s._imageObserver.disconnect();
             }
+            s._imageObserver = new IntersectionObserver((entries) => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        const src = img.getAttribute('data-src');
+                        if (src) {
+                            img.removeAttribute('data-src');
+                            loadImageWithFallback(img, src);
+                        }
+                        s._imageObserver.unobserve(img);
+                    }
+                }
+            }, { rootMargin: '200px', threshold: 0.01 });
+
+            const lazyImages = grid.querySelectorAll('img[data-src]');
+            lazyImages.forEach(img => s._imageObserver.observe(img));
 
             renderPagination(totalPages);
         }
@@ -1982,9 +2014,32 @@
             <button onclick="changePage(1)" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-blue-600 transition-colors shadow-sm disabled:opacity-30 disabled:cursor-not-allowed" ${s.page >= total ? 'disabled' : ''}><i class="ph-bold ph-caret-right text-lg"></i></button>`;
         }
 
-        function changePage(delta) { s.page += delta;
-            renderProductGrid();
-            window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        function changePage(delta) {
+            const totalPages = Math.ceil(s.p.filter(p => {
+                let match = true;
+                if (s.sr) {
+                    const search = normalize(s.sr);
+                    match = normalize(p.id).includes(search) || normalize(p.name).includes(search) || normalize(p
+                        .brand).includes(search);
+                } else {
+                    if (s.l1 !== 'Todo') match = p.l1 === s.l1;
+                    if (match && s.l2) match = p.l2 === s.l2;
+                    if (match && s.l3) match = p.l3 === s.l3;
+                }
+                if (match && s.tg === 'oferta') match = p.tag.includes('oferta');
+                if (match && s.tg === 'nuevo') match = p.tag.includes('nuevo');
+                if (match && s.br) match = p.brand === s.br;
+                return match;
+            }).length / getPerPage());
+            const newPage = s.page + delta;
+            if (newPage < 1 || newPage > totalPages) return;
+            s.page = newPage;
+            // 使用 requestAnimationFrame 确保在下一帧渲染，减少闪烁
+            requestAnimationFrame(() => {
+                renderProductGrid();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
 
         // ============================================================
         // MODAL
@@ -1997,7 +2052,6 @@
             const isAgotado = p.stock <= 0;
             const img = $('m-img');
             if (img) {
-                // 使用防抖加载模态图片
                 img._triedJpg = false;
                 img._triedPng = false;
                 loadImageWithFallback(img, p.image ? p.image : SVG);
@@ -2105,7 +2159,7 @@
         }
 
         // ============================================================
-        // CART OPERATIONS (with stock checks)
+        // CART OPERATIONS
         // ============================================================
         function updateCart(id, delta, reRender = true) {
             const p = s.p.find(x => x.id === id);
@@ -2116,8 +2170,15 @@
             if (newQty < 0) return;
             if (newQty <= 0) delete s.c[id];
             else s.c[id] = newQty;
-            if (reRender) renderProductGrid();
-            updateCartUI();
+            if (reRender) {
+                // 使用 requestAnimationFrame 减少闪烁
+                requestAnimationFrame(() => {
+                    renderProductGrid();
+                    updateCartUI();
+                });
+            } else {
+                updateCartUI();
+            }
         }
 
         function manualUpdateCart(id, value, reRender = true) {
@@ -2127,15 +2188,23 @@
             const newQty = sanitizeNumber(value);
             if (newQty <= 0) delete s.c[id];
             else s.c[id] = newQty;
-            if (reRender) renderProductGrid();
-            updateCartUI();
+            if (reRender) {
+                requestAnimationFrame(() => {
+                    renderProductGrid();
+                    updateCartUI();
+                });
+            } else {
+                updateCartUI();
+            }
         }
 
         function clrC() {
             if (Object.keys(s.c).length === 0) { toast('El carrito ya está vacío'); return; }
             s.c = {};
-            renderProductGrid();
-            updateCartUI();
+            requestAnimationFrame(() => {
+                renderProductGrid();
+                updateCartUI();
+            });
             toast('Carrito vaciado');
         }
 
@@ -2296,7 +2365,7 @@
             closeMenu(); }
 
         // ============================================================
-        // SEARCH (with debounce)
+        // SEARCH
         // ============================================================
         let searchTimeout = null;
 
@@ -2357,7 +2426,7 @@
         }
 
         // ============================================================
-        // GO TO CATALOG (reset filters first)
+        // GO TO CATALOG
         // ============================================================
         function goToCatalog() {
             clrF();
@@ -2365,7 +2434,7 @@
         }
 
         // ============================================================
-        // CURRENCY TOGGLE (global)
+        // CURRENCY TOGGLE
         // ============================================================
         function toggleCurrency() {
             s.cur = s.cur === 'USD' ? 'VES' : 'USD';
@@ -2511,7 +2580,7 @@
         }
 
         // ============================================================
-        // RESIZE HANDLER (reset page)
+        // RESIZE HANDLER
         // ============================================================
         let resizeTimeout;
 
