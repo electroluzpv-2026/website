@@ -814,7 +814,7 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                 prods.forEach(p => {
                     const qty = counts[p.id] || 0;
                     msg += `${idx}. *${p.id}* - ${p.name}\n`;
-                    msg += `   Cantidad: ${qty}\n`;
+                    msg += `   Cantidad UND: ${qty}\n`;
                     if (p.brand) msg += `   Marca: ${p.brand}\n`;
                     msg += `\n`;
                     idx++;
