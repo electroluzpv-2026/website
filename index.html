@@ -911,30 +911,6 @@
                 font-size: 0.8rem;
             }
         }
-
-        /* ===== 产品卡片过渡优化 ===== */
-        .product-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            will-change: transform;
-        }
-        .product-card img {
-            will-change: transform;
-            transition: transform 0.4s ease;
-        }
-
-        /* 防止布局抖动 */
-        .grid {
-            grid-auto-rows: 1fr;
-        }
-        .product-card {
-            height: 100%;
-            min-height: 280px;
-        }
-        @media (max-width: 640px) {
-            .product-card {
-                min-height: 240px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -1104,12 +1080,14 @@
     <!-- CATALOG -->
     <main id="v-cat" class="hidden flex-1 w-full bg-slate-50 p-2 sm:p-4 lg:p-6 pb-24">
         <div class="max-w-[1400px] mx-auto space-y-3">
-            <!-- 搜索栏 -->
+            <!-- 搜索栏（已移除分类标签筛选） -->
             <div class="bg-white/80 backdrop-blur-sm p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200/70">
                 <div class="flex items-center gap-2 flex-wrap">
+                    <!-- 菜单按钮：磨砂质感 -->
                     <button onclick="openMenu()" class="icon-frost" aria-label="Abrir menú">
                         <i class="ph-bold ph-list"></i>
                     </button>
+                    <!-- 搜索框：高级清新设计 -->
                     <div class="search-wrapper">
                         <i class="ph-bold ph-magnifying-glass search-icon"></i>
                         <input type="text" id="s-input" placeholder="Buscar por código, producto o marca..." oninput="debouncedSearch(this.value)" class="search-input-modern" autocomplete="off">
@@ -1117,6 +1095,7 @@
                             <i class="ph-bold ph-x"></i>
                         </button>
                     </div>
+                    <!-- 排序按钮 -->
                     <div class="flex items-center gap-1 shrink-0">
                         <button class="price-sort-btn" onclick="setPriceSort('asc')" title="Menor precio">↑</button>
                         <button class="price-sort-btn" onclick="setPriceSort('desc')" title="Mayor precio">↓</button>
@@ -1303,7 +1282,9 @@
             loading: false,
             loadError: false,
             _defaultCategorySet: true,
-            _imageObserver: null // 保存 IntersectionObserver 实例
+            _imageLoadQueue: [],      // 图片加载队列
+            _imageLoadActive: false,   // 是否正在加载
+            _imageBatchSize: 8         // 每批加载数量
         };
 
         let currentTasa = CONFIG.TASA;
@@ -1433,86 +1414,100 @@
         }
 
         // ============================================================
-        // IMAGE LOAD WITH FALLBACK + DEBOUNCE
+        // IMAGE LOAD WITH FALLBACK + BATCH QUEUE (防抖)
         // ============================================================
-        const imageLoadQueue = new Map();
-
         function loadImageWithFallback(imgElement, url) {
-            if (!imgElement) return;
             if (!url) { imgElement.src = SVG; return; }
             if (url.startsWith('data:') || url.startsWith('http') === false) { imgElement.src = url; return; }
-
-            // 如果图片已经加载完成且src相同，跳过
-            if (imgElement.src === url && imgElement.complete && imgElement.naturalWidth > 0) return;
-
-            const key = imgElement._imgId || (imgElement._imgId = Date.now() + '_' + Math.random().toString(36).substr(2, 6));
-
-            if (imageLoadQueue.has(key)) {
-                clearTimeout(imageLoadQueue.get(key));
-                imageLoadQueue.delete(key);
-            }
-
+            
+            // 加入队列延迟加载
+            imgElement._src = url;
+            imgElement._loaded = false;
+            imgElement._fallbackTried = false;
+            
             // 先显示占位图
-            if (!imgElement.src || imgElement.src === SVG || imgElement.src === '') {
-                imgElement.src = SVG;
-            }
-
-            const timer = setTimeout(() => {
-                imageLoadQueue.delete(key);
-                doLoadImage(imgElement, url);
-            }, 30);
-            imageLoadQueue.set(key, timer);
+            imgElement.src = SVG;
+            
+            // 加入加载队列
+            s._imageLoadQueue.push(imgElement);
+            processImageQueue();
         }
 
-        function doLoadImage(imgElement, url) {
-            const tempImg = new Image();
-            tempImg.crossOrigin = 'anonymous';
-
-            const onLoad = () => {
-                imgElement.src = url;
-                imgElement.onerror = null;
-                if (!url.toLowerCase().endsWith('.png') && !url.toLowerCase().endsWith('.jpg') && !url.toLowerCase()
-                    .endsWith('.jpeg')) {
-                    imgElement.classList.remove('mix-blend-multiply');
-                }
-                tempImg.onload = null;
-                tempImg.onerror = null;
-            };
-
-            const onError = () => {
-                if (url.toLowerCase().endsWith('.png')) {
-                    const jpgUrl = url.substring(0, url.lastIndexOf('.')) + '.jpg';
-                    if (!imgElement._triedJpg) {
-                        imgElement._triedJpg = true;
-                        doLoadImage(imgElement, jpgUrl);
-                        return;
+        function processImageQueue() {
+            // 如果正在处理或者队列为空，直接返回
+            if (s._imageLoadActive || s._imageLoadQueue.length === 0) return;
+            
+            s._imageLoadActive = true;
+            
+            // 使用 requestIdleCallback 或 setTimeout 分批加载
+            const batch = s._imageLoadQueue.splice(0, s._imageBatchSize);
+            
+            const loadNextBatch = () => {
+                let loaded = 0;
+                for (const img of batch) {
+                    if (img._loaded) continue;
+                    img._loaded = true;
+                    
+                    const url = img._src;
+                    if (url.toLowerCase().endsWith('.png')) {
+                        const jpgUrl = url.substring(0, url.lastIndexOf('.')) + '.jpg';
+                        img.onerror = function() {
+                            if (!this._fallbackTried) {
+                                this._fallbackTried = true;
+                                this.src = jpgUrl;
+                            } else {
+                                this.src = SVG;
+                                this.classList.remove('mix-blend-multiply');
+                            }
+                        };
+                        img.src = url;
+                    } else if (url.toLowerCase().endsWith('.jpg') || url.toLowerCase().endsWith('.jpeg')) {
+                        const pngUrl = url.substring(0, url.lastIndexOf('.')) + '.png';
+                        img.onerror = function() {
+                            if (!this._fallbackTried) {
+                                this._fallbackTried = true;
+                                this.src = pngUrl;
+                            } else {
+                                this.src = SVG;
+                                this.classList.remove('mix-blend-multiply');
+                            }
+                        };
+                        img.src = url;
+                    } else {
+                        img.onerror = function() {
+                            this.src = SVG;
+                            this.classList.remove('mix-blend-multiply');
+                        };
+                        img.src = url;
                     }
-                } else if (url.toLowerCase().endsWith('.jpg') || url.toLowerCase().endsWith('.jpeg')) {
-                    const pngUrl = url.substring(0, url.lastIndexOf('.')) + '.png';
-                    if (!imgElement._triedPng) {
-                        imgElement._triedPng = true;
-                        doLoadImage(imgElement, pngUrl);
-                        return;
-                    }
+                    loaded++;
                 }
-                imgElement.src = SVG;
-                imgElement.classList.remove('mix-blend-multiply');
-                imgElement._triedJpg = false;
-                imgElement._triedPng = false;
-                tempImg.onload = null;
-                tempImg.onerror = null;
+                
+                // 继续处理队列中的剩余图片
+                if (s._imageLoadQueue.length > 0) {
+                    // 使用 requestIdleCallback 或 setTimeout 进行下一批加载
+                    if (window.requestIdleCallback) {
+                        requestIdleCallback(() => {
+                            s._imageLoadActive = false;
+                            processImageQueue();
+                        }, { timeout: 100 });
+                    } else {
+                        setTimeout(() => {
+                            s._imageLoadActive = false;
+                            processImageQueue();
+                        }, 50);
+                    }
+                } else {
+                    s._imageLoadActive = false;
+                }
             };
-
-            tempImg.onload = onLoad;
-            tempImg.onerror = onError;
-            tempImg.src = url;
-        }
-
-        function clearImageQueue() {
-            for (const [key, timer] of imageLoadQueue) {
-                clearTimeout(timer);
+            
+            // 使用 requestIdleCallback 或 setTimeout 加载当前批次
+            if (window.requestIdleCallback) {
+                requestIdleCallback(loadNextBatch, { timeout: 200 });
+            } else {
+                setTimeout(loadNextBatch, 50);
             }
-            imageLoadQueue.clear();
         }
 
         // ============================================================
@@ -1533,7 +1528,7 @@
         }
 
         // ============================================================
-        // MODAL CURRENCY TOGGLE
+        // MODAL CURRENCY TOGGLE (独立)
         // ============================================================
         function toggleModalCurrency() {
             s.modalCur = s.modalCur === 'USD' ? 'VES' : 'USD';
@@ -1578,7 +1573,7 @@
         }
 
         // ============================================================
-        // CSV LOAD
+        // CSV LOAD (with PapaParse)
         // ============================================================
         async function fetchCSV() {
             const grid = $('p-grid');
@@ -1725,18 +1720,7 @@
         }
 
         // ============================================================
-        // RENDER CATEGORY TABS ———— 已移除
-        // ============================================================
-        function renderCategoryTabs() {
-            const container = document.getElementById('category-tabs');
-            if (container) {
-                container.innerHTML = '';
-                container.style.display = 'none';
-            }
-        }
-
-        // ============================================================
-        // RENDER MENU CATEGORIES
+        // RENDER MENU CATEGORIES (with expandable submenus)
         // ============================================================
         function renderMenuCategories() {
             const container = document.getElementById('menuCategories');
@@ -1821,9 +1805,13 @@
         }
 
         // ============================================================
-        // RENDER PRODUCT GRID (优化版 - 减少抖动)
+        // RENDER PRODUCT GRID (带图片防抖)
         // ============================================================
         function renderProductGrid() {
+            // 清空图片加载队列
+            s._imageLoadQueue = [];
+            s._imageLoadActive = false;
+            
             const perPage = getPerPage();
             let baseTotal = 0;
             for (const [id, qty] of Object.entries(s.c)) {
@@ -1867,14 +1855,17 @@
                 return;
             }
             noResults.classList.add('hidden');
+            
+            // 计算总页数，确保当前页不超出范围
             const totalPages = Math.ceil(filtered.length / perPage);
+            // 修复：如果当前页大于总页数，跳到最后一页；如果小于1，跳到第一页
             if (s.page > totalPages) s.page = totalPages > 0 ? totalPages : 1;
+            if (s.page < 1) s.page = 1;
+            
             const startIdx = (s.page - 1) * perPage;
             const paginatedProducts = filtered.slice(startIdx, startIdx + perPage);
 
-            // 使用 DocumentFragment 批量构建，减少重排
-            const fragment = document.createDocumentFragment();
-
+            let htmlString = '';
             for (let i = 0; i < paginatedProducts.length; i++) {
                 const p = paginatedProducts[i];
                 const qty = s.c[p.id] || 0;
@@ -1942,17 +1933,12 @@
                 </div></div>`;
                 }
 
-                const card = document.createElement('div');
-                card.className =
-                    `product-card bg-white rounded-xl sm:rounded-2xl border border-slate-200 overflow-hidden flex flex-col shadow-sm hover:shadow-[0_10px_25px_rgba(15,23,42,0.08)] hover:-translate-y-1 transition-all duration-300 group cursor-pointer relative h-full`;
-                card.setAttribute('onclick', `openModal('${p.id}')`);
-                card.style.minHeight = window.innerWidth < 640 ? '240px' : '280px';
-
-                card.innerHTML = `
+                // 使用 data-src 属性标记图片，由队列加载
+                htmlString += `<div class="product-card bg-white rounded-xl sm:rounded-2xl border border-slate-200 overflow-hidden flex flex-col shadow-sm hover:shadow-[0_10px_25px_rgba(15,23,42,0.08)] hover:-translate-y-1 transition-all duration-300 group cursor-pointer relative h-full" onclick="openModal('${p.id}')">
               ${isAgotado ? '<div class="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex items-center justify-center pointer-events-none"><span class="border-2 border-rose-500 text-rose-500 font-black text-[10px] px-2 py-1 rounded-lg transform -rotate-12 tracking-widest bg-white/90 shadow-lg">AGOTADO</span></div>' : ''}
               <div class="aspect-square w-full bg-slate-50 relative p-2 flex items-center justify-center border-b border-slate-100 shrink-0 overflow-hidden">
                 ${tagLabel}
-                <img src="${SVG}" loading="lazy" data-src="${imgUrl}" class="absolute inset-0 w-full h-full object-contain p-2 mix-blend-multiply ${!isAgotado ? 'group-hover:scale-105' : ''} transition-transform duration-500 z-10" onerror="this.src='${SVG}'; this.classList.remove('mix-blend-multiply');">
+                <img src="${SVG}" data-src="${imgUrl}" loading="lazy" class="absolute inset-0 w-full h-full object-contain p-2 mix-blend-multiply ${!isAgotado ? 'group-hover:scale-105' : ''} transition-transform duration-500 z-10" onerror="this.src='${SVG}'; this.classList.remove('mix-blend-multiply');">
               </div>
               <div class="p-2 sm:p-3 flex flex-col h-full flex-1 relative z-0 bg-white overflow-hidden">
                 <div class="absolute inset-0 pointer-events-none z-0">
@@ -1968,35 +1954,23 @@
                   ${dynamicSection}
                 </div>
               </div>
-            `;
-                fragment.appendChild(card);
+            </div>`;
             }
-
-            // 清空并一次性添加所有卡片
-            grid.innerHTML = '';
-            grid.appendChild(fragment);
-
-            // 使用 IntersectionObserver 实现图片懒加载
-            if (s._imageObserver) {
-                s._imageObserver.disconnect();
-            }
-            s._imageObserver = new IntersectionObserver((entries) => {
-                for (const entry of entries) {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        const src = img.getAttribute('data-src');
-                        if (src) {
-                            img.removeAttribute('data-src');
-                            loadImageWithFallback(img, src);
-                        }
-                        s._imageObserver.unobserve(img);
+            grid.innerHTML = htmlString;
+            
+            // 延迟加载图片：使用 MutationObserver 或直接处理
+            setTimeout(() => {
+                const images = grid.querySelectorAll('img[data-src]');
+                images.forEach(img => {
+                    const src = img.getAttribute('data-src');
+                    if (src && src !== SVG) {
+                        // 使用队列加载
+                        loadImageWithFallback(img, src);
+                        img.removeAttribute('data-src');
                     }
-                }
-            }, { rootMargin: '200px', threshold: 0.01 });
-
-            const lazyImages = grid.querySelectorAll('img[data-src]');
-            lazyImages.forEach(img => s._imageObserver.observe(img));
-
+                });
+            }, 50);
+            
             renderPagination(totalPages);
         }
 
@@ -2015,30 +1989,20 @@
         }
 
         function changePage(delta) {
-            const totalPages = Math.ceil(s.p.filter(p => {
-                let match = true;
-                if (s.sr) {
-                    const search = normalize(s.sr);
-                    match = normalize(p.id).includes(search) || normalize(p.name).includes(search) || normalize(p
-                        .brand).includes(search);
-                } else {
-                    if (s.l1 !== 'Todo') match = p.l1 === s.l1;
-                    if (match && s.l2) match = p.l2 === s.l2;
-                    if (match && s.l3) match = p.l3 === s.l3;
-                }
-                if (match && s.tg === 'oferta') match = p.tag.includes('oferta');
-                if (match && s.tg === 'nuevo') match = p.tag.includes('nuevo');
-                if (match && s.br) match = p.brand === s.br;
-                return match;
-            }).length / getPerPage());
-            const newPage = s.page + delta;
-            if (newPage < 1 || newPage > totalPages) return;
-            s.page = newPage;
-            // 使用 requestAnimationFrame 确保在下一帧渲染，减少闪烁
-            requestAnimationFrame(() => {
-                renderProductGrid();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
+            s.page += delta;
+            // 滚动到顶部，但保持当前页位置
+            renderProductGrid();
+            // 平滑滚动到列表顶部，但不会重置页面
+            const grid = document.getElementById('p-grid');
+            if (grid) {
+                const headerOffset = 120;
+                const elementPosition = grid.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
         }
 
         // ============================================================
@@ -2051,11 +2015,7 @@
             s.modalCur = s.cur;
             const isAgotado = p.stock <= 0;
             const img = $('m-img');
-            if (img) {
-                img._triedJpg = false;
-                img._triedPng = false;
-                loadImageWithFallback(img, p.image ? p.image : SVG);
-            }
+            if (img) loadImageWithFallback(img, p.image ? p.image : SVG);
             const mask = $('m-agotado-layer');
             if (mask) mask.style.display = isAgotado ? 'flex' : 'none';
             const catTag = $('m-category-tag');
@@ -2159,7 +2119,7 @@
         }
 
         // ============================================================
-        // CART OPERATIONS
+        // CART OPERATIONS (with stock checks)
         // ============================================================
         function updateCart(id, delta, reRender = true) {
             const p = s.p.find(x => x.id === id);
@@ -2170,15 +2130,8 @@
             if (newQty < 0) return;
             if (newQty <= 0) delete s.c[id];
             else s.c[id] = newQty;
-            if (reRender) {
-                // 使用 requestAnimationFrame 减少闪烁
-                requestAnimationFrame(() => {
-                    renderProductGrid();
-                    updateCartUI();
-                });
-            } else {
-                updateCartUI();
-            }
+            if (reRender) renderProductGrid();
+            updateCartUI();
         }
 
         function manualUpdateCart(id, value, reRender = true) {
@@ -2188,23 +2141,15 @@
             const newQty = sanitizeNumber(value);
             if (newQty <= 0) delete s.c[id];
             else s.c[id] = newQty;
-            if (reRender) {
-                requestAnimationFrame(() => {
-                    renderProductGrid();
-                    updateCartUI();
-                });
-            } else {
-                updateCartUI();
-            }
+            if (reRender) renderProductGrid();
+            updateCartUI();
         }
 
         function clrC() {
             if (Object.keys(s.c).length === 0) { toast('El carrito ya está vacío'); return; }
             s.c = {};
-            requestAnimationFrame(() => {
-                renderProductGrid();
-                updateCartUI();
-            });
+            renderProductGrid();
+            updateCartUI();
             toast('Carrito vaciado');
         }
 
@@ -2365,7 +2310,7 @@
             closeMenu(); }
 
         // ============================================================
-        // SEARCH
+        // SEARCH (with debounce)
         // ============================================================
         let searchTimeout = null;
 
@@ -2426,7 +2371,7 @@
         }
 
         // ============================================================
-        // GO TO CATALOG
+        // GO TO CATALOG (reset filters first)
         // ============================================================
         function goToCatalog() {
             clrF();
@@ -2434,7 +2379,7 @@
         }
 
         // ============================================================
-        // CURRENCY TOGGLE
+        // CURRENCY TOGGLE (global)
         // ============================================================
         function toggleCurrency() {
             s.cur = s.cur === 'USD' ? 'VES' : 'USD';
@@ -2580,7 +2525,7 @@
         }
 
         // ============================================================
-        // RESIZE HANDLER
+        // RESIZE HANDLER (reset page)
         // ============================================================
         let resizeTimeout;
 
@@ -2588,7 +2533,7 @@
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(function() {
                 if (s.v === 'catalog') {
-                    s.page = 1;
+                    // 重新计算每页数量，但保持当前页
                     renderProductGrid();
                 }
             }, 300);
