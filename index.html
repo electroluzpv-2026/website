@@ -9,7 +9,6 @@
     <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
-        /* ===== 基础样式 ===== */
         body { font-family: 'Poppins', sans-serif; font-weight: 400; background-color: #f8fafc; color: #0f172a; -webkit-tap-highlight-color: transparent; }
         .f-int { font-family: 'Inter', sans-serif; }
         .f-num { font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; }
@@ -20,7 +19,6 @@
         .hide-sc { -ms-overflow-style: none; scrollbar-width: none; }
         input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-        /* ===== 品牌按钮 ===== */
         .b-ing { color: #FFCC00; transition: 0.3s; }
         .b-ing:hover, .b-ing.act { background: #FFCC00; color: #111827; transform: scale(1.05); box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4); }
         .b-wad { color: #2563EB; transition: 0.3s; }
@@ -32,28 +30,23 @@
         .t-new { background: linear-gradient(135deg, #f0fdf4, #d1fae5); color: #047857; transition: 0.3s; }
         .t-new:hover, .t-new.act { background: linear-gradient(135deg, #10b981, #059669); color: #fff; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
 
-        /* ===== 支付与配送 ===== */
         .btn-pay { flex: 1; padding: 6px 4px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 9px; font-weight: 700; background: #fff; color: #64748b; transition: 0.2s; text-align: center; }
         .btn-del { padding: 6px 4px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 9px; font-weight: 700; color: #64748b; transition: 0.2s; }
         .fade-in { animation: fadeIn 0.3s ease forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ===== 产品卡片 ===== */
         .product-card { content-visibility: auto; contain-intrinsic-size: 400px; }
         .code-pill { display: inline-block; padding: 0.15rem 0.7rem; border-radius: 9999px; border: 2px solid #3b82f6; background-color: white; color: #1e293b; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.02em; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); white-space: nowrap; }
         .code-pill-sm { font-size: 0.65rem; padding: 0.1rem 0.6rem; border-width: 1.5px; }
         .price-text { font-weight: 400 !important; }
         .product-name { font-weight: 500 !important; }
-        .modal-price { font-weight: 400 !important; }
         .cart-item-name { font-weight: 500 !important; }
 
-        /* ===== 购物车抽屉 ===== */
         #drawer { display: flex; flex-direction: column; }
         #drawer .cart-header { flex-shrink: 0; }
         #drawer #c-items { flex: 1; overflow-y: auto; min-height: 0; }
         #drawer .cart-footer { flex-shrink: 0; padding: 0.75rem; }
 
-        /* ===== 美元按钮 ===== */
         .usd-btn-lively { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #1e40af, #1e3a8a); border: 2px solid rgba(255, 255, 255, 0.2); box-shadow: 0 2px 8px rgba(30, 58, 138, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); flex-shrink: 0; position: relative; padding: 0; }
         .usd-btn-lively:hover { transform: scale(1.1) rotate(-5deg); box-shadow: 0 4px 20px rgba(30, 58, 138, 0.5); }
         .usd-btn-lively:active { transform: scale(0.9); }
@@ -72,7 +65,6 @@
         .usd-price-badge-lively small { color: #94a3b8; font-size: 7px; font-weight: 400; }
         .usd-price-badge-lively .usd-amount-lively { color: #facc15; font-weight: 700; }
 
-        /* ===== 工具类 ===== */
         .hide-arrows::-webkit-inner-spin-button, .hide-arrows::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         .hide-arrows { -moz-appearance: textfield; }
         .category-tag-clickable { cursor: pointer; transition: all 0.2s ease; }
@@ -83,7 +75,6 @@
         .tasa-refresh-btn:hover { transform: rotate(180deg); }
         .tasa-refresh-btn:active { transform: rotate(360deg) scale(0.9); }
 
-        /* ===== 响应式 ===== */
         @media (max-width: 640px) {
             .header-mobile-compact { padding-top: 6px !important; padding-bottom: 6px !important; }
             .header-mobile-compact .logo-text h1 { font-size: 0.85rem !important; line-height: 1.1 !important; }
@@ -107,14 +98,12 @@
             #h-social { gap: 2px !important; }
         }
 
-        /* ===== 图片预览 ===== */
         .image-preview-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.92); z-index: 200; display: none; align-items: center; justify-content: center; cursor: zoom-out; padding: 20px; }
         .image-preview-overlay.open { display: flex; }
         .image-preview-overlay img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; box-shadow: 0 0 60px rgba(0, 0, 0, 0.5); }
         .image-preview-overlay .close-preview { position: absolute; top: 20px; right: 20px; width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.15); color: white; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
         .image-preview-overlay .close-preview:hover { background: rgba(255, 255, 255, 0.25); }
 
-        /* ===== 汉堡菜单 ===== */
         .menu-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
         .menu-overlay.open { opacity: 1; pointer-events: auto; }
         .menu-drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 300px; background: white; z-index: 110; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1); padding: 1rem; overflow-y: auto; }
@@ -132,28 +121,23 @@
         .menu-drawer .tag-filter { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
         .menu-drawer .tag-filter button { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; border: 1px solid #e2e8f0; background: white; cursor: pointer; }
 
-        /* ===== 价格排序 ===== */
         .price-sort-btn { padding: 4px 8px; border-radius: 20px; font-size: 12px; font-weight: 700; background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569; transition: all 0.2s; cursor: pointer; white-space: nowrap; line-height: 1; }
         .price-sort-btn:hover { background: #e2e8f0; }
         .price-sort-btn.active { background: #2563eb; border-color: #2563eb; color: white; }
 
-        /* ===== 模态框货币组 ===== */
         .modal-currency-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 
-        /* ===== 警告与重试 ===== */
         .tasa-warning { color: #f87171 !important; animation: blink-warning 1s ease-in-out infinite; }
         @keyframes blink-warning { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         .retry-btn { background: #3b82f6; color: white; padding: 6px 18px; border-radius: 12px; font-weight: 700; font-size: 12px; border: none; cursor: pointer; transition: background 0.2s; }
         .retry-btn:hover { background: #2563eb; }
 
-        /* ===== 子菜单展开 ===== */
         .sub-menu-toggle { cursor: pointer; user-select: none; }
         .sub-menu-toggle .arrow { transition: transform 0.2s; display: inline-block; }
         .sub-menu-toggle .arrow.open { transform: rotate(90deg); }
         .sub-menu-content { overflow: hidden; max-height: 0; transition: max-height 0.3s ease; }
         .sub-menu-content.open { max-height: 1200px; }
 
-        /* ===== 搜索框 - 高级清新设计 ===== */
         .search-wrapper { position: relative; flex: 1; min-width: 100px; max-width: 420px; }
         .search-wrapper .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px; transition: color 0.3s ease; pointer-events: none; z-index: 2; }
         .search-wrapper:focus-within .search-icon { color: #0c83cd; }
@@ -165,14 +149,12 @@
         .search-clear-btn:hover { background: #e2e8f0; color: #475569; }
         .search-clear-btn.visible { display: flex; }
 
-        /* 磨砂菜单按钮 */
         .icon-frost { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 12px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); border: 1px solid rgba(203, 213, 225, 0.35); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); color: #1e293b; flex-shrink: 0; transition: all 0.25s ease; cursor: pointer; }
         .icon-frost:hover { background: rgba(255, 255, 255, 0.95); border-color: #0c83cd; box-shadow: 0 4px 16px rgba(12, 131, 205, 0.08); transform: scale(1.02); }
         .icon-frost:active { transform: scale(0.96); }
         .icon-frost i { font-size: 18px; color: #1e293b; transition: color 0.2s; }
         .icon-frost:hover i { color: #0c83cd; }
 
-        /* 快捷标签按钮 (搜索框旁) */
         .quick-tag { display: inline-flex; align-items: center; gap: 4px; padding: 7px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; letter-spacing: 0.03em; border: 1px solid #e2e8f0; background: #fff; color: #64748b; cursor: pointer; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
         .quick-tag i { font-size: 13px; }
         .quick-tag.oferta { color: #e11d48; border-color: #fecdd3; background: linear-gradient(135deg, #fff1f2, #ffe4e6); }
@@ -191,7 +173,6 @@
             .quick-tag i { font-size: 11px; }
         }
 
-        /* ===== 首页横向滚动分类条 (自动流动) ===== */
         .cat-scroller-wrap {
             position: relative;
             overflow: hidden;
@@ -222,17 +203,93 @@
         .cat-chip .cat-label { margin-top: 8px; font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.15; height: 26px; display: flex; align-items: center; justify-content: center; }
         .cat-chip .cat-count { font-size: 9px; color: #94a3b8; font-weight: 700; margin-top: 1px; }
 
-        /* 专区卡片 */
         .promo-card { position: relative; border-radius: 26px; overflow: hidden; padding: 28px; color: white; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.35s, box-shadow 0.35s; cursor: pointer; }
         .promo-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18); }
         .promo-card .promo-deco { position: absolute; font-size: 160px; opacity: 0.14; right: -20px; bottom: -30px; transform: rotate(-12deg); transition: transform 0.6s, opacity 0.4s; }
         .promo-card:hover .promo-deco { transform: rotate(6deg) scale(1.1); opacity: 0.22; }
         .promo-card .promo-deco-2 { position: absolute; font-size: 90px; opacity: 0.10; left: -15px; top: -15px; transform: rotate(18deg); }
 
-        /* 分类标签 - 视觉 */
         .category-tab { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; padding: 0.45rem 1.2rem; border-radius: 50px; font-size: 0.8rem; font-weight: 700; background: #f1f5f9; color: #1e293b; border: 2px solid transparent; transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: default; white-space: nowrap; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02); user-select: none; opacity: 0.7; }
         .category-tab i { font-size: 1rem; }
         .category-tab.active-cat { background: #cb0e4c; color: white; border-color: #cb0e4c; box-shadow: 0 8px 24px rgba(203, 14, 76, 0.25); transform: scale(1.03); opacity: 1; cursor: default; }
+
+        /* 页头品牌跑马灯 */
+        .brand-ticker-wrap {
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            max-width: 380px;
+            min-width: 100px;
+            margin: 0 8px;
+            padding: 4px 0;
+            -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+        }
+        .brand-ticker-track {
+            display: flex;
+            gap: 22px;
+            width: max-content;
+            animation: brandTicker 30s linear infinite;
+            will-change: transform;
+        }
+        .brand-ticker-wrap:hover .brand-ticker-track {
+            animation-play-state: paused;
+        }
+        @keyframes brandTicker {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .brand-ticker-item {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            font-size: 13px;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: transform 0.2s, filter 0.2s;
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+        }
+        .brand-ticker-item:hover {
+            transform: scale(1.18);
+            filter: brightness(1.2);
+        }
+        .brand-ticker-item.active {
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 4px;
+        }
+        @media (max-width: 640px) {
+            .brand-ticker-wrap { max-width: 130px; margin: 0 4px; }
+            .brand-ticker-item { font-size: 11px; }
+        }
+
+        /* 详细页低库存提示 — 纯文字, 无边框, 无背景, 居中 */
+        .low-stock-text {
+            display: block;
+            width: 100%;
+            text-align: center;
+            color: #d97706;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            text-shadow: 0 0 12px rgba(245, 158, 11, 0.45), 0 0 4px rgba(245, 158, 11, 0.35);
+            animation: lowStockBlink 2s ease-in-out infinite;
+            padding: 4px 0;
+        }
+        .low-stock-text i {
+            font-size: 14px;
+            margin-right: 4px;
+            color: #d97706;
+            vertical-align: -1px;
+        }
+        @keyframes lowStockBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.75; }
+        }
     </style>
 </head>
 <body>
@@ -246,13 +303,12 @@
 
     <div id="toast" class="hidden"></div>
 
-    <!-- MENU OVERLAY -->
     <div id="menuOverlay" class="menu-overlay" onclick="closeMenu()"></div>
     <div id="menuDrawer" class="menu-drawer">
         <button class="close-btn" onclick="closeMenu()"><i class="ph-bold ph-x"></i></button>
         <div class="menu-title">Categorías Electroluz PV</div>
         <div id="menuCategories"></div>
-        <div class="menu-title mt-4">Marcas</div>
+        <div class="menu-title mt-4">Aliados Importante</div>
         <div class="brand-filter" id="menuBrands"></div>
         <div class="menu-title mt-4">Etiquetas</div>
         <div class="tag-filter">
@@ -260,14 +316,13 @@
             <button onclick="setT('oferta');closeMenu()" class="t-ofr">Oferta</button>
             <button onclick="setT('nuevo');closeMenu()" class="t-new">Nuevo</button>
         </div>
-        <div class="menu-title mt-4">Precio</div>
+        <div class="menu-title mt-4">Precio(Mas bajo a mas alto)</div>
         <div class="flex gap-2">
             <button onclick="setPriceSort('asc');closeMenu()" class="price-sort-btn">↑ Asc</button>
             <button onclick="setPriceSort('desc');closeMenu()" class="price-sort-btn">↓ Desc</button>
         </div>
     </div>
 
-    <!-- HEADER -->
     <header id="mainHeader" class="bg-[#242629] sticky top-0 z-40 shadow-md border-b border-white/5 transition-all">
         <div class="border-b border-white/5 bg-[#191a1d]" id="tasaBar">
             <div class="max-w-7xl mx-auto px-3 py-1 flex justify-between items-center text-[8px] sm:text-xs font-bold text-slate-400 f-int">
@@ -296,6 +351,11 @@
                     <p class="text-slate-400 text-[5px] sm:text-[7px] font-black tracking-[0.1em] uppercase leading-none mt-0.5">ILUMINACIÓN • FERRETERÍA • ELECTRÓNICA</p>
                 </div>
             </div>
+
+            <div class="brand-ticker-wrap" id="brandTickerWrap" title="Nuestros proveedores">
+                <div class="brand-ticker-track" id="brandTicker"></div>
+            </div>
+
             <div class="flex items-center gap-1 sm:gap-3">
                 <button onclick="goToCatalog()" class="hidden sm:flex items-center gap-1 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 text-white px-3 py-1 rounded-lg font-black text-[9px] shadow-md border border-white/10 transition-all uppercase tracking-widest">
                     <i class="ph-bold ph-book-open text-sm"></i> CATÁLOGO
@@ -322,7 +382,6 @@
         </div>
     </header>
 
-    <!-- HOME -->
     <main id="v-home" class="flex-1 w-full relative overflow-hidden bg-[#0b1121] pb-16">
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
             <div class="absolute -top-[20%] -left-[10%] w-[500px] h-[500px] bg-blue-600/30 rounded-full mix-blend-screen filter blur-[120px] opacity-60"></div>
@@ -348,7 +407,6 @@
     </main>
 
     <div id="v-home-bot" class="bg-[#f8fafc] w-full relative z-20">
-        <!-- 横向滚动分类条 (自动流动) -->
         <section class="max-w-7xl mx-auto px-4 pt-12 pb-4">
             <div class="flex items-center justify-between mb-4">
                 <div>
@@ -361,20 +419,17 @@
             </div>
         </section>
 
-        <!-- 分类卡片网格 -->
         <section class="max-w-7xl mx-auto px-4 pt-8 pb-12">
             <div class="text-center mb-10"><h3 class="text-3xl font-black text-slate-900 tracking-tight">Categorías Principales</h3><p class="text-slate-400 text-[10px] font-bold tracking-widest uppercase mt-2">SELECCIONA UNA LÍNEA PARA VER EL CATÁLOGO</p></div>
             <div id="h-cats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
         </section>
 
-        <!-- 专区：Halloween + Navidad + VIP + Papelería -->
         <section class="max-w-7xl mx-auto px-4 pb-16">
             <div class="text-center mb-10">
                 <h3 class="text-3xl font-black text-slate-900 tracking-tight flex items-center justify-center gap-2"><i class="ph-fill ph-confetti text-rose-500"></i> Zonas Especiales</h3>
                 <p class="text-slate-400 text-[10px] font-bold tracking-widest uppercase mt-2">TEMPORADAS Y PROMOCIONES</p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-                <!-- Halloween -->
                 <div class="promo-card" style="background: linear-gradient(135deg, #1a0a2e 0%, #4a148c 55%, #ff6b00 130%);" onclick="filterCategory('halloween')">
                     <i class="ph-fill ph-pumpkin promo-deco"></i>
                     <i class="ph-fill ph-moon-stars promo-deco-2"></i>
@@ -386,7 +441,6 @@
                     <button class="relative z-10 mt-5 bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white px-4 py-2 rounded-lg font-black text-[10px] tracking-widest uppercase border border-white/20 flex items-center gap-1.5 w-fit transition-all">VER MÁS <i class="ph-bold ph-arrow-right"></i></button>
                 </div>
 
-                <!-- Navidad -->
                 <div class="promo-card" style="background: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 45%, #15803d 130%);" onclick="filterCategory('navidad')">
                     <i class="ph-fill ph-tree-evergreen promo-deco"></i>
                     <i class="ph-fill ph-gift promo-deco-2"></i>
@@ -398,7 +452,6 @@
                     <button class="relative z-10 mt-5 bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white px-4 py-2 rounded-lg font-black text-[10px] tracking-widest uppercase border border-white/20 flex items-center gap-1.5 w-fit transition-all">VER MÁS <i class="ph-bold ph-arrow-right"></i></button>
                 </div>
 
-                <!-- VIP Mayorista -->
                 <div class="promo-card" style="background: linear-gradient(135deg, #0b1121 0%, #1e293b 60%, #d97706 140%);" onclick="setView('catalog')">
                     <i class="ph-fill ph-crown promo-deco"></i>
                     <div class="relative z-10">
@@ -409,7 +462,6 @@
                     <button class="relative z-10 mt-5 bg-amber-500/20 hover:bg-amber-500/30 backdrop-blur-sm text-amber-300 px-4 py-2 rounded-lg font-black text-[10px] tracking-widest uppercase border border-amber-400/30 flex items-center gap-1.5 w-fit transition-all">VER MÁS <i class="ph-bold ph-arrow-right"></i></button>
                 </div>
 
-                <!-- Regreso a Clases -->
                 <div class="promo-card" style="background: linear-gradient(135deg, #be123c 0%, #e11d48 55%, #ec4899 130%);" onclick="filterCategory('papeleria')">
                     <i class="ph-fill ph-backpack promo-deco"></i>
                     <i class="ph-fill ph-pencil-simple promo-deco-2"></i>
@@ -439,7 +491,6 @@
         </footer>
     </div>
 
-    <!-- CATALOG -->
     <main id="v-cat" class="hidden flex-1 w-full bg-slate-50 p-2 sm:p-4 lg:p-6 pb-24">
         <div class="max-w-[1400px] mx-auto space-y-3">
             <div class="bg-white/80 backdrop-blur-sm p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200/70">
@@ -481,7 +532,6 @@
         </div>
     </main>
 
-    <!-- MODAL -->
     <div id="modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-[60] flex items-end sm:items-center justify-center sm:p-4 opacity-0 transition-opacity duration-300">
         <div class="bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[90vh] transform translate-y-full sm:translate-y-10 transition-transform duration-300 relative overflow-hidden">
             <div id="m-agotado-layer" class="hidden absolute inset-0 bg-white/70 backdrop-blur-[2px] z-20 flex-col items-center justify-center">
@@ -511,7 +561,8 @@
                         </button>
                     </div>
                 </div>
-                <h3 id="m-tit" class="text-lg sm:text-xl font-black text-slate-900 leading-tight mb-4 uppercase product-name"></h3>
+                <h3 id="m-tit" class="text-lg sm:text-xl font-black text-slate-900 leading-tight mb-2 uppercase product-name"></h3>
+                <div id="m-low-stock" class="mb-4 hidden"></div>
                 <div id="m-info-b" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-3 mb-5"><p class="text-[10px] font-bold text-slate-400 mb-1.5 uppercase tracking-widest flex items-center gap-1"><i class="ph-fill ph-info"></i> Especificaciones</p><p id="m-info" class="text-sm text-slate-700 f-int whitespace-pre-wrap leading-relaxed"></p></div>
                 <div id="m-price-grid"></div>
                 <div class="flex flex-col gap-3 mt-4">
@@ -526,7 +577,6 @@
         </div>
     </div>
 
-    <!-- CART -->
     <div id="drawer" class="fixed inset-y-0 right-0 w-full sm:w-[420px] bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col border-l border-slate-200">
         <div class="cart-header p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-shrink-0">
             <h3 class="font-black text-lg text-slate-900 tracking-tight">Tu Pedido</h3>
@@ -602,9 +652,6 @@
         };
         const SVG = `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3e%3crect width='100' height='100' fill='%23f1f5f9'/%3e%3ctext x='50' y='50' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='8' font-weight='bold' fill='%2394a3b8'%3eSin Imagen%3c/text%3e%3c/svg%3e`;
 
-        // ============================================================
-        // UTILITIES
-        // ============================================================
         function sanitize(str) { if (!str) return ''; const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }; return str.toString().replace(/[&<>"']/g, m => map[m]); }
         function sanitizeNumber(val) { const num = parseInt(val); return isNaN(num) || num < 0 ? 0 : num; }
         function normalize(str) { return str ? str.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase() : ''; }
@@ -615,11 +662,9 @@
             return `$${amount.toFixed(2)}`;
         }
 
-        // ============================================================
-        // 品牌固定颜色映射
-        // ============================================================
+        // 品牌徽章背景色
         const BRAND_COLOR_MAP = {
-            'INGCO':     'bg-gradient-to-r from-amber-400 to-orange-500 text-black border border-orange-600',
+            'INGCO':     'bg-gradient-to-r from-amber-400 to-orange-500 text-black',
             'VERT':      'bg-gradient-to-r from-emerald-400 to-cyan-500 text-white',
             'WADFOW':    'bg-[#002FA7] text-white',
             'PV 007':    'bg-gradient-to-r from-red-600 to-blue-700 text-white',
@@ -628,6 +673,19 @@
             'MACPOLO':   'bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white',
             'DANMI':     'bg-gradient-to-r from-slate-400 to-slate-600 text-white'
         };
+        // 品牌跑马灯文字颜色 — 荧光浅色
+        const BRAND_TEXT_COLOR_MAP = {
+            'INGCO':     '#FFD24D',
+            'VERT':      '#5EEAD4',
+            'WADFOW':    '#6EA8FF',
+            'PV 007':    '#5B9BFF',   // 主色亮蓝, 但用红色光晕 + 红蓝下划线 (在 buildItem 特殊处理)
+            'PV007':     '#5B9BFF',
+            'AMANERLUZ': '#7DA7FF',
+            'MACPOLO':   '#E9A6FF',
+            'DANMI':     '#CBD5E1'
+        };
+        const BRAND_TEXT_COLOR_FALLBACK = ['#FCD34D', '#93C5FD', '#6EE7B7', '#FCA5A5', '#C4B5FD', '#FDBA74', '#67E8F9', '#F9A8D4', '#CBD5E1'];
+
         const MACPOLO_POOL = [
             'bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white',
             'bg-gradient-to-r from-pink-500 to-rose-600 text-white',
@@ -636,7 +694,7 @@
             'bg-gradient-to-r from-rose-500 to-pink-600 text-white'
         ];
         const FALLBACK_BRAND_COLORS = [
-            'bg-[#FFCC00] text-black border border-yellow-400',
+            'bg-[#FFCC00] text-black',
             'bg-[#2563EB] text-white',
             'bg-[#10B981] text-white',
             'bg-[#EF4444] text-white',
@@ -649,18 +707,29 @@
         function getBrandColor(brand) {
             if (!brand) return 'bg-slate-200 text-slate-700';
             const key = brand.toUpperCase().trim();
-            if (key === 'MACPOLO') {
-                return MACPOLO_POOL[Math.floor(Math.random() * MACPOLO_POOL.length)];
-            }
+            if (key === 'MACPOLO') return MACPOLO_POOL[Math.floor(Math.random() * MACPOLO_POOL.length)];
             if (BRAND_COLOR_MAP[key]) return BRAND_COLOR_MAP[key];
             let hash = 0;
             for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) % 1000;
             return FALLBACK_BRAND_COLORS[hash % FALLBACK_BRAND_COLORS.length];
         }
+        function getBrandTextColor(brand) {
+            if (!brand) return '#CBD5E1';
+            const key = brand.toUpperCase().trim();
+            const v = BRAND_TEXT_COLOR_MAP[key];
+            if (v) return v;
+            let hash = 0;
+            for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) % 1000;
+            return BRAND_TEXT_COLOR_FALLBACK[hash % BRAND_TEXT_COLOR_FALLBACK.length];
+        }
+        function hexToRgba(hex, alpha) {
+            const h = hex.replace('#', '');
+            const r = parseInt(h.substring(0, 2), 16);
+            const g = parseInt(h.substring(2, 4), 16);
+            const b = parseInt(h.substring(4, 6), 16);
+            return `rgba(${r},${g},${b},${alpha})`;
+        }
 
-        // ============================================================
-        // 一级分类图标 (用于横向滚动条)
-        // ============================================================
         function getCatIconInfo(catName) {
             const c = normalize(catName);
             if (c.includes('iluminacion') || c.includes('luz')) return { icon: 'ph-fill ph-lightbulb', from: '#FEF3C7', to: '#FDE68A', accent: '#F59E0B' };
@@ -695,9 +764,6 @@
             return { icon: FALLBACK_ICONS[hash % FALLBACK_ICONS.length], ...FALLBACK_COLORS[hash % FALLBACK_COLORS.length] };
         }
 
-        // ============================================================
-        // STATE
-        // ============================================================
         const s = {
             p: [], c: {}, v: 'home',
             l1: 'Todo', l2: '', l3: '',
@@ -716,9 +782,6 @@
         const $ = id => document.getElementById(id);
         function getPerPage() { return window.innerWidth < 768 ? 21 : 20; }
 
-        // ============================================================
-        // TOAST
-        // ============================================================
         function toast(message, isError = false) {
             const el = $('toast');
             if (!el) return;
@@ -728,9 +791,6 @@
             setTimeout(() => el.className = 'hidden', 2800);
         }
 
-        // ============================================================
-        // IMAGE PREVIEW
-        // ============================================================
         function openImagePreviewFromModal() {
             const img = document.getElementById('m-img');
             if (!img || !img.src || img.src === SVG) return;
@@ -747,9 +807,6 @@
             document.body.style.overflow = '';
         }
 
-        // ============================================================
-        // TASA
-        // ============================================================
         function getTasa() { return currentTasa; }
         function updateTasaDisplay() {
             const tasaValue = document.getElementById('tasa-value');
@@ -807,9 +864,6 @@
             window.addEventListener('online', () => fetchTasaBCV());
         }
 
-        // ============================================================
-        // IMAGE LOAD WITH FALLBACK + BATCH QUEUE (防抖)
-        // ============================================================
         function loadImageWithFallback(imgElement, url) {
             if (!url) { imgElement.src = SVG; return; }
             if (url.startsWith('data:')) { imgElement.src = url; return; }
@@ -860,9 +914,6 @@
             else setTimeout(loadNextBatch, 50);
         }
 
-        // ============================================================
-        // USD TOGGLE (Modal)
-        // ============================================================
         function toggleUsdPrice() {
             const badge = document.getElementById('usdPriceBadge'), btn = document.getElementById('usdRevealBtn');
             if (!badge || !btn) return;
@@ -901,9 +952,6 @@
             renderProductGrid();
         }
 
-        // ============================================================
-        // CSV LOAD
-        // ============================================================
         async function fetchCSV() {
             const grid = $('p-grid'), errorEl = $('load-error');
             if (errorEl) errorEl.classList.add('hidden');
@@ -946,7 +994,6 @@
             const idxInfo = findIndex('info', 'spec', 'especificaciones', 'detalles');
             const idxTag = findIndex('ofer', 'tag', 'etiqueta', 'tipo');
             const idxImage = findIndex('images', 'img', 'url', 'foto', 'imagen');
-            // === M 列 "productos nuevo" ===
             const idxProductoNuevo = findIndex('productos nuevo', 'producto nuevo', 'productos_nuevo');
 
             s.p = [];
@@ -959,7 +1006,6 @@
                 let usdPrice = parseNumber(idxUsdPrice !== -1 && row[headers[idxUsdPrice]] ? row[headers[idxUsdPrice]] : '');
                 if (!usdPrice || usdPrice === 0) usdPrice = detailPrice;
 
-                // === M 列非空即算 nuevo ===
                 const productoNuevoVal = idxProductoNuevo !== -1 && row[headers[idxProductoNuevo]] ? String(row[headers[idxProductoNuevo]]).trim() : '';
                 const isNuevo = productoNuevoVal !== '';
 
@@ -987,6 +1033,7 @@
             renderHomeCategories();
             renderHomeScroller();
             renderBrandFilters();
+            renderBrandTicker();
             renderCatalog();
         }
 
@@ -996,9 +1043,6 @@
             fetchCSV();
         }
 
-        // ============================================================
-        // RENDER HOME CATEGORIES (网格卡片)
-        // ============================================================
         function renderHomeCategories() {
             const container = $('h-cats');
             if (!container) return;
@@ -1019,9 +1063,6 @@
             }).join('');
         }
 
-        // ============================================================
-        // RENDER HOME SCROLLER (所有一级分类 + 卡通图标 + 自动流动)
-        // ============================================================
         function renderHomeScroller() {
             const container = $('cat-scroller');
             if (!container) return;
@@ -1029,7 +1070,6 @@
             s.p.forEach(p => { if (p.l1) catMap[p.l1] = (catMap[p.l1] || 0) + 1; });
             const catList = Object.keys(catMap).sort((a, b) => catMap[b] - catMap[a]);
 
-            // 动态时长: 每个分类约 3.5s，最少 30s
             const duration = Math.max(30, catList.length * 3.5);
             container.style.animationDuration = duration + 's';
 
@@ -1048,16 +1088,12 @@
                 </div>`;
             };
 
-            // 渲染两份实现无缝循环
             let html = '';
             for (const cat of catList) html += buildChip(cat);
             for (const cat of catList) html += buildChip(cat);
             container.innerHTML = html;
         }
 
-        // ============================================================
-        // RENDER BRAND FILTERS (动态识别所有 marca)
-        // ============================================================
         function renderBrandFilters() {
             const container = $('menuBrands');
             if (!container) return;
@@ -1072,18 +1108,54 @@
         }
 
         // ============================================================
-        // RENDER CATALOG
+        // RENDER BRAND TICKER (PV 007 用亮蓝文字 + 红色光晕 + 红蓝下划线)
         // ============================================================
+        function renderBrandTicker() {
+            const container = $('brandTicker');
+            if (!container) return;
+            const brands = new Set();
+            s.p.forEach(p => { if (p.brand) brands.add(p.brand); });
+            const list = Array.from(brands).sort();
+            if (list.length === 0) { container.innerHTML = ''; return; }
+
+            const buildItem = (brand) => {
+                const key = brand.toUpperCase().trim();
+                const safeBrand = sanitize(brand);
+                const safeOnclick = sanitize(brand.replace(/'/g, "\\'"));
+                const isActive = s.br === brand ? ' active' : '';
+
+                // === PV 007 特殊处理: 亮蓝文字 + 红色光晕 + 红蓝双色下划线 (稳定兼容所有浏览器) ===
+                if (key === 'PV 007' || key === 'PV007') {
+                    const textShadow = `0 0 6px rgba(255,80,80,0.75), 0 0 14px rgba(255,80,80,0.55), 0 0 22px rgba(91,155,255,0.45)`;
+                    const bgGradient = `linear-gradient(90deg, #FF6B6B 0%, #FF6B6B 50%, #5B9BFF 50%, #5B9BFF 100%)`;
+                    return `<span class="brand-ticker-item${isActive}"
+                        style="color:#5B9BFF;text-shadow:${textShadow};background-image:${bgGradient};background-size:100% 3px;background-repeat:no-repeat;background-position:bottom;padding-bottom:3px !important;"
+                        onclick="setB('${safeOnclick}');setView('catalog');"
+                        title="Ver productos ${safeBrand}">${safeBrand}</span>`;
+                }
+
+                const color = getBrandTextColor(brand);
+                const glowSoft = hexToRgba(color, 0.55);
+                const glowStrong = hexToRgba(color, 0.35);
+                const textShadow = `0 0 6px ${glowSoft}, 0 0 14px ${glowStrong}, 0 0 24px ${hexToRgba(color, 0.18)}`;
+                return `<span class="brand-ticker-item${isActive}" style="color:${color};text-shadow:${textShadow};" onclick="setB('${safeOnclick}');setView('catalog');" title="Ver productos ${safeBrand}">${safeBrand}</span>`;
+            };
+
+            let html = '';
+            for (const b of list) html += buildItem(b);
+            for (const b of list) html += buildItem(b);
+            container.innerHTML = html;
+
+            const duration = Math.max(20, list.length * 2.8);
+            container.style.animationDuration = duration + 's';
+        }
+
         function renderCatalog() {
             if (s.loading) return;
             renderMenuCategories();
             renderProductGrid();
         }
 
-        // ============================================================
-        // RENDER MENU CATEGORIES
-        // 排序: 有三级分类的优先，然后按二级/三级数量降序
-        // ============================================================
         function renderMenuCategories() {
             const container = document.getElementById('menuCategories');
             if (!container) return;
@@ -1208,9 +1280,6 @@
             }
         }
 
-        // ============================================================
-        // RENDER PRODUCT GRID (带图片防抖)
-        // ============================================================
         function renderProductGrid() {
             s._imageLoadQueue = [];
             s._imageLoadActive = false;
@@ -1362,9 +1431,6 @@
             renderPagination(totalPages);
         }
 
-        // ============================================================
-        // PAGINATION
-        // ============================================================
         function renderPagination(total) {
             const el = $('pagination');
             if (!el) return;
@@ -1386,9 +1452,6 @@
             }
         }
 
-        // ============================================================
-        // MODAL
-        // ============================================================
         function openModal(id) {
             const p = s.p.find(x => x.id === id);
             if (!p) return;
@@ -1418,6 +1481,19 @@
             } else brand.classList.add('hidden');
             const title = $('m-tit');
             if (title) title.textContent = p.name;
+
+            const lowStockEl = $('m-low-stock');
+            if (lowStockEl) {
+                if (p.stock > 0 && p.stock < 10) {
+                    const n = Math.floor(p.stock);
+                    lowStockEl.innerHTML = `<span class="low-stock-text"><i class="ph-fill ph-warning"></i>¡Solo quedan ${n} unidad${n === 1 ? '' : 'es'}!</span>`;
+                    lowStockEl.classList.remove('hidden');
+                } else {
+                    lowStockEl.innerHTML = '';
+                    lowStockEl.classList.add('hidden');
+                }
+            }
+
             const infoBox = $('m-info-b'), infoText = $('m-info');
             if (p.info) { infoText.textContent = p.info.replace(/\//g, '\n'); infoBox.classList.remove('hidden'); }
             else infoBox.classList.add('hidden');
@@ -1491,9 +1567,6 @@
             manualUpdateCart(s.mod, n, false);
         }
 
-        // ============================================================
-        // CART OPERATIONS
-        // ============================================================
         function updateCart(id, delta, reRender = true) {
             const p = s.p.find(x => x.id === id);
             if (!p) return;
@@ -1524,9 +1597,6 @@
             toast('Carrito vaciado');
         }
 
-        // ============================================================
-        // CART UI
-        // ============================================================
         function updateCartUI() {
             let totalItems = 0, baseAmount = 0;
             for (const [id, qty] of Object.entries(s.c)) {
@@ -1607,9 +1677,6 @@
             }
         }
 
-        // ============================================================
-        // FILTERS & NAVIGATION
-        // ============================================================
         function filterCategory(cat) {
             const c = normalize(cat);
             let selected = 'Todo', matchedCount = 0;
@@ -1624,7 +1691,13 @@
                 setTimeout(() => { s.l1 = 'Todo'; renderCatalog(); }, 50);
             }
         }
-        function setB(brand) { s.br = s.br === brand ? '' : brand; s.page = 1; renderBrandFilters(); renderCatalog(); }
+        function setB(brand) {
+            s.br = s.br === brand ? '' : brand;
+            s.page = 1;
+            renderBrandFilters();
+            renderBrandTicker();
+            renderCatalog();
+        }
         function setT(tag) {
             s.tg = s.tg === tag ? '' : tag;
             s.page = 1;
@@ -1647,9 +1720,6 @@
         function setL2(v) { s.l2 = v; s.l3 = ''; s.page = 1; renderCatalog(); closeMenu(); }
         function setL3(v) { s.l3 = v; s.page = 1; renderCatalog(); closeMenu(); }
 
-        // ============================================================
-        // SEARCH
-        // ============================================================
         let searchTimeout = null;
         function debouncedSearch(value) {
             clearTimeout(searchTimeout);
@@ -1677,12 +1747,10 @@
             if (qOferta) qOferta.classList.remove('act');
             if (qNuevo) qNuevo.classList.remove('act');
             updS('');
+            renderBrandTicker();
             renderCatalog();
         }
 
-        // ============================================================
-        // VIEW SWITCH
-        // ============================================================
         function setView(view) {
             s.v = view;
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1707,9 +1775,6 @@
             setView('catalog');
         }
 
-        // ============================================================
-        // CURRENCY TOGGLE
-        // ============================================================
         function toggleCurrency() {
             s.cur = s.cur === 'USD' ? 'VES' : 'USD';
             const slider = $('cur-slider'), usdLbl = $('cur-usd-lbl'), vesLbl = $('cur-ves-lbl');
@@ -1727,9 +1792,6 @@
             if (s.mod) updateModalPrices();
         }
 
-        // ============================================================
-        // DELIVERY & PAYMENT
-        // ============================================================
         function setDel(m) {
             s.del = m;
             ['nacional', 'delivery', 'pickup'].forEach(x => {
@@ -1777,9 +1839,6 @@
             updateCartUI();
         }
 
-        // ============================================================
-        // CART DRAWER
-        // ============================================================
         function toggCart() {
             const d = $('drawer'), o = $('overlay');
             if (!d || !o) return;
@@ -1794,9 +1853,6 @@
             }
         }
 
-        // ============================================================
-        // SEND WHATSAPP
-        // ============================================================
         function sendWA() {
             let tQ = 0, bA = 0;
             for (const [id, qty] of Object.entries(s.c)) {
@@ -1823,9 +1879,6 @@
             window.open(`https://wa.me/${CONFIG.WHATSAPP}?text=${msg}`, '_blank');
         }
 
-        // ============================================================
-        // MENU
-        // ============================================================
         function openMenu() {
             document.getElementById('menuOverlay').classList.add('open');
             document.getElementById('menuDrawer').classList.add('open');
@@ -1837,9 +1890,6 @@
             document.getElementById('menuDrawer').classList.remove('open');
         }
 
-        // ============================================================
-        // RESIZE HANDLER
-        // ============================================================
         let resizeTimeout;
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimeout);
@@ -1848,9 +1898,6 @@
             }, 300);
         });
 
-        // ============================================================
-        // EXPOSE GLOBALS
-        // ============================================================
         window.setView = setView;
         window.goToCatalog = goToCatalog;
         window.toggleCurrency = toggleCurrency;
@@ -1891,9 +1938,6 @@
         window.debouncedSearch = debouncedSearch;
         window.toggleSubMenu = toggleSubMenu;
 
-        // ============================================================
-        // INIT
-        // ============================================================
         window.onload = function() {
             scheduleTasaUpdate();
             fetchCSV();
