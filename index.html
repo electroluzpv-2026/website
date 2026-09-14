@@ -213,7 +213,7 @@
         .category-tab i { font-size: 1rem; }
         .category-tab.active-cat { background: #cb0e4c; color: white; border-color: #cb0e4c; box-shadow: 0 8px 24px rgba(203, 14, 76, 0.25); transform: scale(1.03); opacity: 1; cursor: default; }
 
-        /* 页头品牌跑马灯 */
+        /* 页头品牌跑马灯 (只在电脑端 + 只在目录页) */
         .brand-ticker-wrap {
             position: relative;
             overflow: hidden;
@@ -262,9 +262,8 @@
             text-decoration-thickness: 2px;
             text-underline-offset: 4px;
         }
-        @media (max-width: 640px) {
-            .brand-ticker-wrap { max-width: 130px; margin: 0 4px; }
-            .brand-ticker-item { font-size: 11px; }
+        @media (max-width: 767px) {
+            .brand-ticker-wrap { display: none !important; }
         }
 
         /* 详细页低库存提示 — 纯文字, 无边框, 无背景, 居中 */
@@ -308,7 +307,7 @@
         <button class="close-btn" onclick="closeMenu()"><i class="ph-bold ph-x"></i></button>
         <div class="menu-title">Categorías Electroluz PV</div>
         <div id="menuCategories"></div>
-        <div class="menu-title mt-4">Aliados Importante</div>
+        <div class="menu-title mt-4">Nuestros Aliados</div>
         <div class="brand-filter" id="menuBrands"></div>
         <div class="menu-title mt-4">Etiquetas</div>
         <div class="tag-filter">
@@ -316,7 +315,7 @@
             <button onclick="setT('oferta');closeMenu()" class="t-ofr">Oferta</button>
             <button onclick="setT('nuevo');closeMenu()" class="t-new">Nuevo</button>
         </div>
-        <div class="menu-title mt-4">Precio(Mas bajo a mas alto)</div>
+        <div class="menu-title mt-4">Precio(de mas bajo a mas alto)</div>
         <div class="flex gap-2">
             <button onclick="setPriceSort('asc');closeMenu()" class="price-sort-btn">↑ Asc</button>
             <button onclick="setPriceSort('desc');closeMenu()" class="price-sort-btn">↓ Desc</button>
@@ -352,7 +351,8 @@
                 </div>
             </div>
 
-            <div class="brand-ticker-wrap" id="brandTickerWrap" title="Nuestros proveedores">
+            <!-- 品牌跑马灯: 只在电脑端 + 只在目录页显示 (由 JS 控制 style.display) -->
+            <div class="brand-ticker-wrap hidden md:flex" id="brandTickerWrap" title="Nuestros proveedores">
                 <div class="brand-ticker-track" id="brandTicker"></div>
             </div>
 
@@ -662,7 +662,6 @@
             return `$${amount.toFixed(2)}`;
         }
 
-        // 品牌徽章背景色
         const BRAND_COLOR_MAP = {
             'INGCO':     'bg-gradient-to-r from-amber-400 to-orange-500 text-black',
             'VERT':      'bg-gradient-to-r from-emerald-400 to-cyan-500 text-white',
@@ -673,12 +672,11 @@
             'MACPOLO':   'bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white',
             'DANMI':     'bg-gradient-to-r from-slate-400 to-slate-600 text-white'
         };
-        // 品牌跑马灯文字颜色 — 荧光浅色
         const BRAND_TEXT_COLOR_MAP = {
             'INGCO':     '#FFD24D',
             'VERT':      '#5EEAD4',
             'WADFOW':    '#6EA8FF',
-            'PV 007':    '#5B9BFF',   // 主色亮蓝, 但用红色光晕 + 红蓝下划线 (在 buildItem 特殊处理)
+            'PV 007':    '#5B9BFF',
             'PV007':     '#5B9BFF',
             'AMANERLUZ': '#7DA7FF',
             'MACPOLO':   '#E9A6FF',
@@ -1107,9 +1105,6 @@
             container.innerHTML = html;
         }
 
-        // ============================================================
-        // RENDER BRAND TICKER (PV 007 用亮蓝文字 + 红色光晕 + 红蓝下划线)
-        // ============================================================
         function renderBrandTicker() {
             const container = $('brandTicker');
             if (!container) return;
@@ -1124,7 +1119,6 @@
                 const safeOnclick = sanitize(brand.replace(/'/g, "\\'"));
                 const isActive = s.br === brand ? ' active' : '';
 
-                // === PV 007 特殊处理: 亮蓝文字 + 红色光晕 + 红蓝双色下划线 (稳定兼容所有浏览器) ===
                 if (key === 'PV 007' || key === 'PV007') {
                     const textShadow = `0 0 6px rgba(255,80,80,0.75), 0 0 14px rgba(255,80,80,0.55), 0 0 22px rgba(91,155,255,0.45)`;
                     const bgGradient = `linear-gradient(90deg, #FF6B6B 0%, #FF6B6B 50%, #5B9BFF 50%, #5B9BFF 100%)`;
@@ -1751,6 +1745,14 @@
             renderCatalog();
         }
 
+        // 跑马灯可见性控制: 电脑端 + 目录页
+        function updateBrandTickerVisibility() {
+            const ticker = document.getElementById('brandTickerWrap');
+            if (!ticker) return;
+            const isDesktop = window.innerWidth >= 768;
+            ticker.style.display = (isDesktop && s.v !== 'home') ? 'flex' : 'none';
+        }
+
         function setView(view) {
             s.v = view;
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1768,6 +1770,8 @@
             if (tasa) tasa.classList.toggle('hidden', isHome);
             const truck = $('h-truck');
             if (truck) truck.classList.toggle('hidden', !isHome);
+            // 跑马灯: 只在电脑端 + 只在目录页显示
+            updateBrandTickerVisibility();
         }
 
         function goToCatalog() {
@@ -1895,6 +1899,7 @@
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(function() {
                 if (s.v === 'catalog') renderProductGrid();
+                updateBrandTickerVisibility();
             }, 300);
         });
 
@@ -1950,6 +1955,8 @@
                 if (usdLbl) { usdLbl.classList.remove('text-white'); usdLbl.classList.add('text-slate-500'); }
                 if (vesLbl) { vesLbl.classList.remove('text-slate-500'); vesLbl.classList.add('text-white'); }
             }
+            // 初始化跑马灯可见性 (默认主页 → 隐藏)
+            updateBrandTickerVisibility();
         };
     </script>
 </body>
