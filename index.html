@@ -180,20 +180,9 @@
             -webkit-mask-image: linear-gradient(to right, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
             mask-image: linear-gradient(to right, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
         }
-        .cat-scroller-track {
-            display: flex;
-            gap: 14px;
-            width: max-content;
-            animation: catScrollFlow 45s linear infinite;
-            will-change: transform;
-        }
-        .cat-scroller-wrap:hover .cat-scroller-track {
-            animation-play-state: paused;
-        }
-        @keyframes catScrollFlow {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
+        .cat-scroller-track { display: flex; gap: 14px; width: max-content; animation: catScrollFlow 45s linear infinite; will-change: transform; }
+        .cat-scroller-wrap:hover .cat-scroller-track { animation-play-state: paused; }
+        @keyframes catScrollFlow { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         .cat-chip { flex: 0 0 auto; width: 116px; cursor: pointer; text-align: center; }
         .cat-chip .cat-icon-wrap { width: 100%; aspect-ratio: 1; border-radius: 22px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08); }
         .cat-chip:hover .cat-icon-wrap { transform: translateY(-6px) scale(1.05); box-shadow: 0 14px 30px rgba(15, 23, 42, 0.16); }
@@ -213,81 +202,146 @@
         .category-tab i { font-size: 1rem; }
         .category-tab.active-cat { background: #cb0e4c; color: white; border-color: #cb0e4c; box-shadow: 0 8px 24px rgba(203, 14, 76, 0.25); transform: scale(1.03); opacity: 1; cursor: default; }
 
-        /* 页头品牌跑马灯 (只在电脑端 + 只在目录页) */
-        .brand-ticker-wrap {
+        /* 页头品牌跑马灯 - 现代胶囊 */
+        .brand-ticker-wrap { position: relative; overflow: hidden; flex: 1; max-width: 480px; min-width: 120px; margin: 0 12px; padding: 6px 0; -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%); mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%); }
+        .brand-ticker-track { display: flex; gap: 14px; width: max-content; animation: brandTicker 30s linear infinite; will-change: transform; padding: 4px 0; }
+        .brand-ticker-wrap:hover .brand-ticker-track { animation-play-state: paused; }
+        @keyframes brandTicker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .brand-chip { position: relative; display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px 5px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); cursor: pointer; white-space: nowrap; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); overflow: hidden; }
+        .brand-chip::before { content: ''; position: absolute; inset: 0; border-radius: 999px; background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.15) 50%, transparent 70%); transform: translateX(-100%); transition: transform 0.7s; }
+        .brand-chip:hover::before { transform: translateX(100%); }
+        .brand-chip:hover { background: rgba(255, 255, 255, 0.12); transform: translateY(-2px) scale(1.06); }
+        .brand-chip .brand-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 8px currentColor; }
+        .brand-chip .brand-name { font-family: 'Inter', sans-serif; font-weight: 900; font-style: italic; font-size: 12px; letter-spacing: 0.05em; line-height: 1; }
+        .brand-chip.active { background: rgba(255, 255, 255, 0.18); border-color: rgba(255, 255, 255, 0.4); box-shadow: 0 0 20px rgba(255, 255, 255, 0.15); }
+        .brand-chip.pv007 { background: linear-gradient(90deg, rgba(255, 107, 107, 0.18), rgba(91, 155, 255, 0.18)); border-color: rgba(255, 255, 255, 0.2); }
+        .brand-chip.pv007:hover { background: linear-gradient(90deg, rgba(255, 107, 107, 0.3), rgba(91, 155, 255, 0.3)); box-shadow: 0 0 22px rgba(255, 107, 107, 0.35), 0 0 30px rgba(91, 155, 255, 0.25); }
+        .brand-chip.pv007 .brand-dot { background: linear-gradient(135deg, #FF6B6B 50%, #5B9BFF 50%); box-shadow: 0 0 10px rgba(255, 107, 107, 0.6), 0 0 14px rgba(91, 155, 255, 0.5); }
+        .brand-chip.pv007 .brand-name { background: linear-gradient(90deg, #FFB1B1 0%, #FFB1B1 45%, #A8C6FF 55%, #A8C6FF 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 6px rgba(255, 107, 107, 0.5)) drop-shadow(0 0 8px rgba(91, 155, 255, 0.4)); }
+        @media (max-width: 767px) { .brand-ticker-wrap { display: none !important; } }
+
+        /* 低库存提示 */
+        .low-stock-text { display: block; width: 100%; text-align: center; color: #d97706; font-size: 13px; font-weight: 800; letter-spacing: 0.02em; text-shadow: 0 0 12px rgba(245, 158, 11, 0.45), 0 0 4px rgba(245, 158, 11, 0.35); animation: lowStockBlink 2s ease-in-out infinite; padding: 4px 0; }
+        .low-stock-text i { font-size: 14px; margin-right: 4px; color: #d97706; vertical-align: -1px; }
+        @keyframes lowStockBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.75; } }
+
+        /* ============================================================
+           FAQ - 玫红/蓝 logo 配色, 无顶部边条, 非白底
+           ============================================================ */
+        .faq-section {
+            position: relative;
+            padding: 72px 24px 80px;
+            background: transparent;
+            overflow: hidden;
+        }
+        .faq-section::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            right: -80px;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(203, 14, 76, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .faq-section::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(30, 64, 175, 0.07) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .faq-inner { position: relative; max-width: 1280px; margin: 0 auto; z-index: 2; }
+        .faq-title {
+            font-size: 2.1rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin-bottom: 14px;
+            background: linear-gradient(90deg, #cb0e4c 0%, #cb0e4c 40%, #1e40af 60%, #1e40af 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            position: relative;
+        }
+        .faq-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 64px;
+            height: 4px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #cb0e4c, #1e40af);
+        }
+        .faq-subtitle {
+            color: #475569;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            line-height: 1.65;
+            max-width: 760px;
+            margin: 24px 0 44px;
+        }
+        .faq-subtitle strong { color: #1e40af; font-weight: 800; }
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 22px;
+        }
+        .faq-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 26px 22px 24px;
+            border: 1px solid rgba(203, 14, 76, 0.10);
+            box-shadow: 0 4px 18px rgba(30, 64, 175, 0.06), 0 1px 3px rgba(203, 14, 76, 0.04);
             position: relative;
             overflow: hidden;
-            flex: 1;
-            max-width: 380px;
-            min-width: 100px;
-            margin: 0 8px;
-            padding: 4px 0;
-            -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
-            mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
-        }
-        .brand-ticker-track {
-            display: flex;
-            gap: 22px;
-            width: max-content;
-            animation: brandTicker 30s linear infinite;
-            will-change: transform;
-        }
-        .brand-ticker-wrap:hover .brand-ticker-track {
-            animation-play-state: paused;
-        }
-        @keyframes brandTicker {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-        .brand-ticker-item {
-            font-family: 'Inter', sans-serif;
-            font-weight: 900;
-            font-style: italic;
-            font-size: 13px;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: transform 0.2s, filter 0.2s;
-            background: none !important;
-            border: none !important;
-            padding: 0 !important;
-            border-radius: 0 !important;
-        }
-        .brand-ticker-item:hover {
-            transform: scale(1.18);
-            filter: brightness(1.2);
-        }
-        .brand-ticker-item.active {
-            text-decoration: underline;
-            text-decoration-thickness: 2px;
-            text-underline-offset: 4px;
-        }
-        @media (max-width: 767px) {
-            .brand-ticker-wrap { display: none !important; }
-        }
-
-        /* 详细页低库存提示 — 纯文字, 无边框, 无背景, 居中 */
-        .low-stock-text {
-            display: block;
-            width: 100%;
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
             text-align: center;
-            color: #d97706;
-            font-size: 13px;
+        }
+        /* 移除顶部玫红-蓝边条 */
+        .faq-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 30px rgba(30, 64, 175, 0.12), 0 4px 10px rgba(203, 14, 76, 0.10);
+            border-color: rgba(203, 14, 76, 0.25);
+        }
+        .faq-card .faq-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(203, 14, 76, 0.10), rgba(30, 64, 175, 0.10));
+            color: #cb0e4c;
+            font-size: 22px;
+            margin-bottom: 14px;
+        }
+        .faq-card .faq-q {
+            color: #1e40af;
             font-weight: 800;
-            letter-spacing: 0.02em;
-            text-shadow: 0 0 12px rgba(245, 158, 11, 0.45), 0 0 4px rgba(245, 158, 11, 0.35);
-            animation: lowStockBlink 2s ease-in-out infinite;
-            padding: 4px 0;
+            font-size: 15px;
+            margin-bottom: 10px;
+            line-height: 1.35;
         }
-        .low-stock-text i {
-            font-size: 14px;
-            margin-right: 4px;
-            color: #d97706;
-            vertical-align: -1px;
+        .faq-card .faq-a {
+            color: #475569;
+            font-family: 'Inter', sans-serif;
+            font-size: 13.5px;
+            line-height: 1.65;
         }
-        @keyframes lowStockBlink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.75; }
+        .faq-card .faq-a strong { color: #cb0e4c; font-weight: 800; }
+        @media (max-width: 640px) {
+            .faq-section { padding: 48px 16px 56px; }
+            .faq-title { font-size: 1.6rem; }
+            .faq-subtitle { font-size: 13px; margin-bottom: 32px; }
+            .faq-grid { gap: 16px; }
+            .faq-card { padding: 22px 18px 20px; }
         }
     </style>
 </head>
@@ -315,7 +369,7 @@
             <button onclick="setT('oferta');closeMenu()" class="t-ofr">Oferta</button>
             <button onclick="setT('nuevo');closeMenu()" class="t-new">Nuevo</button>
         </div>
-        <div class="menu-title mt-4">Precio(de mas bajo a mas alto)</div>
+        <div class="menu-title mt-4">Precio(De mas bajo a mas alto)</div>
         <div class="flex gap-2">
             <button onclick="setPriceSort('asc');closeMenu()" class="price-sort-btn">↑ Asc</button>
             <button onclick="setPriceSort('desc');closeMenu()" class="price-sort-btn">↓ Desc</button>
@@ -351,7 +405,6 @@
                 </div>
             </div>
 
-            <!-- 品牌跑马灯: 只在电脑端 + 只在目录页显示 (由 JS 控制 style.display) -->
             <div class="brand-ticker-wrap hidden md:flex" id="brandTickerWrap" title="Nuestros proveedores">
                 <div class="brand-ticker-track" id="brandTicker"></div>
             </div>
@@ -475,7 +528,8 @@
             </div>
         </section>
 
-        <section class="max-w-7xl mx-auto px-4 py-16 border-t border-slate-200 grid lg:grid-cols-2 gap-12 items-center bg-white">
+        <!-- Visítanos (地图板块) - 背景融入页面, 去掉白色底 -->
+        <section class="max-w-7xl mx-auto px-4 py-16 grid lg:grid-cols-2 gap-12 items-center">
             <div>
                 <span class="text-blue-600 font-bold text-[10px] tracking-widest uppercase mb-2 flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> SEDE CENTRAL & ATENCIÓN</span>
                 <h3 class="text-4xl font-black text-slate-900 mb-4 tracking-tight">Visítanos en Caracas</h3>
@@ -486,6 +540,38 @@
                 <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3922.9610255094144!2d-66.90973692519916!3d10.503735989628947!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTDCsDMwJzEzLjUiTiA2NsKw54JzMjUuOCJX!5e0!3m2!1szh-CN!2sve!4v1788108354107!5m2!1szh-CN!2sve" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </section>
+
+        <!-- Preguntas Frecuentes (地图下方) -->
+        <section class="faq-section">
+            <div class="faq-inner">
+                <h2 class="faq-title">Preguntas Frecuentes</h2>
+                <p class="faq-subtitle">Encuentra aquí las respuestas a las consultas más comunes sobre compras, envíos y devoluciones en <strong>Electroluz PV</strong>. Queremos que tu experiencia sea <strong>clara, rápida y confiable</strong>.</p>
+                <div class="faq-grid">
+                    <div class="faq-card">
+                        <div class="faq-icon"><i class="ph-fill ph-truck"></i></div>
+                        <div class="faq-q">¿Realizan envíos al interior del país?</div>
+                        <div class="faq-a">
+                            Sí, realizamos envíos a nivel nacional a través de <strong>MRW</strong> y <strong>Zoom</strong>. El tiempo de entrega varía según la ubicación y el tipo de producto; algunos envíos se realizan con <strong>pago a destino</strong>.
+                        </div>
+                    </div>
+                    <div class="faq-card">
+                        <div class="faq-icon"><i class="ph-fill ph-arrows-left-right"></i></div>
+                        <div class="faq-q">¿Puedo pedir reembolso de dinero?</div>
+                        <div class="faq-a">
+                            No realizamos reembolsos en efectivo. Puedes optar por un <strong>cambio de producto</strong> o recibir una <strong>nota de crédito</strong> para usar en futuras compras.
+                        </div>
+                    </div>
+                    <div class="faq-card">
+                        <div class="faq-icon"><i class="ph-fill ph-shield-check"></i></div>
+                        <div class="faq-q">¿Los productos tienen garantía?</div>
+                        <div class="faq-a">
+                            Sí. Ofrecemos una <strong>garantía de 7 días</strong> desde la fecha de compra, sujeta a las <strong>condiciones específicas de cada producto y marca</strong>. Consulta con nuestro equipo para conocer los detalles aplicables a tu compra.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <footer class="bg-[#070b15] py-8 text-slate-500 text-xs f-int border-t border-white/5">
             <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4"><p>© 2026 Distribuidora Electroluz PV C.A. – Todos los derechos reservados.</p><div class="flex items-center gap-4"><a href="https://www.instagram.com/electroluzpv" target="_blank" class="hover:text-pink-400 flex items-center gap-1 transition-colors"><i class="ph-fill ph-instagram-logo text-xl"></i> Instagram</a><a href="https://www.tiktok.com/@electroluzpv" target="_blank" class="hover:text-cyan-400 flex items-center gap-1 transition-colors"><i class="ph-fill ph-tiktok-logo text-xl"></i> TikTok</a></div></div>
         </footer>
@@ -661,6 +747,14 @@
             if (cur === 'VES') return `Bs ${(amount * getTasa()).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
             return `$${amount.toFixed(2)}`;
         }
+        // 精确四舍五入到 2 位小数 (避免浮点误差)
+        function round2(n) {
+            return Math.round((n + Number.EPSILON) * 100) / 100;
+        }
+        // 数字 → 千分位格式, 保留 2 位小数
+        function formatVES(amount) {
+            return round2(amount).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
 
         const BRAND_COLOR_MAP = {
             'INGCO':     'bg-gradient-to-r from-amber-400 to-orange-500 text-black',
@@ -673,14 +767,9 @@
             'DANMI':     'bg-gradient-to-r from-slate-400 to-slate-600 text-white'
         };
         const BRAND_TEXT_COLOR_MAP = {
-            'INGCO':     '#FFD24D',
-            'VERT':      '#5EEAD4',
-            'WADFOW':    '#6EA8FF',
-            'PV 007':    '#5B9BFF',
-            'PV007':     '#5B9BFF',
-            'AMANERLUZ': '#7DA7FF',
-            'MACPOLO':   '#E9A6FF',
-            'DANMI':     '#CBD5E1'
+            'INGCO': '#FFD24D', 'VERT': '#5EEAD4', 'WADFOW': '#6EA8FF',
+            'PV 007': '#5B9BFF', 'PV007': '#5B9BFF', 'AMANERLUZ': '#7DA7FF',
+            'MACPOLO': '#E9A6FF', 'DANMI': '#CBD5E1'
         };
         const BRAND_TEXT_COLOR_FALLBACK = ['#FCD34D', '#93C5FD', '#6EE7B7', '#FCA5A5', '#C4B5FD', '#FDBA74', '#67E8F9', '#F9A8D4', '#CBD5E1'];
 
@@ -692,15 +781,9 @@
             'bg-gradient-to-r from-rose-500 to-pink-600 text-white'
         ];
         const FALLBACK_BRAND_COLORS = [
-            'bg-[#FFCC00] text-black',
-            'bg-[#2563EB] text-white',
-            'bg-[#10B981] text-white',
-            'bg-[#EF4444] text-white',
-            'bg-[#8B5CF6] text-white',
-            'bg-[#F97316] text-white',
-            'bg-[#06B6D4] text-white',
-            'bg-[#EC4899] text-white',
-            'bg-slate-700 text-white'
+            'bg-[#FFCC00] text-black', 'bg-[#2563EB] text-white', 'bg-[#10B981] text-white',
+            'bg-[#EF4444] text-white', 'bg-[#8B5CF6] text-white', 'bg-[#F97316] text-white',
+            'bg-[#06B6D4] text-white', 'bg-[#EC4899] text-white', 'bg-slate-700 text-white'
         ];
         function getBrandColor(brand) {
             if (!brand) return 'bg-slate-200 text-slate-700';
@@ -847,7 +930,7 @@
         function manualUpdateTasa() {
             const dot = document.getElementById('tasa-dot');
             if (dot) { dot.classList.remove('tasa-updating'); void dot.offsetWidth; dot.classList.add('tasa-updating'); }
-            fetchTasaBCV().then(success => toast(success ? '✅ Tasa BCV actualizada' : '❌ Error al actualizar tasa', !success));
+            fetchTasaBCV().then(success => toast(success ? 'Tasa BCV actualizada' : '❌ Error al actualizar tasa', !success));
         }
         function scheduleTasaUpdate() {
             fetchTasaBCV();
@@ -929,14 +1012,17 @@
             const label = $('modal-currency-label');
             if (label) label.textContent = s.modalCur === 'USD' ? 'VES' : 'USD';
         }
+
         function goToCategoryFromModal() {
-            const catTag = $('m-category-tag');
-            if (!catTag) return;
-            const parts = catTag.textContent.split('/').map(x => x.trim());
-            if (!parts[0] || parts[0] === 'General') return;
+            if (!s.mod) return;
+            const p = s.p.find(x => x.id === s.mod);
+            if (!p) return;
+            const l1 = p.l1 || 'Todo';
+            const l2 = p.l2 || '';
+            const l3 = p.l3 || '';
             closeM();
             setTimeout(() => {
-                s.l1 = parts[0] || 'Todo'; s.l2 = ''; s.l3 = '';
+                s.l1 = l1; s.l2 = l2; s.l3 = l3;
                 s.sr = ''; s.tg = ''; s.br = ''; s.page = 1;
                 setView('catalog');
                 setTimeout(() => { renderCatalog(); window.scrollTo({ top: 0, behavior: 'smooth' }); }, 50);
@@ -1113,34 +1199,34 @@
             const list = Array.from(brands).sort();
             if (list.length === 0) { container.innerHTML = ''; return; }
 
-            const buildItem = (brand) => {
+            const buildChip = (brand) => {
                 const key = brand.toUpperCase().trim();
                 const safeBrand = sanitize(brand);
                 const safeOnclick = sanitize(brand.replace(/'/g, "\\'"));
                 const isActive = s.br === brand ? ' active' : '';
 
                 if (key === 'PV 007' || key === 'PV007') {
-                    const textShadow = `0 0 6px rgba(255,80,80,0.75), 0 0 14px rgba(255,80,80,0.55), 0 0 22px rgba(91,155,255,0.45)`;
-                    const bgGradient = `linear-gradient(90deg, #FF6B6B 0%, #FF6B6B 50%, #5B9BFF 50%, #5B9BFF 100%)`;
-                    return `<span class="brand-ticker-item${isActive}"
-                        style="color:#5B9BFF;text-shadow:${textShadow};background-image:${bgGradient};background-size:100% 3px;background-repeat:no-repeat;background-position:bottom;padding-bottom:3px !important;"
-                        onclick="setB('${safeOnclick}');setView('catalog');"
-                        title="Ver productos ${safeBrand}">${safeBrand}</span>`;
+                    return `<div class="brand-chip pv007${isActive}" onclick="setB('${safeOnclick}');setView('catalog');" title="Ver productos ${safeBrand}">
+                        <span class="brand-dot"></span>
+                        <span class="brand-name">${safeBrand}</span>
+                    </div>`;
                 }
 
                 const color = getBrandTextColor(brand);
-                const glowSoft = hexToRgba(color, 0.55);
-                const glowStrong = hexToRgba(color, 0.35);
-                const textShadow = `0 0 6px ${glowSoft}, 0 0 14px ${glowStrong}, 0 0 24px ${hexToRgba(color, 0.18)}`;
-                return `<span class="brand-ticker-item${isActive}" style="color:${color};text-shadow:${textShadow};" onclick="setB('${safeOnclick}');setView('catalog');" title="Ver productos ${safeBrand}">${safeBrand}</span>`;
+                const glow = hexToRgba(color, 0.6);
+                const glowSoft = hexToRgba(color, 0.35);
+                return `<div class="brand-chip${isActive}" onclick="setB('${safeOnclick}');setView('catalog');" title="Ver productos ${safeBrand}" style="box-shadow: inset 0 0 12px ${glowSoft};">
+                    <span class="brand-dot" style="background:${color}; color:${color}; box-shadow: 0 0 8px ${glow}, 0 0 12px ${glowSoft};"></span>
+                    <span class="brand-name" style="color:${color}; text-shadow: 0 0 8px ${glow}, 0 0 14px ${glowSoft};">${safeBrand}</span>
+                </div>`;
             };
 
             let html = '';
-            for (const b of list) html += buildItem(b);
-            for (const b of list) html += buildItem(b);
+            for (const b of list) html += buildChip(b);
+            for (const b of list) html += buildChip(b);
             container.innerHTML = html;
 
-            const duration = Math.max(20, list.length * 2.8);
+            const duration = Math.max(20, list.length * 3.2);
             container.style.animationDuration = duration + 's';
         }
 
@@ -1632,8 +1718,9 @@
             const totalEl = $('c-tot'), totalUsdEl = $('c-tot-usd'), refEl = $('c-ref');
             if (totalEl && totalUsdEl && refEl) {
                 const tasa = getTasa();
+                const totalVES = round2(finalAmount * tasa);
                 if (s.pay.includes('bs')) {
-                    totalEl.textContent = `Bs ${(finalAmount * tasa).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                    totalEl.textContent = `Bs ${formatVES(totalVES)}`;
                     totalEl.className = "block font-black text-lg f-num leading-none text-emerald-600";
                     totalUsdEl.textContent = `$${finalAmount.toFixed(2)} USD`;
                     totalUsdEl.className = "text-xs font-bold text-slate-400 f-num";
@@ -1647,7 +1734,7 @@
                 } else {
                     totalEl.textContent = `$${finalAmount.toFixed(2)}`;
                     totalEl.className = "block font-black text-lg f-num leading-none text-blue-600";
-                    totalUsdEl.textContent = `Bs ${(finalAmount * tasa).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                    totalUsdEl.textContent = `Bs ${formatVES(totalVES)}`;
                     totalUsdEl.className = "text-xs font-bold text-slate-400 f-num";
                     refEl.textContent = `Tasa: ${tasa.toFixed(2)} VES/USD`;
                 }
@@ -1745,7 +1832,6 @@
             renderCatalog();
         }
 
-        // 跑马灯可见性控制: 电脑端 + 目录页
         function updateBrandTickerVisibility() {
             const ticker = document.getElementById('brandTickerWrap');
             if (!ticker) return;
@@ -1770,7 +1856,6 @@
             if (tasa) tasa.classList.toggle('hidden', isHome);
             const truck = $('h-truck');
             if (truck) truck.classList.toggle('hidden', !isHome);
-            // 跑马灯: 只在电脑端 + 只在目录页显示
             updateBrandTickerVisibility();
         }
 
@@ -1837,7 +1922,7 @@
                 if (btn) {
                     btn.className = `${base} ${st.cls} ${m.includes('usd') || m.includes('bin') ? 'flex items-center justify-center gap-1.5' : ''}`;
                     if (m === 'efectivo_usd') btn.innerHTML = `<i class="ph-fill ph-currency-dollar text-base"></i> Efectivo $`;
-                    if (m === 'binance_usdt') btn.innerHTML = `<i class="ph-fill ph-currency-btc text-base"></i> Binance`;
+                    if (m === 'binance_usdt') btn.innerHTML = `<i class="ph-fill ph-currency-bitcoin text-base"></i> Binance`;
                 }
             }
             updateCartUI();
@@ -1857,6 +1942,9 @@
             }
         }
 
+        // ============================================================
+        // 修复: WhatsApp 总价精确计算 (使用 round2 + formatVES)
+        // ============================================================
         function sendWA() {
             let tQ = 0, bA = 0;
             for (const [id, qty] of Object.entries(s.c)) {
@@ -1874,10 +1962,13 @@
                 fA += qty * pr;
                 lines.push(`- ${qty}x [${id}] ${p.name} ($${pr.toFixed(2)})`);
             }
+            // 关键修复: 先四舍五入到 2 位小数
+            fA = round2(fA);
             const br = "%0A";
             const tasa = getTasa();
+            const totalVES = round2(fA * tasa);   // ← 精确计算
             let msg = `*NUEVO PEDIDO ELECTROLUZ PV*${br}${br}*Productos:*${br}${lines.join(br)}${br}${br}---------------------------${br}*Entrega:* ${{ nacional: 'Envío Nacional', delivery: 'Delivery Caracas', pickup: 'PickUp en Tienda' } [s.del] || s.del}${br}*Pago:* ${{ pago_movil_bs: 'Pago Móvil Bs', transferencia_bs: 'Transferencia Bs', efectivo_bs: 'Efectivo Bs', efectivo_usd: 'Efectivo USD', binance_usdt: 'Binance USDT' } [s.pay] || s.pay}${br}${br}`;
-            if (s.pay.includes('bs')) msg += `*Subtotal USD:* $${fA.toFixed(2)}${br}*Tasa BCV:* ${tasa.toFixed(2)} VES/USD${br}*TOTAL BS:* Bs. ${(fA * tasa).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            if (s.pay.includes('bs')) msg += `*Subtotal USD:* $${fA.toFixed(2)}${br}*Tasa BCV:* ${tasa.toFixed(2)} VES/USD${br}*TOTAL BS:* Bs. ${formatVES(totalVES)}`;
             else if (s.pay === 'binance_usdt') msg += `*TOTAL USDT:* ${fA.toFixed(2)}`;
             else msg += `*TOTAL USD:* $${fA.toFixed(2)}`;
             window.open(`https://wa.me/${CONFIG.WHATSAPP}?text=${msg}`, '_blank');
@@ -1955,7 +2046,6 @@
                 if (usdLbl) { usdLbl.classList.remove('text-white'); usdLbl.classList.add('text-slate-500'); }
                 if (vesLbl) { vesLbl.classList.remove('text-slate-500'); vesLbl.classList.add('text-white'); }
             }
-            // 初始化跑马灯可见性 (默认主页 → 隐藏)
             updateBrandTickerVisibility();
         };
     </script>
