@@ -19,16 +19,19 @@
         .hide-sc { -ms-overflow-style: none; scrollbar-width: none; }
         input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-        .b-ing { color: #FFCC00; transition: 0.3s; }
-        .b-ing:hover, .b-ing.act { background: #FFCC00; color: #111827; transform: scale(1.05); box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4); }
-        .b-wad { color: #2563EB; transition: 0.3s; }
-        .b-wad:hover, .b-wad.act { background: #2563EB; color: #fff; transform: scale(1.05); box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); }
-        .b-ver { color: #10B981; transition: 0.3s; }
-        .b-ver:hover, .b-ver.act { background: #10B981; color: #fff; transform: scale(1.05); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+        /* ============================================================
+           页头主题配色 - 玫红 → 深蓝 (符合 logo 主题)
+           ============================================================ */
+        #mainHeader {
+            background: linear-gradient(135deg, #831843 0%, #6d1e3a 40%, #1e3a8a 100%);
+        }
+        #tasaBar {
+            background: rgba(0, 0, 0, 0.22);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
         .t-ofr { background: linear-gradient(135deg, #fff1f2, #ffe4e6); color: #be123c; transition: 0.3s; }
-        .t-ofr:hover, .t-ofr.act { background: linear-gradient(135deg, #f43f5e, #e11d48); color: #fff; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.3); }
         .t-new { background: linear-gradient(135deg, #f0fdf4, #d1fae5); color: #047857; transition: 0.3s; }
-        .t-new:hover, .t-new.act { background: linear-gradient(135deg, #10b981, #059669); color: #fff; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
 
         .btn-pay { flex: 1; padding: 6px 4px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 9px; font-weight: 700; background: #fff; color: #64748b; transition: 0.2s; text-align: center; }
         .btn-del { padding: 6px 4px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 9px; font-weight: 700; color: #64748b; transition: 0.2s; }
@@ -104,22 +107,127 @@
         .image-preview-overlay .close-preview { position: absolute; top: 20px; right: 20px; width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.15); color: white; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
         .image-preview-overlay .close-preview:hover { background: rgba(255, 255, 255, 0.25); }
 
-        .menu-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        /* ============================================================
+           汉堡菜单 - 双面板联动 (玫红/蓝主题)
+           ============================================================ */
+        .menu-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.55); z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
         .menu-overlay.open { opacity: 1; pointer-events: auto; }
-        .menu-drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 300px; background: white; z-index: 110; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1); padding: 1rem; overflow-y: auto; }
+
+        .menu-drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 300px;
+            background: #ffffff;
+            z-index: 110;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 6px 0 24px rgba(15, 23, 42, 0.15);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
         .menu-drawer.open { transform: translateX(0); }
-        .menu-drawer .close-btn { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; border: none; background: #f1f5f9; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .menu-drawer .menu-title { font-weight: 800; font-size: 1rem; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
-        .menu-drawer .menu-title:first-of-type { margin-top: 2.5rem; }
-        .menu-drawer .menu-item { display: block; padding: 0.6rem 0.6rem; border-radius: 8px; font-weight: 600; font-size: 0.85rem; color: #334155; transition: all 0.15s; cursor: pointer; border-bottom: 1px solid #f1f5f9; }
-        .menu-drawer .menu-item:hover { background: #f1f5f9; color: #1e293b; }
-        .menu-drawer .menu-item i { margin-right: 8px; width: 20px; display: inline-block; }
-        .menu-drawer .brand-filter { display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0; }
-        .menu-drawer .brand-filter button { padding: 3px 12px; border-radius: 16px; font-size: 11px; font-weight: 700; border: 1px solid #e2e8f0; background: white; color: #475569; cursor: pointer; transition: all 0.15s; }
-        .menu-drawer .brand-filter button:hover { border-color: #94a3b8; }
-        .menu-drawer .brand-filter button.active { background: #1e293b; color: white; border-color: #1e293b; }
-        .menu-drawer .tag-filter { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
-        .menu-drawer .tag-filter button { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; border: 1px solid #e2e8f0; background: white; cursor: pointer; }
+
+        .menu-drawer .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            z-index: 3;
+        }
+        .menu-drawer .close-btn:hover { background: #fdf2f8; color: #cb0e4c; }
+
+        .menu-header-row {
+            padding: 20px 20px 12px;
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            border-bottom: 1px solid #f1f5f9;
+            flex-shrink: 0;
+        }
+
+        .menu-cats-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 8px 20px;
+        }
+        .menu-cats-list::-webkit-scrollbar { width: 3px; }
+        .menu-cats-list::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+        .menu-cat-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13.5px;
+            color: #334155;
+            transition: all 0.15s;
+            user-select: none;
+            position: relative;
+        }
+        .menu-cat-item:hover { background: #f8fafc; color: #cb0e4c; }
+        .menu-cat-item.active {
+            background: linear-gradient(90deg, #fdf2f8 0%, #eff6ff 100%);
+            color: #cb0e4c;
+        }
+        .menu-cat-item .cat-arrow { color: #cbd5e1; font-size: 12px; transition: all 0.2s; flex-shrink: 0; }
+        .menu-cat-item:hover .cat-arrow, .menu-cat-item.active .cat-arrow { color: #cb0e4c; transform: translateX(2px); }
+        .menu-cat-item.promociones { color: #cb0e4c; font-weight: 700; }
+        .menu-cat-item.promociones i { font-size: 16px; }
+        .menu-cat-item .cat-inner { display: flex; align-items: center; gap: 8px; min-width: 0; }
+        .menu-cat-item .cat-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .menu-subs-panel {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            width: 300px;
+            height: 100%;
+            background: #ffffff;
+            box-shadow: 8px 0 28px rgba(15, 23, 42, 0.12);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(-8px);
+            transition: opacity 0.22s ease, transform 0.22s ease;
+            display: flex;
+            flex-direction: column;
+            padding: 16px 0 20px;
+            overflow-y: auto;
+        }
+        .menu-subs-panel::-webkit-scrollbar { width: 3px; }
+        .menu-subs-panel::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        .menu-subs-panel.show { opacity: 1; pointer-events: auto; transform: translateX(0); }
+        .menu-subs-title { padding: 4px 22px 12px; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #94a3b8; border-bottom: 1px solid #f1f5f9; margin-bottom: 6px; }
+        .menu-sub-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 22px; cursor: pointer; font-size: 13.5px; font-weight: 500; color: #334155; transition: all 0.15s; user-select: none; }
+        .menu-sub-item:hover { background: #fdf2f8; color: #cb0e4c; }
+        .menu-sub-item.all { font-weight: 800; color: #1e40af; padding-bottom: 12px; border-bottom: 1px solid #eff6ff; margin-bottom: 6px; }
+        .menu-sub-item.all:hover { color: #cb0e4c; background: #fdf2f8; }
+        .menu-sub-item .sub-arrow { color: #cbd5e1; font-size: 11px; }
+        .menu-sub-item:hover .sub-arrow { color: #cb0e4c; transform: translateX(2px); }
+
+        @media (max-width: 767px) {
+            .menu-drawer { width: 100%; max-width: 340px; }
+            .menu-subs-panel { left: 0; width: 100%; transform: translateX(0); }
+            .menu-subs-panel.show { transform: translateX(0); }
+        }
 
         .price-sort-btn { padding: 4px 8px; border-radius: 20px; font-size: 12px; font-weight: 700; background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569; transition: all 0.2s; cursor: pointer; white-space: nowrap; line-height: 1; }
         .price-sort-btn:hover { background: #e2e8f0; }
@@ -132,28 +240,22 @@
         .retry-btn { background: #3b82f6; color: white; padding: 6px 18px; border-radius: 12px; font-weight: 700; font-size: 12px; border: none; cursor: pointer; transition: background 0.2s; }
         .retry-btn:hover { background: #2563eb; }
 
-        .sub-menu-toggle { cursor: pointer; user-select: none; }
-        .sub-menu-toggle .arrow { transition: transform 0.2s; display: inline-block; }
-        .sub-menu-toggle .arrow.open { transform: rotate(90deg); }
-        .sub-menu-content { overflow: hidden; max-height: 0; transition: max-height 0.3s ease; }
-        .sub-menu-content.open { max-height: 1200px; }
-
         .search-wrapper { position: relative; flex: 1; min-width: 100px; max-width: 420px; }
         .search-wrapper .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px; transition: color 0.3s ease; pointer-events: none; z-index: 2; }
-        .search-wrapper:focus-within .search-icon { color: #0c83cd; }
+        .search-wrapper:focus-within .search-icon { color: #cb0e4c; }
         .search-input-modern { width: 100%; background: #ffffff; border: 2px solid #e8ecf1; border-radius: 14px; padding: 9px 36px 9px 38px; font-size: 13px; font-family: 'Inter', sans-serif; color: #0f172a; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); outline: none; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03); letter-spacing: 0.01em; }
         .search-input-modern::placeholder { color: #a8b3c7; font-weight: 400; letter-spacing: 0.01em; }
         .search-input-modern:hover { border-color: #cdd5e0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); }
-        .search-input-modern:focus { border-color: #0c83cd; box-shadow: 0 4px 20px rgba(12, 131, 205, 0.12), 0 0 0 4px rgba(12, 131, 205, 0.06); background: #ffffff; }
+        .search-input-modern:focus { border-color: #cb0e4c; box-shadow: 0 4px 20px rgba(203, 14, 76, 0.12), 0 0 0 4px rgba(203, 14, 76, 0.06); background: #ffffff; }
         .search-clear-btn { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; border-radius: 50%; background: #f1f4f9; border: none; color: #94a3b8; display: none; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: 12px; z-index: 2; }
         .search-clear-btn:hover { background: #e2e8f0; color: #475569; }
         .search-clear-btn.visible { display: flex; }
 
-        .icon-frost { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 12px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); border: 1px solid rgba(203, 213, 225, 0.35); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); color: #1e293b; flex-shrink: 0; transition: all 0.25s ease; cursor: pointer; }
-        .icon-frost:hover { background: rgba(255, 255, 255, 0.95); border-color: #0c83cd; box-shadow: 0 4px 16px rgba(12, 131, 205, 0.08); transform: scale(1.02); }
+        .icon-frost { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 12px; background: rgba(248, 250, 252, 0.95); backdrop-filter: blur(8px); border: 1px solid rgba(203, 213, 225, 0.5); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); color: #1e293b; flex-shrink: 0; transition: all 0.25s ease; cursor: pointer; }
+        .icon-frost:hover { background: #ffffff; border-color: #cb0e4c; box-shadow: 0 4px 16px rgba(203, 14, 76, 0.12); transform: scale(1.02); }
         .icon-frost:active { transform: scale(0.96); }
         .icon-frost i { font-size: 18px; color: #1e293b; transition: color 0.2s; }
-        .icon-frost:hover i { color: #0c83cd; }
+        .icon-frost:hover i { color: #cb0e4c; }
 
         .quick-tag { display: inline-flex; align-items: center; gap: 4px; padding: 7px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; letter-spacing: 0.03em; border: 1px solid #e2e8f0; background: #fff; color: #64748b; cursor: pointer; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
         .quick-tag i { font-size: 13px; }
@@ -173,21 +275,55 @@
             .quick-tag i { font-size: 11px; }
         }
 
-        .cat-scroller-wrap {
-            position: relative;
-            overflow: hidden;
-            padding: 6px 0 16px;
-            -webkit-mask-image: linear-gradient(to right, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
-            mask-image: linear-gradient(to right, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
-        }
+        /* 主页分类条 + 左右箭头 */
+        .cat-scroller-outer { position: relative; padding: 0 44px; }
+        .cat-scroller-wrap { position: relative; overflow: hidden; padding: 6px 0 16px; }
         .cat-scroller-track { display: flex; gap: 14px; width: max-content; animation: catScrollFlow 45s linear infinite; will-change: transform; }
         .cat-scroller-wrap:hover .cat-scroller-track { animation-play-state: paused; }
+        .cat-scroller-track.boost-left { animation-duration: 10s !important; }
+        .cat-scroller-track.boost-right { animation-duration: 10s !important; animation-direction: reverse; }
         @keyframes catScrollFlow { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        .cat-scroll-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: #ffffff;
+            color: #cb0e4c;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-size: 18px;
+        }
+        .cat-scroll-arrow:hover {
+            background: linear-gradient(135deg, #cb0e4c, #1e40af);
+            color: #ffffff;
+            transform: translateY(-50%) scale(1.08);
+            box-shadow: 0 6px 20px rgba(203, 14, 76, 0.35);
+        }
+        .cat-scroll-arrow:active { transform: translateY(-50%) scale(0.95); }
+        .cat-scroll-arrow.left { left: 0; }
+        .cat-scroll-arrow.right { right: 0; }
+
+        @media (max-width: 640px) {
+            .cat-scroller-outer { padding: 0 36px; }
+            .cat-scroll-arrow { width: 32px; height: 32px; font-size: 14px; }
+        }
+
         .cat-chip { flex: 0 0 auto; width: 116px; cursor: pointer; text-align: center; }
         .cat-chip .cat-icon-wrap { width: 100%; aspect-ratio: 1; border-radius: 22px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08); }
         .cat-chip:hover .cat-icon-wrap { transform: translateY(-6px) scale(1.05); box-shadow: 0 14px 30px rgba(15, 23, 42, 0.16); }
         .cat-chip .cat-icon-wrap i { font-size: 44px; position: relative; z-index: 2; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.12)); transition: transform 0.35s; }
-        .cat-chip:hover .cat-icon-wrap i { transform: scale(1.15) rotate(-6deg); }
+        .cat-chip .cat-icon-wrap .emoji-icon { font-size: 46px; position: relative; z-index: 2; line-height: 1; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.15)); transition: transform 0.35s; }
+        .cat-chip:hover .cat-icon-wrap i, .cat-chip:hover .cat-icon-wrap .emoji-icon { transform: scale(1.15) rotate(-6deg); }
         .cat-chip .cat-icon-wrap .blob { position: absolute; width: 80px; height: 80px; border-radius: 50%; filter: blur(22px); opacity: 0.55; }
         .cat-chip .cat-label { margin-top: 8px; font-size: 11px; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.15; height: 26px; display: flex; align-items: center; justify-content: center; }
         .cat-chip .cat-count { font-size: 9px; color: #94a3b8; font-weight: 700; margin-top: 1px; }
@@ -198,143 +334,41 @@
         .promo-card:hover .promo-deco { transform: rotate(6deg) scale(1.1); opacity: 0.22; }
         .promo-card .promo-deco-2 { position: absolute; font-size: 90px; opacity: 0.10; left: -15px; top: -15px; transform: rotate(18deg); }
 
-        .category-tab { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; padding: 0.45rem 1.2rem; border-radius: 50px; font-size: 0.8rem; font-weight: 700; background: #f1f5f9; color: #1e293b; border: 2px solid transparent; transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: default; white-space: nowrap; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02); user-select: none; opacity: 0.7; }
-        .category-tab i { font-size: 1rem; }
-        .category-tab.active-cat { background: #cb0e4c; color: white; border-color: #cb0e4c; box-shadow: 0 8px 24px rgba(203, 14, 76, 0.25); transform: scale(1.03); opacity: 1; cursor: default; }
-
-        /* 页头品牌跑马灯 - 现代胶囊 */
         .brand-ticker-wrap { position: relative; overflow: hidden; flex: 1; max-width: 480px; min-width: 120px; margin: 0 12px; padding: 6px 0; -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%); mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%); }
         .brand-ticker-track { display: flex; gap: 14px; width: max-content; animation: brandTicker 30s linear infinite; will-change: transform; padding: 4px 0; }
         .brand-ticker-wrap:hover .brand-ticker-track { animation-play-state: paused; }
         @keyframes brandTicker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .brand-chip { position: relative; display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px 5px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); cursor: pointer; white-space: nowrap; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); overflow: hidden; }
-        .brand-chip::before { content: ''; position: absolute; inset: 0; border-radius: 999px; background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.15) 50%, transparent 70%); transform: translateX(-100%); transition: transform 0.7s; }
+        .brand-chip { position: relative; display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px 5px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); cursor: pointer; white-space: nowrap; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); overflow: hidden; }
+        .brand-chip::before { content: ''; position: absolute; inset: 0; border-radius: 999px; background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%); transform: translateX(-100%); transition: transform 0.7s; }
         .brand-chip:hover::before { transform: translateX(100%); }
-        .brand-chip:hover { background: rgba(255, 255, 255, 0.12); transform: translateY(-2px) scale(1.06); }
+        .brand-chip:hover { background: rgba(255, 255, 255, 0.16); transform: translateY(-2px) scale(1.06); }
         .brand-chip .brand-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 8px currentColor; }
         .brand-chip .brand-name { font-family: 'Inter', sans-serif; font-weight: 900; font-style: italic; font-size: 12px; letter-spacing: 0.05em; line-height: 1; }
-        .brand-chip.active { background: rgba(255, 255, 255, 0.18); border-color: rgba(255, 255, 255, 0.4); box-shadow: 0 0 20px rgba(255, 255, 255, 0.15); }
-        .brand-chip.pv007 { background: linear-gradient(90deg, rgba(255, 107, 107, 0.18), rgba(91, 155, 255, 0.18)); border-color: rgba(255, 255, 255, 0.2); }
-        .brand-chip.pv007:hover { background: linear-gradient(90deg, rgba(255, 107, 107, 0.3), rgba(91, 155, 255, 0.3)); box-shadow: 0 0 22px rgba(255, 107, 107, 0.35), 0 0 30px rgba(91, 155, 255, 0.25); }
+        .brand-chip.active { background: rgba(255, 255, 255, 0.22); border-color: rgba(255, 255, 255, 0.5); box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
+        .brand-chip.pv007 { background: linear-gradient(90deg, rgba(255, 107, 107, 0.2), rgba(91, 155, 255, 0.2)); border-color: rgba(255, 255, 255, 0.25); }
+        .brand-chip.pv007:hover { background: linear-gradient(90deg, rgba(255, 107, 107, 0.32), rgba(91, 155, 255, 0.32)); box-shadow: 0 0 22px rgba(255, 107, 107, 0.4), 0 0 30px rgba(91, 155, 255, 0.3); }
         .brand-chip.pv007 .brand-dot { background: linear-gradient(135deg, #FF6B6B 50%, #5B9BFF 50%); box-shadow: 0 0 10px rgba(255, 107, 107, 0.6), 0 0 14px rgba(91, 155, 255, 0.5); }
         .brand-chip.pv007 .brand-name { background: linear-gradient(90deg, #FFB1B1 0%, #FFB1B1 45%, #A8C6FF 55%, #A8C6FF 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 6px rgba(255, 107, 107, 0.5)) drop-shadow(0 0 8px rgba(91, 155, 255, 0.4)); }
         @media (max-width: 767px) { .brand-ticker-wrap { display: none !important; } }
 
-        /* 低库存提示 */
         .low-stock-text { display: block; width: 100%; text-align: center; color: #d97706; font-size: 13px; font-weight: 800; letter-spacing: 0.02em; text-shadow: 0 0 12px rgba(245, 158, 11, 0.45), 0 0 4px rgba(245, 158, 11, 0.35); animation: lowStockBlink 2s ease-in-out infinite; padding: 4px 0; }
         .low-stock-text i { font-size: 14px; margin-right: 4px; color: #d97706; vertical-align: -1px; }
         @keyframes lowStockBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.75; } }
 
-        /* ============================================================
-           FAQ - 玫红/蓝 logo 配色, 无顶部边条, 非白底
-           ============================================================ */
-        .faq-section {
-            position: relative;
-            padding: 72px 24px 80px;
-            background: transparent;
-            overflow: hidden;
-        }
-        .faq-section::before {
-            content: '';
-            position: absolute;
-            top: -80px;
-            right: -80px;
-            width: 320px;
-            height: 320px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(203, 14, 76, 0.08) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .faq-section::after {
-            content: '';
-            position: absolute;
-            bottom: -100px;
-            left: -100px;
-            width: 380px;
-            height: 380px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(30, 64, 175, 0.07) 0%, transparent 70%);
-            pointer-events: none;
-        }
+        .faq-section { position: relative; padding: 72px 24px 80px; background: transparent; overflow: hidden; }
+        .faq-section::before { content: ''; position: absolute; top: -80px; right: -80px; width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(circle, rgba(203, 14, 76, 0.08) 0%, transparent 70%); pointer-events: none; }
+        .faq-section::after { content: ''; position: absolute; bottom: -100px; left: -100px; width: 380px; height: 380px; border-radius: 50%; background: radial-gradient(circle, rgba(30, 64, 175, 0.07) 0%, transparent 70%); pointer-events: none; }
         .faq-inner { position: relative; max-width: 1280px; margin: 0 auto; z-index: 2; }
-        .faq-title {
-            font-size: 2.1rem;
-            font-weight: 900;
-            letter-spacing: -0.02em;
-            margin-bottom: 14px;
-            background: linear-gradient(90deg, #cb0e4c 0%, #cb0e4c 40%, #1e40af 60%, #1e40af 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-            position: relative;
-        }
-        .faq-title::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: -8px;
-            width: 64px;
-            height: 4px;
-            border-radius: 4px;
-            background: linear-gradient(90deg, #cb0e4c, #1e40af);
-        }
-        .faq-subtitle {
-            color: #475569;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            line-height: 1.65;
-            max-width: 760px;
-            margin: 24px 0 44px;
-        }
+        .faq-title { font-size: 2.1rem; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 14px; background: linear-gradient(90deg, #cb0e4c 0%, #cb0e4c 40%, #1e40af 60%, #1e40af 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; position: relative; }
+        .faq-title::after { content: ''; position: absolute; left: 0; bottom: -8px; width: 64px; height: 4px; border-radius: 4px; background: linear-gradient(90deg, #cb0e4c, #1e40af); }
+        .faq-subtitle { color: #475569; font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.65; max-width: 760px; margin: 24px 0 44px; }
         .faq-subtitle strong { color: #1e40af; font-weight: 800; }
-        .faq-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 22px;
-        }
-        .faq-card {
-            background: #ffffff;
-            border-radius: 18px;
-            padding: 26px 22px 24px;
-            border: 1px solid rgba(203, 14, 76, 0.10);
-            box-shadow: 0 4px 18px rgba(30, 64, 175, 0.06), 0 1px 3px rgba(203, 14, 76, 0.04);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-            text-align: center;
-        }
-        /* 移除顶部玫红-蓝边条 */
-        .faq-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 14px 30px rgba(30, 64, 175, 0.12), 0 4px 10px rgba(203, 14, 76, 0.10);
-            border-color: rgba(203, 14, 76, 0.25);
-        }
-        .faq-card .faq-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, rgba(203, 14, 76, 0.10), rgba(30, 64, 175, 0.10));
-            color: #cb0e4c;
-            font-size: 22px;
-            margin-bottom: 14px;
-        }
-        .faq-card .faq-q {
-            color: #1e40af;
-            font-weight: 800;
-            font-size: 15px;
-            margin-bottom: 10px;
-            line-height: 1.35;
-        }
-        .faq-card .faq-a {
-            color: #475569;
-            font-family: 'Inter', sans-serif;
-            font-size: 13.5px;
-            line-height: 1.65;
-        }
+        .faq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; }
+        .faq-card { background: #ffffff; border-radius: 18px; padding: 26px 22px 24px; border: 1px solid rgba(203, 14, 76, 0.10); box-shadow: 0 4px 18px rgba(30, 64, 175, 0.06), 0 1px 3px rgba(203, 14, 76, 0.04); position: relative; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s; text-align: center; }
+        .faq-card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(30, 64, 175, 0.12), 0 4px 10px rgba(203, 14, 76, 0.10); border-color: rgba(203, 14, 76, 0.25); }
+        .faq-card .faq-icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, rgba(203, 14, 76, 0.10), rgba(30, 64, 175, 0.10)); color: #cb0e4c; font-size: 22px; margin-bottom: 14px; }
+        .faq-card .faq-q { color: #1e40af; font-weight: 800; font-size: 15px; margin-bottom: 10px; line-height: 1.35; }
+        .faq-card .faq-a { color: #475569; font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.65; }
         .faq-card .faq-a strong { color: #cb0e4c; font-weight: 800; }
         @media (max-width: 640px) {
             .faq-section { padding: 48px 16px 56px; }
@@ -359,39 +393,30 @@
     <div id="menuOverlay" class="menu-overlay" onclick="closeMenu()"></div>
     <div id="menuDrawer" class="menu-drawer">
         <button class="close-btn" onclick="closeMenu()"><i class="ph-bold ph-x"></i></button>
-        <div class="menu-title">Categorías Electroluz PV</div>
-        <div id="menuCategories"></div>
-        <div class="menu-title mt-4">Nuestros Aliados</div>
-        <div class="brand-filter" id="menuBrands"></div>
-        <div class="menu-title mt-4">Etiquetas</div>
-        <div class="tag-filter">
-            <button onclick="setT('');closeMenu()" id="tag-todo-btn" class="bg-slate-900 text-white">Todo</button>
-            <button onclick="setT('oferta');closeMenu()" class="t-ofr">Oferta</button>
-            <button onclick="setT('nuevo');closeMenu()" class="t-new">Nuevo</button>
-        </div>
-        <div class="menu-title mt-4">Precio(De mas bajo a mas alto)</div>
-        <div class="flex gap-2">
-            <button onclick="setPriceSort('asc');closeMenu()" class="price-sort-btn">↑ Asc</button>
-            <button onclick="setPriceSort('desc');closeMenu()" class="price-sort-btn">↓ Desc</button>
-        </div>
+        <div class="menu-header-row">Todas las categorías</div>
+        <div class="menu-cats-list" id="menuCategories"></div>
+        <div class="menu-subs-panel" id="menuSubsPanel"></div>
     </div>
 
-    <header id="mainHeader" class="bg-[#242629] sticky top-0 z-40 shadow-md border-b border-white/5 transition-all">
-        <div class="border-b border-white/5 bg-[#191a1d]" id="tasaBar">
-            <div class="max-w-7xl mx-auto px-3 py-1 flex justify-between items-center text-[8px] sm:text-xs font-bold text-slate-400 f-int">
+    <!-- ============================================================ -->
+    <!-- 页头 (含搜索栏) - 全部 sticky 固定 -->
+    <!-- ============================================================ -->
+    <header id="mainHeader" class="sticky top-0 z-40 shadow-md border-b border-white/10 transition-all">
+        <div id="tasaBar">
+            <div class="max-w-7xl mx-auto px-3 py-1 flex justify-between items-center text-[8px] sm:text-xs font-bold text-slate-300 f-int">
                 <div class="flex items-center gap-2 overflow-x-auto hide-sc">
-                    <span id="h-tasa" class="flex items-center gap-1 text-blue-400 font-bold whitespace-nowrap">
-                        <span id="tasa-dot" class="w-1.5 h-1.5 rounded-full bg-blue-500 tasa-updating"></span>
+                    <span id="h-tasa" class="flex items-center gap-1 text-blue-200 font-bold whitespace-nowrap">
+                        <span id="tasa-dot" class="w-1.5 h-1.5 rounded-full bg-cyan-300 tasa-updating"></span>
                         <span>TASA BCV</span>
                         <span id="tasa-value" class="text-white font-black tracking-wider">1 USD = 791.67 VES</span>
-                        <span id="tasa-update-time" class="text-[6px] text-slate-500 ml-0.5"></span>
-                        <span onclick="manualUpdateTasa()" class="tasa-refresh-btn text-slate-400 hover:text-blue-400 transition-colors" title="Actualizar tasa BCV">
+                        <span id="tasa-update-time" class="text-[6px] text-slate-400 ml-0.5"></span>
+                        <span onclick="manualUpdateTasa()" class="tasa-refresh-btn text-slate-300 hover:text-cyan-300 transition-colors" title="Actualizar tasa BCV">
                             <i class="ph-bold ph-arrows-clockwise text-[10px]"></i>
                         </span>
                     </span>
-                    <span id="h-truck" class="hidden sm:flex items-center gap-1 text-amber-500 whitespace-nowrap"><i class="ph-fill ph-truck"></i> Envíos</span>
+                    <span id="h-truck" class="hidden sm:flex items-center gap-1 text-amber-300 whitespace-nowrap"><i class="ph-fill ph-truck"></i> Envíos</span>
                 </div>
-                <span class="tracking-widest text-[7px] sm:text-[10px] whitespace-nowrap">RIF J507436055</span>
+                <span class="tracking-widest text-[7px] sm:text-[10px] whitespace-nowrap text-slate-300">RIF J507436055</span>
             </div>
         </div>
         <div class="max-w-7xl mx-auto px-3 py-1.5 flex flex-wrap justify-between items-center gap-1 header-mobile-compact">
@@ -401,7 +426,7 @@
                 </div>
                 <div class="logo-text leading-tight">
                     <h1 class="text-white font-black text-sm sm:text-lg leading-none">Electroluz PV</h1>
-                    <p class="text-slate-400 text-[5px] sm:text-[7px] font-black tracking-[0.1em] uppercase leading-none mt-0.5">ILUMINACIÓN • FERRETERÍA • ELECTRÓNICA</p>
+                    <p class="text-white/70 text-[5px] sm:text-[7px] font-black tracking-[0.1em] uppercase leading-none mt-0.5">ILUMINACIÓN • FERRETERÍA • ELECTRÓNICA</p>
                 </div>
             </div>
 
@@ -410,27 +435,53 @@
             </div>
 
             <div class="flex items-center gap-1 sm:gap-3">
-                <button onclick="goToCatalog()" class="hidden sm:flex items-center gap-1 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 text-white px-3 py-1 rounded-lg font-black text-[9px] shadow-md border border-white/10 transition-all uppercase tracking-widest">
+                <button onclick="goToCatalog()" class="hidden sm:flex items-center gap-1 bg-white/15 hover:bg-white/25 text-white px-3 py-1 rounded-lg font-black text-[9px] shadow-md border border-white/20 transition-all uppercase tracking-widest backdrop-blur-sm">
                     <i class="ph-bold ph-book-open text-sm"></i> CATÁLOGO
                 </button>
                 <div id="h-social" class="flex items-center gap-1">
-                    <a href="https://www.instagram.com/electroluzpv" target="_blank" class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-pink-500/20 hover:text-pink-400 transition-all"><i class="ph-fill ph-instagram-logo text-xs sm:text-base"></i></a>
-                    <a href="https://www.tiktok.com/@electroluzpv" target="_blank" class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-cyan-500/20 hover:text-cyan-400 transition-all"><i class="ph-fill ph-tiktok-logo text-xs sm:text-base"></i></a>
+                    <a href="https://www.instagram.com/electroluzpv" target="_blank" class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white hover:bg-pink-500/30 hover:text-pink-200 transition-all"><i class="ph-fill ph-instagram-logo text-xs sm:text-base"></i></a>
+                    <a href="https://www.tiktok.com/@electroluzpv" target="_blank" class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white hover:bg-cyan-500/30 hover:text-cyan-200 transition-all"><i class="ph-fill ph-tiktok-logo text-xs sm:text-base"></i></a>
                 </div>
                 <div id="h-ctrls" class="hidden flex items-center gap-2 sm:gap-3">
-                    <div class="relative inline-flex items-center cursor-pointer bg-black/20 p-0.5 rounded-full border border-white/10" onclick="toggleCurrency()">
+                    <div class="relative inline-flex items-center cursor-pointer bg-black/25 p-0.5 rounded-full border border-white/15" onclick="toggleCurrency()">
                         <div class="w-12 sm:w-16 h-6 sm:h-7 bg-transparent rounded-full flex relative items-center justify-between px-1.5 sm:px-2">
                             <span id="cur-usd-lbl" class="text-[8px] sm:text-[9px] font-black z-10 transition-colors text-white">USD</span>
-                            <span id="cur-ves-lbl" class="text-[8px] sm:text-[9px] font-black z-10 transition-colors text-slate-500">VES</span>
-                            <div id="cur-slider" class="absolute left-0 w-1/2 h-[22px] sm:h-full bg-blue-500 rounded-full shadow transition-transform duration-300 transform translate-x-0" style="top:2px;"></div>
+                            <span id="cur-ves-lbl" class="text-[8px] sm:text-[9px] font-black z-10 transition-colors text-white/50">VES</span>
+                            <div id="cur-slider" class="absolute left-0 w-1/2 h-[22px] sm:h-full bg-rose-500 rounded-full shadow transition-transform duration-300 transform translate-x-0" style="top:2px;"></div>
                         </div>
                     </div>
                     <button onclick="toggCart()" class="relative bg-white hover:bg-slate-100 text-slate-900 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-black text-[10px] sm:text-xs shadow-lg transition-all flex items-center gap-1.5 uppercase tracking-widest">
-                        <i class="ph-bold ph-shopping-cart text-base sm:text-lg text-blue-600"></i> <span class="hidden sm:inline">Pedido</span>
-                        <span id="c-badge" class="absolute -top-1 -right-1 bg-rose-500 text-white text-[7px] sm:text-[10px] w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center rounded-full border-2 border-[#242629] text-[8px]">0</span>
+                        <i class="ph-bold ph-shopping-cart text-base sm:text-lg text-rose-600"></i> <span class="hidden sm:inline">Pedido</span>
+                        <span id="c-badge" class="absolute -top-1 -right-1 bg-rose-500 text-white text-[7px] sm:text-[10px] w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center rounded-full border-2 border-white text-[8px]">0</span>
                     </button>
                 </div>
-                <button class="md:hidden w-7 h-7 flex items-center justify-center text-white bg-white/5 rounded-lg border border-white/10" onclick="setView(s.v==='home'?'catalog':'home')"><i class="ph-bold ph-grid-four text-sm"></i></button>
+                <button class="md:hidden w-7 h-7 flex items-center justify-center text-white bg-white/10 rounded-lg border border-white/15" onclick="setView(s.v==='home'?'catalog':'home')"><i class="ph-bold ph-grid-four text-sm"></i></button>
+            </div>
+        </div>
+
+        <!-- 目录搜索栏 - 仅 catalog 页显示, 属于 header 一部分, 一起固定 (白色背景) -->
+        <div id="catalogSearchBar" class="hidden bg-white border-t border-slate-200">
+            <div class="max-w-[1400px] mx-auto px-3 py-2 flex items-center gap-2 flex-wrap">
+                <button onclick="openMenu()" class="icon-frost" aria-label="Abrir menú">
+                    <i class="ph-bold ph-list"></i>
+                </button>
+                <div class="search-wrapper">
+                    <i class="ph-bold ph-magnifying-glass search-icon"></i>
+                    <input type="text" id="s-input" placeholder="Buscar producto..." oninput="debouncedSearch(this.value)" class="search-input-modern" autocomplete="off">
+                    <button id="s-clear" class="search-clear-btn" onclick="clrSearch()">
+                        <i class="ph-bold ph-x"></i>
+                    </button>
+                </div>
+                <button id="qt-oferta" class="quick-tag oferta" onclick="quickTag('oferta')" title="Ver productos en oferta">
+                    <i class="ph-fill ph-fire"></i> Oferta
+                </button>
+                <button id="qt-nuevo" class="quick-tag nuevo" onclick="quickTag('nuevo')" title="Ver productos nuevos">
+                    <i class="ph-fill ph-sparkle"></i> Nuevo
+                </button>
+                <div class="flex items-center gap-1 shrink-0 ml-auto">
+                    <button class="price-sort-btn" onclick="setPriceSort('asc')" title="Menor precio">↑</button>
+                    <button class="price-sort-btn" onclick="setPriceSort('desc')" title="Mayor precio">↓</button>
+                </div>
             </div>
         </div>
     </header>
@@ -464,11 +515,15 @@
             <div class="flex items-center justify-between mb-4">
                 <div>
                     <h3 class="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2"><i class="ph-fill ph-sparkle text-amber-400"></i> Explora por Categoría</h3>
-                    <p class="text-slate-400 text-[10px] font-bold tracking-widest uppercase mt-1">DESLIZA O PASA EL CURSOR PARA PAUSAR</p>
+                    <p class="text-slate-400 text-[10px] font-bold tracking-widest uppercase mt-1">USA LAS FLECHAS PARA ACELERAR</p>
                 </div>
             </div>
-            <div class="cat-scroller-wrap">
-                <div id="cat-scroller" class="cat-scroller-track"></div>
+            <div class="cat-scroller-outer">
+                <button class="cat-scroll-arrow left" onclick="boostScroller('left')" aria-label="Acelerar izquierda"><i class="ph-bold ph-caret-left"></i></button>
+                <div class="cat-scroller-wrap">
+                    <div id="cat-scroller" class="cat-scroller-track"></div>
+                </div>
+                <button class="cat-scroll-arrow right" onclick="boostScroller('right')" aria-label="Acelerar derecha"><i class="ph-bold ph-caret-right"></i></button>
             </div>
         </section>
 
@@ -528,7 +583,6 @@
             </div>
         </section>
 
-        <!-- Visítanos (地图板块) - 背景融入页面, 去掉白色底 -->
         <section class="max-w-7xl mx-auto px-4 py-16 grid lg:grid-cols-2 gap-12 items-center">
             <div>
                 <span class="text-blue-600 font-bold text-[10px] tracking-widest uppercase mb-2 flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span> SEDE CENTRAL & ATENCIÓN</span>
@@ -541,7 +595,6 @@
             </div>
         </section>
 
-        <!-- Preguntas Frecuentes (地图下方) -->
         <section class="faq-section">
             <div class="faq-inner">
                 <h2 class="faq-title">Preguntas Frecuentes</h2>
@@ -579,31 +632,6 @@
 
     <main id="v-cat" class="hidden flex-1 w-full bg-slate-50 p-2 sm:p-4 lg:p-6 pb-24">
         <div class="max-w-[1400px] mx-auto space-y-3">
-            <div class="bg-white/80 backdrop-blur-sm p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200/70">
-                <div class="flex items-center gap-2 flex-wrap">
-                    <button onclick="openMenu()" class="icon-frost" aria-label="Abrir menú">
-                        <i class="ph-bold ph-list"></i>
-                    </button>
-                    <div class="search-wrapper">
-                        <i class="ph-bold ph-magnifying-glass search-icon"></i>
-                        <input type="text" id="s-input" placeholder="Buscar producto..." oninput="debouncedSearch(this.value)" class="search-input-modern" autocomplete="off">
-                        <button id="s-clear" class="search-clear-btn" onclick="clrSearch()">
-                            <i class="ph-bold ph-x"></i>
-                        </button>
-                    </div>
-                    <button id="qt-oferta" class="quick-tag oferta" onclick="quickTag('oferta')" title="Ver productos en oferta">
-                        <i class="ph-fill ph-fire"></i> Oferta
-                    </button>
-                    <button id="qt-nuevo" class="quick-tag nuevo" onclick="quickTag('nuevo')" title="Ver productos nuevos">
-                        <i class="ph-fill ph-sparkle"></i> Nuevo
-                    </button>
-                    <div class="flex items-center gap-1 shrink-0 ml-auto">
-                        <button class="price-sort-btn" onclick="setPriceSort('asc')" title="Menor precio">↑</button>
-                        <button class="price-sort-btn" onclick="setPriceSort('desc')" title="Mayor precio">↓</button>
-                    </div>
-                </div>
-            </div>
-
             <div id="p-grid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 pt-2">
                 <div class="col-span-full py-20 text-center flex flex-col items-center"><i class="ph-bold ph-spinner-gap animate-spin text-4xl text-blue-500 mb-3"></i><p class="text-slate-500 font-bold f-int text-lg">Cargando...</p></div>
             </div>
@@ -747,24 +775,18 @@
             if (cur === 'VES') return `Bs ${(amount * getTasa()).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
             return `$${amount.toFixed(2)}`;
         }
-        // 精确四舍五入到 2 位小数 (避免浮点误差)
-        function round2(n) {
-            return Math.round((n + Number.EPSILON) * 100) / 100;
-        }
-        // 数字 → 千分位格式, 保留 2 位小数
-        function formatVES(amount) {
-            return round2(amount).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
+        function round2(n) { return Math.round((n + Number.EPSILON) * 100) / 100; }
+        function formatVES(amount) { return round2(amount).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 
         const BRAND_COLOR_MAP = {
-            'INGCO':     'bg-gradient-to-r from-amber-400 to-orange-500 text-black',
-            'VERT':      'bg-gradient-to-r from-emerald-400 to-cyan-500 text-white',
-            'WADFOW':    'bg-[#002FA7] text-white',
-            'PV 007':    'bg-gradient-to-r from-red-600 to-blue-700 text-white',
-            'PV007':     'bg-gradient-to-r from-red-600 to-blue-700 text-white',
+            'INGCO': 'bg-gradient-to-r from-amber-400 to-orange-500 text-black',
+            'VERT': 'bg-gradient-to-r from-emerald-400 to-cyan-500 text-white',
+            'WADFOW': 'bg-[#002FA7] text-white',
+            'PV 007': 'bg-gradient-to-r from-red-600 to-blue-700 text-white',
+            'PV007': 'bg-gradient-to-r from-red-600 to-blue-700 text-white',
             'AMANERLUZ': 'bg-[#0B2447] text-white',
-            'MACPOLO':   'bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white',
-            'DANMI':     'bg-gradient-to-r from-slate-400 to-slate-600 text-white'
+            'MACPOLO': 'bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white',
+            'DANMI': 'bg-gradient-to-r from-slate-400 to-slate-600 text-white'
         };
         const BRAND_TEXT_COLOR_MAP = {
             'INGCO': '#FFD24D', 'VERT': '#5EEAD4', 'WADFOW': '#6EA8FF',
@@ -811,8 +833,11 @@
             return `rgba(${r},${g},${b},${alpha})`;
         }
 
+        // 分类图标 - Halloween/Navidad 使用 Emoji 保证显示
         function getCatIconInfo(catName) {
             const c = normalize(catName);
+            if (c.includes('halloween')) return { emoji: '🎃', from: '#FED7AA', to: '#FDBA74', accent: '#EA580C' };
+            if (c.includes('navidad')) return { emoji: '🎄', from: '#DCFCE7', to: '#BBF7D0', accent: '#16A34A' };
             if (c.includes('iluminacion') || c.includes('luz')) return { icon: 'ph-fill ph-lightbulb', from: '#FEF3C7', to: '#FDE68A', accent: '#F59E0B' };
             if (c.includes('ferreteria')) return { icon: 'ph-fill ph-wrench', from: '#DBEAFE', to: '#BFDBFE', accent: '#2563EB' };
             if (c.includes('electronic')) return { icon: 'ph-fill ph-plug', from: '#D1FAE5', to: '#A7F3D0', accent: '#059669' };
@@ -820,8 +845,6 @@
             if (c.includes('juguete')) return { icon: 'ph-fill ph-game-controller', from: '#EDE9FE', to: '#DDD6FE', accent: '#7C3AED' };
             if (c.includes('carnaval')) return { icon: 'ph-fill ph-mask-happy', from: '#FEF3C7', to: '#FCD34D', accent: '#D97706' };
             if (c.includes('hogar')) return { icon: 'ph-fill ph-house-line', from: '#E0E7FF', to: '#C7D2FE', accent: '#4338CA' };
-            if (c.includes('halloween')) return { icon: 'ph-fill ph-pumpkin', from: '#FED7AA', to: '#FDBA74', accent: '#EA580C' };
-            if (c.includes('navidad')) return { icon: 'ph-fill ph-tree-evergreen', from: '#DCFCE7', to: '#BBF7D0', accent: '#16A34A' };
             if (c.includes('general')) return { icon: 'ph-fill ph-package', from: '#F1F5F9', to: '#E2E8F0', accent: '#475569' };
             if (c.includes('herramienta')) return { icon: 'ph-fill ph-hammer', from: '#FEE2E2', to: '#FECACA', accent: '#DC2626' };
             if (c.includes('pintura')) return { icon: 'ph-fill ph-paint-brush', from: '#FCE7F3', to: '#FBCFE8', accent: '#DB2777' };
@@ -851,8 +874,7 @@
             sr: '', tg: '', br: '',
             cur: 'USD', modalCur: 'USD', mod: null,
             del: 'nacional', pay: 'pago_movil_bs',
-            page: 1, priceSort: '', loading: false, loadError: false,
-            _imageLoadQueue: [], _imageLoadActive: false, _imageBatchSize: 8
+            page: 1, priceSort: '', loading: false, loadError: false
         };
 
         let currentTasa = CONFIG.TASA;
@@ -867,7 +889,7 @@
             const el = $('toast');
             if (!el) return;
             el.innerHTML = `<i class="ph-fill ${isError ? 'ph-warning-circle' : 'ph-check-circle'} text-lg"></i> ${sanitize(message)}`;
-            el.className = `fixed top-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-white font-bold text-sm shadow-2xl z-50 flex items-center gap-2 transition-all duration-300 ${isError ? 'bg-rose-500' : 'bg-slate-800'}`;
+            el.className = `fixed top-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full text-white font-bold text-sm shadow-2xl z-[300] flex items-center gap-2 transition-all duration-300 ${isError ? 'bg-rose-500' : 'bg-slate-800'}`;
             setTimeout(() => el.classList.add('-translate-y-24', 'opacity-0'), 2500);
             setTimeout(() => el.className = 'hidden', 2800);
         }
@@ -930,7 +952,7 @@
         function manualUpdateTasa() {
             const dot = document.getElementById('tasa-dot');
             if (dot) { dot.classList.remove('tasa-updating'); void dot.offsetWidth; dot.classList.add('tasa-updating'); }
-            fetchTasaBCV().then(success => toast(success ? 'Tasa BCV actualizada' : '❌ Error al actualizar tasa', !success));
+            fetchTasaBCV().then(success => toast(success ? '✅ Tasa BCV actualizada' : '❌ Error al actualizar tasa', !success));
         }
         function scheduleTasaUpdate() {
             fetchTasaBCV();
@@ -943,56 +965,6 @@
                 }
             });
             window.addEventListener('online', () => fetchTasaBCV());
-        }
-
-        function loadImageWithFallback(imgElement, url) {
-            if (!url) { imgElement.src = SVG; return; }
-            if (url.startsWith('data:')) { imgElement.src = url; return; }
-            imgElement._src = url;
-            imgElement._loaded = false;
-            imgElement._fallbackTried = false;
-            imgElement.src = SVG;
-            s._imageLoadQueue.push(imgElement);
-            processImageQueue();
-        }
-        function processImageQueue() {
-            if (s._imageLoadActive || s._imageLoadQueue.length === 0) return;
-            s._imageLoadActive = true;
-            const batch = s._imageLoadQueue.splice(0, s._imageBatchSize);
-            const loadNextBatch = () => {
-                for (const img of batch) {
-                    if (img._loaded) continue;
-                    img._loaded = true;
-                    const url = img._src;
-                    if (url.toLowerCase().endsWith('.png')) {
-                        const jpgUrl = url.substring(0, url.lastIndexOf('.')) + '.jpg';
-                        img.onerror = function() {
-                            if (!this._fallbackTried) { this._fallbackTried = true; this.src = jpgUrl; }
-                            else { this.src = SVG; this.classList.remove('mix-blend-multiply'); }
-                        };
-                        img.src = url;
-                    } else if (url.toLowerCase().endsWith('.jpg') || url.toLowerCase().endsWith('.jpeg')) {
-                        const pngUrl = url.substring(0, url.lastIndexOf('.')) + '.png';
-                        img.onerror = function() {
-                            if (!this._fallbackTried) { this._fallbackTried = true; this.src = pngUrl; }
-                            else { this.src = SVG; this.classList.remove('mix-blend-multiply'); }
-                        };
-                        img.src = url;
-                    } else {
-                        img.onerror = function() { this.src = SVG; this.classList.remove('mix-blend-multiply'); };
-                        img.src = url;
-                    }
-                }
-                if (s._imageLoadQueue.length > 0) {
-                    const runNext = () => { s._imageLoadActive = false; processImageQueue(); };
-                    if (window.requestIdleCallback) requestIdleCallback(runNext, { timeout: 100 });
-                    else setTimeout(runNext, 50);
-                } else {
-                    s._imageLoadActive = false;
-                }
-            };
-            if (window.requestIdleCallback) requestIdleCallback(loadNextBatch, { timeout: 200 });
-            else setTimeout(loadNextBatch, 50);
         }
 
         function toggleUsdPrice() {
@@ -1116,7 +1088,6 @@
             if (s.p.length === 0) { toast('No se encontraron productos en el CSV', true); return; }
             renderHomeCategories();
             renderHomeScroller();
-            renderBrandFilters();
             renderBrandTicker();
             renderCatalog();
         }
@@ -1162,10 +1133,13 @@
                 const count = catMap[cat];
                 const safeCat = sanitize(cat);
                 const safeOnclick = sanitize(cat.replace(/'/g, "\\'"));
+                const iconHtml = info.emoji
+                    ? `<span class="emoji-icon">${info.emoji}</span>`
+                    : `<i class="${info.icon}" style="color: ${info.accent};"></i>`;
                 return `<div class="cat-chip" onclick="filterCategory('${safeOnclick}')">
                     <div class="cat-icon-wrap" style="background: linear-gradient(135deg, ${info.from} 0%, ${info.to} 100%);">
                         <span class="blob" style="background: ${info.accent};"></span>
-                        <i class="${info.icon}" style="color: ${info.accent};"></i>
+                        ${iconHtml}
                     </div>
                     <div class="cat-label">${safeCat}</div>
                     <div class="cat-count">${count} prod.</div>
@@ -1178,17 +1152,18 @@
             container.innerHTML = html;
         }
 
-        function renderBrandFilters() {
-            const container = $('menuBrands');
-            if (!container) return;
-            const brands = new Set();
-            s.p.forEach(p => { if (p.brand) brands.add(p.brand); });
-            const sortedBrands = Array.from(brands).sort();
-            let html = `<button onclick="setB('');closeMenu()" class="${s.br === '' ? 'active' : ''}">Todo</button>`;
-            for (const b of sortedBrands) {
-                html += `<button onclick="setB('${sanitize(b.replace(/'/g, "\\'"))}');closeMenu()" class="${s.br === b ? 'active' : ''}">${sanitize(b)}</button>`;
-            }
-            container.innerHTML = html;
+        // 加速分类滚动
+        function boostScroller(dir) {
+            const track = document.getElementById('cat-scroller');
+            if (!track) return;
+            track.classList.remove('boost-left', 'boost-right');
+            void track.offsetWidth;
+            if (dir === 'left') track.classList.add('boost-left');
+            else track.classList.add('boost-right');
+            clearTimeout(window._boostTimeout);
+            window._boostTimeout = setTimeout(() => {
+                track.classList.remove('boost-left', 'boost-right');
+            }, 2500);
         }
 
         function renderBrandTicker() {
@@ -1236,134 +1211,102 @@
             renderProductGrid();
         }
 
+        // 菜单 - 双面板联动
         function renderMenuCategories() {
             const container = document.getElementById('menuCategories');
+            const subsPanel = document.getElementById('menuSubsPanel');
             if (!container) return;
 
-            const catStats = {};
+            const catMap = {};
             s.p.forEach(p => {
                 if (!p.l1) return;
-                if (!catStats[p.l1]) catStats[p.l1] = { subCount: new Set(), typeCount: 0 };
-                if (p.l2) catStats[p.l1].subCount.add(p.l2);
-                if (p.l3) catStats[p.l1].typeCount++;
+                if (!catMap[p.l1]) catMap[p.l1] = { subs: new Set(), count: 0 };
+                catMap[p.l1].count++;
+                if (p.l2) catMap[p.l1].subs.add(p.l2);
             });
-
-            const allCats = Object.keys(catStats).sort((a, b) => {
-                const sa = catStats[a], sb = catStats[b];
-                const hasTypeA = sa.typeCount > 0 ? 1 : 0;
-                const hasTypeB = sb.typeCount > 0 ? 1 : 0;
-                if (hasTypeA !== hasTypeB) return hasTypeB - hasTypeA;
-                if (sa.typeCount !== sb.typeCount) return sb.typeCount - sa.typeCount;
-                if (sa.subCount.size !== sb.subCount.size) return sb.subCount.size - sa.subCount.size;
-                return a.localeCompare(b);
-            });
+            const allCats = Object.keys(catMap).sort((a, b) => catMap[b].count - catMap[a].count);
 
             let html = '';
-            const isTodoActive = s.l1 === 'Todo';
-            html += `<div class="menu-item" onclick="setL1('Todo');closeMenu();" style="${isTodoActive ? 'background:#e2e8f0;color:#1e293b;' : ''}">
-                <i class="ph-bold ph-squares-four"></i> Todo
+
+            html += `<div class="menu-cat-item ${s.l1 === 'Todo' && !s.tg ? 'active' : ''}" onclick="setL1('Todo')" data-cat="">
+                <div class="cat-inner"><span class="cat-label">Todos los productos</span></div>
+                <i class="ph-bold ph-caret-right cat-arrow"></i>
+            </div>`;
+
+            html += `<div class="menu-cat-item promociones ${s.tg === 'oferta' ? 'active' : ''}" onclick="setT('oferta');closeMenu();" data-cat="">
+                <div class="cat-inner"><i class="ph-bold ph-tag"></i><span class="cat-label">Promociones</span></div>
             </div>`;
 
             for (const cat of allCats) {
-                const stat = catStats[cat];
-                const hasSubs = stat.subCount.size > 0;
-                const hasTypes = stat.typeCount > 0;
+                const hasSubs = catMap[cat].subs.size > 0;
                 const isActive = s.l1 === cat;
-                const isExpanded = isActive && hasSubs;
-                const safeCat = sanitize(cat);
-                const iconClass = hasTypes ? 'ph-caret-down' : (hasSubs ? 'ph-caret-right' : 'ph-folder');
-
-                html += `<div class="menu-item sub-menu-toggle" onclick="toggleSubMenu(this, '${sanitize(cat.replace(/'/g, "\\'"))}')" data-expanded="${isExpanded ? 'true' : 'false'}" style="${isActive ? 'background:#e2e8f0;color:#1e293b;' : ''}">
-                    <i class="ph-bold ${iconClass}"></i> ${safeCat}
-                    ${hasSubs ? `<span class="arrow ${isExpanded ? 'open' : ''}">▶</span>` : ''}
+                html += `<div class="menu-cat-item ${isActive ? 'active' : ''}" data-cat="${sanitize(cat)}" onmouseenter="showSubsPanel('${sanitize(cat.replace(/'/g, "\\'"))}')" onclick="onCatClick('${sanitize(cat.replace(/'/g, "\\'"))}')">
+                    <div class="cat-inner"><span class="cat-label">${sanitize(cat)}</span></div>
+                    ${hasSubs ? '<i class="ph-bold ph-caret-right cat-arrow"></i>' : ''}
                 </div>`;
-
-                if (hasSubs) {
-                    const subStats = {};
-                    s.p.forEach(p => {
-                        if (p.l1 !== cat || !p.l2) return;
-                        if (!subStats[p.l2]) subStats[p.l2] = { typeCount: 0 };
-                        if (p.l3) subStats[p.l2].typeCount++;
-                    });
-                    const sortedSubs = Object.keys(subStats).sort((a, b) => {
-                        const ta = subStats[a].typeCount, tb = subStats[b].typeCount;
-                        if (ta !== tb) return tb - ta;
-                        return a.localeCompare(b);
-                    });
-
-                    html += `<div class="sub-menu-content ${isExpanded ? 'open' : ''}">`;
-                    for (const sub of sortedSubs) {
-                        const hasSubTypes = subStats[sub].typeCount > 0;
-                        const isSubActive = s.l2 === sub;
-                        const safeSub = sanitize(sub);
-                        html += `<div class="menu-item sub-menu-toggle" onclick="toggleSubMenu(this, '${sanitize(sub.replace(/'/g, "\\'"))}', '${sanitize(cat.replace(/'/g, "\\'"))}')" data-expanded="${isSubActive && hasSubTypes ? 'true' : 'false'}" style="${isSubActive ? 'background:#e2e8f0;color:#1e293b;' : ''}padding-left:1rem;">
-                            <i class="ph-bold ${hasSubTypes ? 'ph-caret-down' : 'ph-subtract'}"></i> ${safeSub}
-                            ${hasSubTypes ? `<span class="arrow ${isSubActive && hasSubTypes ? 'open' : ''}">▶</span>` : ''}
-                        </div>`;
-
-                        if (hasSubTypes) {
-                            const types = new Set();
-                            s.p.forEach(p => { if (p.l1 === cat && p.l2 === sub && p.l3) types.add(p.l3); });
-                            const sortedTypes = Array.from(types).sort();
-                            html += `<div class="sub-menu-content ${isSubActive && hasSubTypes ? 'open' : ''}">`;
-                            for (const type of sortedTypes) {
-                                const isTypeActive = s.l3 === type;
-                                html += `<div class="menu-item" onclick="setL3('${sanitize(type.replace(/'/g, "\\'"))}');closeMenu();" style="${isTypeActive ? 'background:#e2e8f0;color:#1e293b;' : ''}padding-left:2rem;">
-                                    <i class="ph-bold ph-dot"></i> ${sanitize(type)}
-                                </div>`;
-                            }
-                            html += `</div>`;
-                        }
-                    }
-                    html += `</div>`;
-                }
             }
+
             container.innerHTML = html;
+
+            if (subsPanel) { subsPanel.innerHTML = ''; subsPanel.classList.remove('show'); }
         }
 
-        function toggleSubMenu(el, catName, parentCat) {
-            const isExpanded = el.dataset.expanded === 'true';
-            const content = el.nextElementSibling;
-            const arrow = el.querySelector('.arrow');
-            if (content && content.classList.contains('sub-menu-content')) {
-                if (isExpanded) {
-                    content.classList.remove('open');
-                    el.dataset.expanded = 'false';
-                    if (arrow) arrow.classList.remove('open');
-                } else {
-                    content.classList.add('open');
-                    el.dataset.expanded = 'true';
-                    if (arrow) arrow.classList.add('open');
-                    const parent = el.parentElement;
-                    parent.querySelectorAll('.sub-menu-toggle').forEach(sib => {
-                        if (sib !== el && sib.dataset.expanded === 'true') {
-                            const sibContent = sib.nextElementSibling;
-                            const sibArrow = sib.querySelector('.arrow');
-                            if (sibContent && sibContent.classList.contains('sub-menu-content')) {
-                                sibContent.classList.remove('open');
-                                sib.dataset.expanded = 'false';
-                                if (sibArrow) sibArrow.classList.remove('open');
-                            }
-                        }
-                    });
-                }
-            } else {
-                if (parentCat) {
-                    s.l1 = parentCat; s.l2 = catName; s.l3 = ''; s.page = 1;
-                    renderCatalog();
-                    closeMenu();
-                } else {
-                    if (catName === 'Todo' || el.textContent.replace(/[▶]/g, '').trim() === 'Todo') setL1('Todo');
-                    else setL1(catName);
-                    closeMenu();
-                }
+        function showSubsPanel(cat) {
+            const subsPanel = document.getElementById('menuSubsPanel');
+            if (!subsPanel) return;
+
+            const subs = new Set();
+            s.p.forEach(p => {
+                if (p.l1 === cat && p.l2) subs.add(p.l2);
+            });
+
+            document.querySelectorAll('.menu-cat-item').forEach(el => {
+                el.classList.toggle('active', el.getAttribute('data-cat') === cat);
+            });
+
+            if (subs.size === 0) { subsPanel.classList.remove('show'); return; }
+
+            const sortedSubs = Array.from(subs).sort();
+            let html = `<div class="menu-subs-title">${sanitize(cat)}</div>`;
+            html += `<div class="menu-sub-item all" onclick="setL1('${sanitize(cat.replace(/'/g, "\\'"))}')">
+                <span>Ver todos los productos</span>
+                <i class="ph-bold ph-arrow-right sub-arrow"></i>
+            </div>`;
+
+            for (const sub of sortedSubs) {
+                html += `<div class="menu-sub-item" onclick="setL2FromMenu('${sanitize(cat.replace(/'/g, "\\'"))}', '${sanitize(sub.replace(/'/g, "\\'"))}')">
+                    <span>${sanitize(sub)}</span>
+                </div>`;
             }
+
+            subsPanel.innerHTML = html;
+            subsPanel.classList.add('show');
+        }
+
+        function onCatClick(cat) {
+            if (window.innerWidth < 768) {
+                setL1(cat);
+                return;
+            }
+            const subs = new Set();
+            s.p.forEach(p => { if (p.l1 === cat && p.l2) subs.add(p.l2); });
+            if (subs.size > 0) {
+                showSubsPanel(cat);
+            } else {
+                setL1(cat);
+            }
+        }
+
+        function setL2FromMenu(l1, l2) {
+            s.l1 = l1; s.l2 = l2; s.l3 = '';
+            s.sr = ''; s.tg = ''; s.br = '';
+            s.page = 1;
+            closeMenu();
+            if (s.v !== 'catalog') setView('catalog');
+            renderCatalog();
         }
 
         function renderProductGrid() {
-            s._imageLoadQueue = [];
-            s._imageLoadActive = false;
-
             const perPage = getPerPage();
             let baseTotal = 0;
             for (const [id, qty] of Object.entries(s.c)) {
@@ -1387,6 +1330,16 @@
                 if (match && s.br) match = p.brand === s.br;
                 return match;
             });
+
+            // 搜索时: 如果当前分类下无结果, 自动取消分类, 做全局搜索
+            if (s.sr && filtered.length === 0 && (s.l1 !== 'Todo' || s.l2 || s.l3 || s.br || s.tg)) {
+                const search = normalize(s.sr);
+                filtered = s.p.filter(p => normalize(p.id).includes(search) || normalize(p.name).includes(search) || normalize(p.brand).includes(search));
+                s.l1 = 'Todo'; s.l2 = ''; s.l3 = ''; s.br = ''; s.tg = '';
+                const qOferta = $('qt-oferta'), qNuevo = $('qt-nuevo');
+                if (qOferta) qOferta.classList.remove('act');
+                if (qNuevo) qNuevo.classList.remove('act');
+            }
 
             if (s.priceSort === 'asc') filtered.sort((a, b) => a.pd - b.pd);
             else if (s.priceSort === 'desc') filtered.sort((a, b) => b.pd - a.pd);
@@ -1472,13 +1425,13 @@
                 }
 
                 const watermarkIcons = getCatIconInfo(p.l1);
-                const icon1 = watermarkIcons.icon.replace('ph-fill ', '');
+                const icon1 = watermarkIcons.icon ? watermarkIcons.icon.replace('ph-fill ', '') : 'ph-package';
 
                 htmlString += `<div class="product-card bg-white rounded-xl sm:rounded-2xl border border-slate-200 overflow-hidden flex flex-col shadow-sm hover:shadow-[0_10px_25px_rgba(15,23,42,0.08)] hover:-translate-y-1 transition-all duration-300 group cursor-pointer relative h-full" onclick="openModal('${sanitize(p.id.replace(/'/g, "\\'"))}')">
                     ${isAgotado ? '<div class="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex items-center justify-center pointer-events-none"><span class="border-2 border-rose-500 text-rose-500 font-black text-[10px] px-2 py-1 rounded-lg transform -rotate-12 tracking-widest bg-white/90 shadow-lg">AGOTADO</span></div>' : ''}
                     <div class="aspect-square w-full bg-slate-50 relative p-2 flex items-center justify-center border-b border-slate-100 shrink-0 overflow-hidden">
                         ${tagLabel}
-                        <img src="${SVG}" data-src="${sanitize(imgUrl)}" loading="lazy" class="absolute inset-0 w-full h-full object-contain p-2 mix-blend-multiply ${!isAgotado ? 'group-hover:scale-105' : ''} transition-transform duration-500 z-10" onerror="this.src='${SVG}'; this.classList.remove('mix-blend-multiply');">
+                        <img src="${sanitize(imgUrl)}" decoding="async" class="absolute inset-0 w-full h-full object-contain p-2 mix-blend-multiply ${!isAgotado ? 'group-hover:scale-105' : ''} transition-transform duration-500 z-10" onerror="this.src='${SVG}'; this.classList.remove('mix-blend-multiply');">
                     </div>
                     <div class="p-2 sm:p-3 flex flex-col h-full flex-1 relative z-0 bg-white overflow-hidden">
                         <div class="absolute inset-0 pointer-events-none z-0">
@@ -1497,17 +1450,6 @@
             }
             grid.innerHTML = htmlString;
 
-            setTimeout(() => {
-                const images = grid.querySelectorAll('img[data-src]');
-                images.forEach(img => {
-                    const src = img.getAttribute('data-src');
-                    if (src && src !== SVG) {
-                        loadImageWithFallback(img, src);
-                        img.removeAttribute('data-src');
-                    }
-                });
-            }, 50);
-
             renderPagination(totalPages);
         }
 
@@ -1525,7 +1467,7 @@
             renderProductGrid();
             const grid = document.getElementById('p-grid');
             if (grid) {
-                const headerOffset = 120;
+                const headerOffset = 130;
                 const elementPosition = grid.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
                 window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
@@ -1538,7 +1480,10 @@
             s.mod = id; s.modalCur = s.cur;
             const isAgotado = p.stock <= 0;
             const img = $('m-img');
-            if (img) loadImageWithFallback(img, p.image ? p.image : SVG);
+            if (img) {
+                img.onerror = function() { this.src = SVG; this.classList.remove('mix-blend-multiply'); };
+                img.src = p.image ? p.image : SVG;
+            }
             const mask = $('m-agotado-layer');
             if (mask) mask.style.display = isAgotado ? 'flex' : 'none';
             const catTag = $('m-category-tag');
@@ -1775,7 +1720,6 @@
         function setB(brand) {
             s.br = s.br === brand ? '' : brand;
             s.page = 1;
-            renderBrandFilters();
             renderBrandTicker();
             renderCatalog();
         }
@@ -1797,9 +1741,16 @@
             if (qNuevo) qNuevo.classList.toggle('act', s.tg === 'nuevo');
             setTimeout(() => renderCatalog(), 50);
         }
-        function setL1(v) { s.l1 = v; s.l2 = ''; s.l3 = ''; s.page = 1; renderCatalog(); closeMenu(); }
-        function setL2(v) { s.l2 = v; s.l3 = ''; s.page = 1; renderCatalog(); closeMenu(); }
-        function setL3(v) { s.l3 = v; s.page = 1; renderCatalog(); closeMenu(); }
+        function setL1(v) {
+            s.l1 = v; s.l2 = ''; s.l3 = '';
+            s.tg = '';
+            s.page = 1;
+            closeMenu();
+            if (s.v !== 'catalog') setView('catalog');
+            renderCatalog();
+        }
+        function setL2(v) { s.l2 = v; s.l3 = ''; s.page = 1; closeMenu(); renderCatalog(); }
+        function setL3(v) { s.l3 = v; s.page = 1; closeMenu(); renderCatalog(); }
 
         let searchTimeout = null;
         function debouncedSearch(value) {
@@ -1810,7 +1761,6 @@
             s.sr = normalize(v);
             const clearBtn = $('s-clear');
             if (clearBtn) clearBtn.classList.toggle('visible', v.length > 0);
-            if (v) { s.l1 = 'Todo'; s.l2 = s.l3 = ''; }
             s.page = 1;
             renderCatalog();
         }
@@ -1856,12 +1806,24 @@
             if (tasa) tasa.classList.toggle('hidden', isHome);
             const truck = $('h-truck');
             if (truck) truck.classList.toggle('hidden', !isHome);
+            const searchBar = $('catalogSearchBar');
+            if (searchBar) searchBar.classList.toggle('hidden', isHome);
             updateBrandTickerVisibility();
         }
 
+        // 打开 Catálogo 默认显示 Nuevo 产品
         function goToCatalog() {
-            clrF();
+            s.l1 = 'Todo'; s.l2 = ''; s.l3 = '';
+            s.sr = ''; s.br = '';
+            s.tg = 'nuevo';
+            s.page = 1;
+            const i = $('s-input');
+            if (i) i.value = '';
+            const qOferta = $('qt-oferta'), qNuevo = $('qt-nuevo');
+            if (qOferta) qOferta.classList.remove('act');
+            if (qNuevo) qNuevo.classList.add('act');
             setView('catalog');
+            setTimeout(() => renderCatalog(), 50);
         }
 
         function toggleCurrency() {
@@ -1869,12 +1831,12 @@
             const slider = $('cur-slider'), usdLbl = $('cur-usd-lbl'), vesLbl = $('cur-ves-lbl');
             if (s.cur === 'VES') {
                 if (slider) slider.classList.replace('translate-x-0', 'translate-x-[100%]');
-                if (usdLbl) { usdLbl.classList.remove('text-white'); usdLbl.classList.add('text-slate-500'); }
-                if (vesLbl) { vesLbl.classList.remove('text-slate-500'); vesLbl.classList.add('text-white'); }
+                if (usdLbl) { usdLbl.classList.remove('text-white'); usdLbl.classList.add('text-white/50'); }
+                if (vesLbl) { vesLbl.classList.remove('text-white/50'); vesLbl.classList.add('text-white'); }
             } else {
                 if (slider) slider.classList.replace('translate-x-[100%]', 'translate-x-0');
-                if (usdLbl) { usdLbl.classList.remove('text-slate-500'); usdLbl.classList.add('text-white'); }
-                if (vesLbl) { vesLbl.classList.remove('text-white'); vesLbl.classList.add('text-slate-500'); }
+                if (usdLbl) { usdLbl.classList.remove('text-white/50'); usdLbl.classList.add('text-white'); }
+                if (vesLbl) { vesLbl.classList.remove('text-white'); vesLbl.classList.add('text-white/50'); }
             }
             renderProductGrid();
             updateCartUI();
@@ -1922,7 +1884,7 @@
                 if (btn) {
                     btn.className = `${base} ${st.cls} ${m.includes('usd') || m.includes('bin') ? 'flex items-center justify-center gap-1.5' : ''}`;
                     if (m === 'efectivo_usd') btn.innerHTML = `<i class="ph-fill ph-currency-dollar text-base"></i> Efectivo $`;
-                    if (m === 'binance_usdt') btn.innerHTML = `<i class="ph-fill ph-currency-bitcoin text-base"></i> Binance`;
+                    if (m === 'binance_usdt') btn.innerHTML = `<i class="ph-fill ph-currency-btc text-base"></i> Binance`;
                 }
             }
             updateCartUI();
@@ -1942,9 +1904,6 @@
             }
         }
 
-        // ============================================================
-        // 修复: WhatsApp 总价精确计算 (使用 round2 + formatVES)
-        // ============================================================
         function sendWA() {
             let tQ = 0, bA = 0;
             for (const [id, qty] of Object.entries(s.c)) {
@@ -1962,11 +1921,10 @@
                 fA += qty * pr;
                 lines.push(`- ${qty}x [${id}] ${p.name} ($${pr.toFixed(2)})`);
             }
-            // 关键修复: 先四舍五入到 2 位小数
             fA = round2(fA);
             const br = "%0A";
             const tasa = getTasa();
-            const totalVES = round2(fA * tasa);   // ← 精确计算
+            const totalVES = round2(fA * tasa);
             let msg = `*NUEVO PEDIDO ELECTROLUZ PV*${br}${br}*Productos:*${br}${lines.join(br)}${br}${br}---------------------------${br}*Entrega:* ${{ nacional: 'Envío Nacional', delivery: 'Delivery Caracas', pickup: 'PickUp en Tienda' } [s.del] || s.del}${br}*Pago:* ${{ pago_movil_bs: 'Pago Móvil Bs', transferencia_bs: 'Transferencia Bs', efectivo_bs: 'Efectivo Bs', efectivo_usd: 'Efectivo USD', binance_usdt: 'Binance USDT' } [s.pay] || s.pay}${br}${br}`;
             if (s.pay.includes('bs')) msg += `*Subtotal USD:* $${fA.toFixed(2)}${br}*Tasa BCV:* ${tasa.toFixed(2)} VES/USD${br}*TOTAL BS:* Bs. ${formatVES(totalVES)}`;
             else if (s.pay === 'binance_usdt') msg += `*TOTAL USDT:* ${fA.toFixed(2)}`;
@@ -1978,11 +1936,12 @@
             document.getElementById('menuOverlay').classList.add('open');
             document.getElementById('menuDrawer').classList.add('open');
             renderMenuCategories();
-            renderBrandFilters();
         }
         function closeMenu() {
             document.getElementById('menuOverlay').classList.remove('open');
             document.getElementById('menuDrawer').classList.remove('open');
+            const subsPanel = document.getElementById('menuSubsPanel');
+            if (subsPanel) subsPanel.classList.remove('show');
         }
 
         let resizeTimeout;
@@ -2017,6 +1976,10 @@
         window.setL1 = setL1;
         window.setL2 = setL2;
         window.setL3 = setL3;
+        window.setL2FromMenu = setL2FromMenu;
+        window.showSubsPanel = showSubsPanel;
+        window.onCatClick = onCatClick;
+        window.boostScroller = boostScroller;
         window.updS = updS;
         window.clrSearch = clrSearch;
         window.clrF = clrF;
@@ -2032,7 +1995,6 @@
         window.closeImagePreview = closeImagePreview;
         window.retryLoad = retryLoad;
         window.debouncedSearch = debouncedSearch;
-        window.toggleSubMenu = toggleSubMenu;
 
         window.onload = function() {
             scheduleTasaUpdate();
@@ -2043,8 +2005,8 @@
             const slider = $('cur-slider'), usdLbl = $('cur-usd-lbl'), vesLbl = $('cur-ves-lbl');
             if (s.cur === 'VES') {
                 if (slider) slider.classList.replace('translate-x-0', 'translate-x-[100%]');
-                if (usdLbl) { usdLbl.classList.remove('text-white'); usdLbl.classList.add('text-slate-500'); }
-                if (vesLbl) { vesLbl.classList.remove('text-slate-500'); vesLbl.classList.add('text-white'); }
+                if (usdLbl) { usdLbl.classList.remove('text-white'); usdLbl.classList.add('text-white/50'); }
+                if (vesLbl) { vesLbl.classList.remove('text-white/50'); vesLbl.classList.add('text-white'); }
             }
             updateBrandTickerVisibility();
         };
