@@ -105,7 +105,14 @@
         .fade-in { animation: fadeIn 0.3s ease forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .product-card { content-visibility: auto; contain-intrinsic-size: 400px; }
+        /* ============================================================
+           修复手机端滑动跳帧：内容高度估算按断点分别设置
+           ============================================================ */
+        .product-card { content-visibility: auto; contain-intrinsic-size: auto 260px; }
+        @media (min-width: 640px) {
+            .product-card { contain-intrinsic-size: auto 420px; }
+        }
+
         .code-pill { display: inline-block; padding: 0.15rem 0.7rem; border-radius: 9999px; border: 2px solid #3b82f6; background-color: white; color: #1e293b; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.02em; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); white-space: nowrap; }
         .code-pill-sm { font-size: 0.65rem; padding: 0.1rem 0.6rem; border-width: 1.5px; }
         .price-text { font-weight: 400 !important; }
@@ -144,6 +151,10 @@
         .tasa-refresh-btn { cursor: pointer; transition: transform 0.2s ease; display: inline-flex; align-items: center; gap: 2px; padding: 0 4px; }
         .tasa-refresh-btn:hover { transform: rotate(180deg); }
         .tasa-refresh-btn:active { transform: rotate(360deg) scale(0.9); }
+
+        /* 详情页分类层级点击标签 */
+        .cat-level-link { transition: color 0.15s, background 0.15s; padding: 1px 4px; border-radius: 6px; }
+        .cat-level-link:hover { color: #cb0e4c; background: #fdf2f8; }
 
         @media (max-width: 640px) {
             .header-mobile-compact { padding-top: 6px !important; padding-bottom: 6px !important; }
@@ -376,6 +387,8 @@
         @media (max-width: 640px) {
             .cat-scroller-outer { padding: 0 36px; }
             .cat-scroll-arrow { width: 32px; height: 32px; font-size: 14px; }
+            /* 移动端降低跑马灯频率，减少滚动卡顿 */
+            .cat-scroller-track { animation-duration: 60s !important; }
         }
 
         .cat-chip { flex: 0 0 auto; width: 116px; cursor: pointer; text-align: center; }
@@ -766,6 +779,15 @@
                 <div class="col-span-full py-20 text-center flex flex-col items-center"><i class="ph-bold ph-spinner-gap animate-spin text-4xl text-blue-500 mb-3"></i><p class="text-slate-500 font-bold f-int text-lg">Cargando...</p></div>
             </div>
             <div id="pagination" class="hidden flex justify-center items-center mt-6 pb-4"></div>
+            <!-- ============================================================
+                 免责声明：所有图片仅供参考
+                 ============================================================ -->
+            <div class="mt-2 mb-4 text-center">
+                <p class="text-[10px] sm:text-xs text-slate-400 f-int italic px-4 leading-relaxed">
+                    <i class="ph-bold ph-info text-slate-300"></i>
+                    Aviso: Todas las imágenes son de referencia y pueden variar respecto al producto final.
+                </p>
+            </div>
             <div id="no-res" class="hidden py-16 text-center bg-white rounded-2xl border border-slate-200 shadow-sm"><i class="ph-bold ph-magnifying-glass text-5xl text-slate-300 mb-3"></i><h3 class="text-xl font-black text-slate-800">No se encontraron productos</h3><button onclick="clrF()" class="mt-4 px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold text-sm transition-colors border border-slate-200">Limpiar Filtros</button></div>
             <div id="load-error" class="hidden py-16 text-center bg-white rounded-2xl border border-rose-200 shadow-sm">
                 <i class="ph-bold ph-warning-circle text-5xl text-rose-400 mb-3"></i>
@@ -1090,21 +1112,29 @@
             if (label) label.textContent = s.modalCur === 'USD' ? 'VES' : 'USD';
         }
 
-        function goToCategoryFromModal() {
-            if (!s.mod) return;
-            const p = s.p.find(x => x.id === s.mod);
-            if (!p) return;
-            const l1 = p.l1 || 'Todo';
-            const l2 = p.l2 || '';
-            const l3 = p.l3 || '';
+        // ============================================================
+        // 需求 2：详情页按分类层级跳转（一级 / 二级 / 三级各自独立）
+        // ============================================================
+        function goToCategoryLevel(l1, l2, l3) {
             closeM();
             setTimeout(() => {
-                s.l1 = l1; s.l2 = l2; s.l3 = l3;
+                s.l1 = l1 || 'Todo';
+                s.l2 = l2 || '';
+                s.l3 = l3 || '';
                 s.sr = ''; s.tg = ''; s.br = ''; s.page = 1;
                 setView('catalog');
                 setTimeout(() => { renderCatalog(); window.scrollTo({ top: 0, behavior: 'smooth' }); }, 50);
             }, 300);
         }
+
+        // 兼容旧引用：默认跳到该产品的最深层级
+        function goToCategoryFromModal() {
+            if (!s.mod) return;
+            const p = s.p.find(x => x.id === s.mod);
+            if (!p) return;
+            goToCategoryLevel(p.l1 || 'Todo', p.l2 || '', p.l3 || '');
+        }
+
         function setPriceSort(type) {
             s.priceSort = s.priceSort === type ? '' : type;
             s.page = 1;
@@ -1316,6 +1346,9 @@
             renderProductGrid();
         }
 
+        // ============================================================
+        // 需求 4：移动端菜单加入品牌分类
+        // ============================================================
         function renderMenuCategories() {
             const container = document.getElementById('menuCategories');
             const subsPanel = document.getElementById('menuSubsPanel');
@@ -1332,7 +1365,7 @@
 
             let html = '';
 
-            html += `<div class="menu-cat-item ${s.l1 === 'Todo' && !s.tg ? 'active' : ''}" onclick="setL1('Todo')" data-cat="">
+            html += `<div class="menu-cat-item ${s.l1 === 'Todo' && !s.tg && !s.br ? 'active' : ''}" onclick="setL1('Todo')" data-cat="">
                 <div class="cat-inner"><span class="cat-label">Todos los productos</span></div>
                 <i class="ph-bold ph-caret-right cat-arrow"></i>
             </div>`;
@@ -1343,11 +1376,25 @@
 
             for (const cat of allCats) {
                 const hasSubs = catMap[cat].subs.size > 0;
-                const isActive = s.l1 === cat;
+                const isActive = s.l1 === cat && !s.br;
                 html += `<div class="menu-cat-item ${isActive ? 'active' : ''}" data-cat="${sanitize(cat)}" onmouseenter="showSubsPanel('${sanitize(cat.replace(/'/g, "\\'"))}')" onclick="onCatClick('${sanitize(cat.replace(/'/g, "\\'"))}')">
                     <div class="cat-inner"><span class="cat-label">${sanitize(cat)}</span></div>
                     ${hasSubs ? '<i class="ph-bold ph-caret-right cat-arrow"></i>' : ''}
                 </div>`;
+            }
+
+            // 品牌分类（移动端菜单）
+            const brands = new Set();
+            s.p.forEach(p => { if (p.brand) brands.add(p.brand); });
+            if (brands.size > 0) {
+                html += `<div class="menu-header-row" style="padding:14px 20px 8px;border-top:1px solid #f1f5f9;border-bottom:none;">Marcas</div>`;
+                const sortedBrands = Array.from(brands).sort();
+                for (const b of sortedBrands) {
+                    const isActive = s.br === b;
+                    html += `<div class="menu-cat-item ${isActive ? 'active' : ''}" onclick="setB('${sanitize(b.replace(/'/g, "\\'"))}');closeMenu();" data-cat="">
+                        <div class="cat-inner"><i class="ph-bold ph-tag"></i><span class="cat-label">${sanitize(b)}</span></div>
+                    </div>`;
+                }
             }
 
             container.innerHTML = html;
@@ -1589,16 +1636,33 @@
             }
             const mask = $('m-agotado-layer');
             if (mask) mask.style.display = isAgotado ? 'flex' : 'none';
+
+            // ============================================================
+            // 需求 2：分类层级标签 — 一级 / 二级 / 三级各自独立可点击
+            // ============================================================
             const catTag = $('m-category-tag');
             if (catTag) {
-                let catText = p.l1;
-                if (p.l2) catText += ' / ' + p.l2;
-                if (p.l3) catText += ' / ' + p.l3;
-                catTag.textContent = catText;
-                catTag.style.cursor = 'pointer';
-                catTag.title = 'Ver productos de esta categoría';
-                catTag.onclick = goToCategoryFromModal;
+                let parts = [];
+                if (p.l1) parts.push(`<span class="cat-level-link" data-level="1" data-l1="${sanitize(p.l1.replace(/"/g, '&quot;'))}" data-l2="" data-l3="">${sanitize(p.l1)}</span>`);
+                if (p.l2) parts.push(`<span class="cat-level-link" data-level="2" data-l1="${sanitize(p.l1.replace(/"/g, '&quot;'))}" data-l2="${sanitize(p.l2.replace(/"/g, '&quot;'))}" data-l3="">${sanitize(p.l2)}</span>`);
+                if (p.l3) parts.push(`<span class="cat-level-link" data-level="3" data-l1="${sanitize(p.l1.replace(/"/g, '&quot;'))}" data-l2="${sanitize(p.l2.replace(/"/g, '&quot;'))}" data-l3="${sanitize(p.l3.replace(/"/g, '&quot;'))}">${sanitize(p.l3)}</span>`);
+                catTag.innerHTML = parts.join(' <i class="ph-bold ph-caret-right text-[8px] text-slate-400"></i> ');
+                catTag.style.cursor = 'default';
+                catTag.title = 'Haz clic en un nivel para ver esa categoría';
+                catTag.onclick = null;
+                catTag.querySelectorAll('.cat-level-link').forEach(el => {
+                    el.style.cursor = 'pointer';
+                    el.onclick = function(e) {
+                        e.stopPropagation();
+                        goToCategoryLevel(
+                            this.dataset.l1,
+                            this.dataset.l2,
+                            this.dataset.l3
+                        );
+                    };
+                });
             }
+
             const code = $('m-cod');
             if (code) code.textContent = p.id;
             const brand = $('m-br');
@@ -1824,6 +1888,7 @@
             s.br = s.br === brand ? '' : brand;
             s.page = 1;
             renderBrandTicker();
+            if (s.v !== 'catalog') setView('catalog');
             renderCatalog();
         }
         function setT(tag) {
@@ -1846,7 +1911,7 @@
         }
         function setL1(v) {
             s.l1 = v; s.l2 = ''; s.l3 = '';
-            s.tg = '';
+            s.tg = ''; s.br = '';
             s.page = 1;
             closeMenu();
             if (s.v !== 'catalog') setView('catalog');
@@ -1914,16 +1979,19 @@
             updateBrandTickerVisibility();
         }
 
+        // ============================================================
+        // 需求 3：取消打开就显示 Nuevo 分类
+        // ============================================================
         function goToCatalog() {
             s.l1 = 'Todo'; s.l2 = ''; s.l3 = '';
             s.sr = ''; s.br = '';
-            s.tg = 'nuevo';
+            s.tg = '';
             s.page = 1;
             const i = $('s-input');
             if (i) i.value = '';
             const qOferta = $('qt-oferta'), qNuevo = $('qt-nuevo');
             if (qOferta) qOferta.classList.remove('act');
-            if (qNuevo) qNuevo.classList.add('act');
+            if (qNuevo) qNuevo.classList.remove('act');
             setView('catalog');
             setTimeout(() => renderCatalog(), 50);
         }
@@ -2046,13 +2114,23 @@
             if (subsPanel) subsPanel.classList.remove('show');
         }
 
+        // ============================================================
+        // 需求 1：修复手机滑动跳帧 — resize 防抖 + 宽度变化判断
+        // ============================================================
         let resizeTimeout;
+        let lastWidth = window.innerWidth;
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(function() {
+                // 手机端仅当宽度真正变化（≥40px）时才重渲染，避免地址栏收缩触发跳帧
+                if (Math.abs(window.innerWidth - lastWidth) < 40) {
+                    updateBrandTickerVisibility();
+                    return;
+                }
+                lastWidth = window.innerWidth;
                 if (s.v === 'catalog') renderProductGrid();
                 updateBrandTickerVisibility();
-            }, 300);
+            }, 350);
         });
 
         window.setView = setView;
@@ -2072,6 +2150,7 @@
         window.sendWA = sendWA;
         window.filterCategory = filterCategory;
         window.goToCategoryFromModal = goToCategoryFromModal;
+        window.goToCategoryLevel = goToCategoryLevel;
         window.setB = setB;
         window.setT = setT;
         window.quickTag = quickTag;
