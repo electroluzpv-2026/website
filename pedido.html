@@ -16,80 +16,190 @@
         .hide-sc::-webkit-scrollbar { display: none; }
         .hide-sc { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .code-pill { display: inline-block; padding: 0.05rem 0.4rem; border-radius: 9999px; border: 1.5px solid #3b82f6; background: white; color: #1e293b; font-size: 0.5rem; font-weight: 600; white-space: nowrap; }
+        .code-pill { display: inline-block; padding: 0.05rem 0.35rem; border-radius: 9999px; border: 1.5px solid #3b82f6; background: white; color: #1e293b; font-size: 0.42rem; font-weight: 700; white-space: nowrap; }
         .fade-in { animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 图片更大 */
-        .thumb { width: 56px; height: 56px; object-fit: contain; background: #f8fafc; border-radius: 0.4rem; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.2s; flex-shrink: 0; }
-        .thumb:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        /* ============ 视图切换 ============ */
+        .view-toggle { display: flex; align-items: center; gap: 0.12rem; }
+        .view-toggle button {
+            padding: 0.38rem 0.6rem; border-radius: 0.45rem; color: #64748b; cursor: pointer;
+            transition: .2s; border: none; background: transparent;
+            display: flex; align-items: center; justify-content: center; font-size: 0.8rem;
+        }
+        .view-toggle button.active { background: #1e293b; color: white; }
+        .view-toggle button:not(.active):hover { background: #f1f5f9; }
         @media (min-width: 640px) {
-            .thumb { width: 72px; height: 72px; }
+            .view-toggle button { padding: 0.55rem 0.85rem; font-size: 1.05rem; }
         }
 
-        .image-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 1rem; }
-        .image-modal.active { display: flex; }
-        .image-modal img { max-width: 95vw; max-height: 85vh; border-radius: 1rem; box-shadow: 0 20px 60px rgba(0,0,0,0.5); object-fit: contain; background: white; padding: 0.5rem; }
+        /* ============ 画册网格（CATÁLOGO） ============ */
+        .catalog-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 0.5rem; }
+        @media (min-width: 640px) { .catalog-grid { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 0.9rem; } }
+        @media (min-width: 1024px) { .catalog-grid { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 1rem; } }
+        @media (min-width: 1280px) { .catalog-grid { grid-template-columns: repeat(5, minmax(0,1fr)); } }
 
-        .qty-wrapper { display: flex; align-items: center; gap: 0.15rem; justify-content: center; }
-        .qty-wrapper .qty-btn { width: 24px; height: 24px; border-radius: 0.3rem; border: 1px solid #e2e8f0; background: white; color: #475569; font-weight: 700; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; touch-action: manipulation; user-select: none; }
+        .card {
+            position: relative; background: #fff; border: 1px solid #e2e8f0; border-radius: 0.85rem;
+            overflow: hidden; display: flex; flex-direction: column;
+            transition: box-shadow .2s, transform .2s, border-color .2s;
+        }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(15,23,42,.10); }
+        .card.item-active { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,.22); }
+        .card.card-baja { background: #fbfcfd; }
+        .card.card-baja .card-img-wrap { filter: grayscale(.45); }
+
+        .card-img-wrap {
+            position: relative; width: 100%; aspect-ratio: 1 / 1; background: #f8fafc;
+            display: flex; align-items: center; justify-content: center; padding: 0.45rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .card-img { max-width: 100%; max-height: 100%; object-fit: contain; cursor: zoom-in; transition: transform .2s; }
+        .card-img:hover { transform: scale(1.05); }
+
+        .card-check {
+            position: absolute; top: 0.35rem; left: 0.35rem; width: 16px; height: 16px;
+            accent-color: #3b82f6; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.18);
+            border-radius: 4px;
+        }
+        .rot-badge {
+            position: absolute; top: 0.35rem; right: 0.35rem;
+            font-size: 0.4rem; font-weight: 800; padding: 0.08rem 0.3rem; border-radius: 9999px;
+            letter-spacing: 0.02em; box-shadow: 0 1px 4px rgba(0,0,0,.08);
+        }
+        .rot-popular { background: #dcfce7; color: #166534; }
+        .rot-regular { background: #e0e7ff; color: #3730a3; }
+        .rot-baja    { background: #e2e8f0; color: #64748b; }
+
+        .card-body { padding: 0.42rem 0.45rem 0.5rem; display: flex; flex-direction: column; gap: 0.18rem; flex: 1; }
+        .card-brand { font-size: 0.44rem; font-weight: 800; color: #475569; letter-spacing: .02em; }
+        .card-name {
+            font-size: 0.52rem; font-weight: 600; color: #0f172a; line-height: 1.25;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            min-height: 1.3rem;
+        }
+        .card-emp { font-size: 0.4rem; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-info { display: flex; justify-content: space-between; align-items: center; font-size: 0.45rem; margin-top: auto; padding-top: 0.15rem; }
+        .card-price { font-weight: 800; color: #0f172a; }
+        .baja-hint {
+            font-size: 0.36rem; font-weight: 800; color: #b45309; background: #fef3c7;
+            border-radius: 0.3rem; padding: 0.1rem 0.25rem; text-align: center; letter-spacing: .01em;
+        }
+
+        @media (min-width: 640px) {
+            .code-pill { font-size: 0.6rem; padding: 0.08rem 0.5rem; }
+            .card-check { width: 20px; height: 20px; top: 0.5rem; left: 0.5rem; }
+            .rot-badge { font-size: 0.58rem; padding: 0.12rem 0.5rem; top: 0.5rem; right: 0.5rem; }
+            .card-body { padding: 0.6rem 0.65rem 0.7rem; gap: 0.25rem; }
+            .card-brand { font-size: 0.65rem; }
+            .card-name { font-size: 0.78rem; min-height: 2rem; }
+            .card-emp { font-size: 0.6rem; }
+            .card-info { font-size: 0.68rem; }
+            .baja-hint { font-size: 0.55rem; padding: 0.14rem 0.4rem; }
+        }
+
+        /* ============ 表格视图（两列独立滚动） ============ */
+        .tabla-view {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 0.5rem;
+        }
+        @media (min-width: 640px) { .tabla-view { gap: 0.9rem; } }
+
+        .tabla-col {
+            height: calc(100vh - 250px);
+            min-height: 320px;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.85rem;
+            padding: 0.35rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            box-shadow: 0 1px 3px rgba(15,23,42,.04);
+        }
+        @supports (height: 100dvh) {
+            .tabla-col { height: calc(100dvh - 250px); }
+        }
+        @media (min-width: 640px) {
+            .tabla-col { padding: 0.6rem; gap: 0.55rem; border-radius: 1rem; }
+        }
+        .tabla-col::-webkit-scrollbar { width: 5px; }
+        .tabla-col::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+        .tabla-col::-webkit-scrollbar-track { background: transparent; }
+
+        .tabla-row {
+            display: flex; gap: 0.35rem; padding: 0.35rem;
+            border: 1px solid #e2e8f0; border-radius: 0.6rem; background: #fff;
+            position: relative; align-items: flex-start;
+            transition: box-shadow .2s, border-color .2s;
+            flex-shrink: 0;
+        }
+        .tabla-row.item-active { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,.18); }
+        .tabla-row.row-baja { background: #fbfcfd; }
+        .tabla-row.row-baja .tabla-thumb { filter: grayscale(.45); }
+
+        .tabla-check {
+            width: 14px; height: 14px; accent-color: #3b82f6; flex-shrink: 0;
+            margin-top: 0.15rem; cursor: pointer;
+        }
+        .tabla-thumb {
+            width: 50px; height: 50px; object-fit: contain; background: #f8fafc;
+            border-radius: 0.45rem; border: 1px solid #e2e8f0; flex-shrink: 0; cursor: zoom-in;
+            transition: transform .2s;
+        }
+        .tabla-thumb:hover { transform: scale(1.05); }
+        .tabla-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.1rem; }
+        .tabla-brand { font-size: 0.45rem; font-weight: 800; color: #475569; }
+        .tabla-name {
+            font-size: 0.5rem; font-weight: 600; color: #0f172a; line-height: 1.25;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .tabla-emp { font-size: 0.4rem; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tabla-bottom { display: flex; align-items: center; gap: 0.25rem; flex-wrap: wrap; margin-top: 0.1rem; }
+        .tabla-price { font-weight: 800; font-size: 0.5rem; color: #0f172a; }
+        .tabla-rot { font-size: 0.38rem; font-weight: 800; padding: 0.02rem 0.22rem; border-radius: 999px; }
+
+        @media (min-width: 640px) {
+            .tabla-check { width: 18px; height: 18px; margin-top: 0.2rem; }
+            .tabla-thumb { width: 84px; height: 84px; }
+            .tabla-row { gap: 0.6rem; padding: 0.55rem; border-radius: 0.8rem; }
+            .tabla-info { gap: 0.18rem; }
+            .tabla-brand { font-size: 0.65rem; }
+            .tabla-name { font-size: 0.8rem; }
+            .tabla-emp { font-size: 0.58rem; }
+            .tabla-bottom { gap: 0.4rem; margin-top: 0.15rem; }
+            .tabla-price { font-size: 0.75rem; }
+            .tabla-rot { font-size: 0.55rem; padding: 0.04rem 0.3rem; }
+        }
+
+        /* ============ 数量控制 ============ */
+        .qty-wrapper { display: flex; align-items: center; gap: 0.12rem; justify-content: center; margin-top: 0.2rem; }
+        .qty-wrapper .qty-btn {
+            width: 20px; height: 20px; border-radius: 0.3rem; border: 1px solid #e2e8f0; background: white;
+            color: #475569; font-weight: 700; font-size: 0.6rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+            touch-action: manipulation; user-select: none;
+        }
         .qty-wrapper .qty-btn:active { background: #e2e8f0; transform: scale(0.9); }
         .qty-wrapper .qty-btn:hover { background: #f1f5f9; }
-        .qty-wrapper .qty-input-mobile { width: 36px; text-align: center; border: 1px solid #e2e8f0; border-radius: 0.3rem; padding: 0.1rem 0; font-weight: 700; font-size: 0.7rem; background: white; }
-        .qty-wrapper .qty-input-mobile:focus { outline: none; border-color: #3b82f6; ring: 2px solid #3b82f6; }
+        .qty-wrapper .qty-input-mobile {
+            width: 30px; text-align: center; border: 1px solid #e2e8f0; border-radius: 0.3rem;
+            padding: 0.05rem 0; font-weight: 700; font-size: 0.58rem; background: white;
+        }
+        .qty-wrapper .qty-input-mobile:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,.25); }
         @media (min-width: 640px) {
-            .qty-wrapper .qty-btn { width: 30px; height: 30px; font-size: 0.9rem; }
-            .qty-wrapper .qty-input-mobile { width: 48px; font-size: 0.9rem; padding: 0.15rem 0; }
+            .qty-wrapper { margin-top: 0.25rem; }
+            .qty-wrapper .qty-btn { width: 28px; height: 28px; font-size: 0.85rem; }
+            .qty-wrapper .qty-input-mobile { width: 46px; font-size: 0.85rem; padding: 0.12rem 0; }
         }
 
-        .inventory-table th { background: #f1f5f9; border-bottom: 2px solid #e2e8f0; font-size: 0.5rem; padding: 0.3rem 0.2rem; white-space: nowrap; }
-        .inventory-table td { border-bottom: 1px solid #e2e8f0; padding: 0.3rem 0.2rem; font-size: 0.55rem; vertical-align: middle; }
-        .inventory-table tr:hover td { background: #f8fafc; }
-        /* 手机端：每个产品两行信息 */
-        @media (max-width: 640px) {
-            .inventory-table th { font-size: 0.4rem; padding: 0.15rem 0.1rem; }
-            .inventory-table td { font-size: 0.45rem; padding: 0.15rem 0.1rem; }
-            .inventory-table .desc-cell { 
-                display: block;
-                width: 100%;
-                max-width: 120px;
-                word-break: break-word;
-                line-height: 1.2;
-            }
-            .inventory-table .compact-row {
-                display: flex;
-                flex-direction: column;
-                gap: 0.1rem;
-                padding: 0.15rem 0;
-            }
-            .inventory-table .row-first {
-                display: flex;
-                align-items: center;
-                gap: 0.3rem;
-                flex-wrap: wrap;
-            }
-            .inventory-table .row-second {
-                font-size: 0.4rem;
-                color: #334155;
-                word-break: break-word;
-                line-height: 1.2;
-                padding-left: 0.1rem;
-            }
-            .code-pill { font-size: 0.35rem; padding: 0.05rem 0.25rem; }
-            .thumb { width: 44px; height: 44px; }
-            .qty-wrapper .qty-btn { width: 20px; height: 20px; font-size: 0.5rem; }
-            .qty-wrapper .qty-input-mobile { width: 28px; font-size: 0.5rem; }
-            .stock-badge { font-size: 0.4rem; padding: 0.05rem 0.3rem; }
-        }
-        @media (min-width: 640px) {
-            .inventory-table th { font-size: 0.7rem; padding: 0.5rem 0.5rem; }
-            .inventory-table td { font-size: 0.8rem; padding: 0.4rem 0.5rem; }
-        }
-
+        /* ============ 其他 ============ */
         .search-input { font-size: 0.7rem; padding: 0.4rem 0.6rem; }
-        @media (min-width: 640px) {
-            .search-input { font-size: 0.9rem; padding: 0.6rem 0.8rem; }
-        }
+        @media (min-width: 640px) { .search-input { font-size: 0.9rem; padding: 0.6rem 0.8rem; } }
 
         .header-title { font-size: 0.8rem; }
         .header-sub { font-size: 0.45rem; }
@@ -100,40 +210,30 @@
 
         .whatsapp-btn { background: #25D366; color: white; border: none; padding: 0.3rem 0.8rem; border-radius: 0.5rem; font-weight: 700; font-size: 0.6rem; display: flex; align-items: center; gap: 0.3rem; transition: 0.2s; }
         .whatsapp-btn:hover { background: #1ebe5c; transform: scale(1.02); }
-        @media (min-width: 640px) {
-            .whatsapp-btn { padding: 0.4rem 1.2rem; font-size: 0.8rem; }
-        }
+        @media (min-width: 640px) { .whatsapp-btn { padding: 0.4rem 1.2rem; font-size: 0.8rem; } }
 
-        .stock-badge { font-size: 0.5rem; padding: 0.05rem 0.4rem; border-radius: 9999px; font-weight: 700; }
+        .stock-badge { font-size: 0.42rem; padding: 0.05rem 0.35rem; border-radius: 9999px; font-weight: 800; }
+        @media (min-width: 640px) { .stock-badge { font-size: 0.6rem; padding: 0.08rem 0.5rem; } }
         .stock-zero { background: #fee2e2; color: #991b1b; }
         .stock-low { background: #fef3c7; color: #92400e; }
         .stock-ok { background: #dcfce7; color: #166534; }
 
-        .filter-chip { 
-            padding: 0.15rem 0.6rem; 
-            border-radius: 9999px; 
-            font-size: 0.5rem; 
-            font-weight: 700; 
-            background: white; 
-            border: 1.5px solid #e2e8f0; 
-            color: #475569; 
-            cursor: pointer; 
-            transition: 0.2s; 
-            white-space: nowrap;
-            max-width: 150px;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .filter-chip {
+            padding: 0.15rem 0.6rem; border-radius: 9999px; font-size: 0.5rem; font-weight: 700;
+            background: white; border: 1.5px solid #e2e8f0; color: #475569; cursor: pointer;
+            transition: 0.2s; white-space: nowrap; max-width: 150px; overflow: hidden; text-overflow: ellipsis;
         }
         .filter-chip.active { background: #1e293b; border-color: #1e293b; color: white; }
         .filter-chip:hover { background: #f1f5f9; }
+        .filter-chip.active:hover { background: #0f172a; }
         @media (min-width: 640px) {
             .filter-chip { font-size: 0.7rem; padding: 0.2rem 1rem; max-width: 250px; }
         }
 
-        /* 汉堡菜单抽屉 */
+        /* 抽屉 */
         .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); z-index: 300; display: none; }
         .drawer-overlay.active { display: block; }
-        .drawer-panel { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; max-width: 80vw; background: white; z-index: 350; padding: 1.2rem 1rem; overflow-y: auto; transform: translateX(-100%); transition: transform 0.25s ease; box-shadow: 4px 0 30px rgba(0,0,0,0.2); }
+        .drawer-panel { position: fixed; top: 0; left: 0; bottom: 0; width: 290px; max-width: 82vw; background: white; z-index: 350; padding: 1.2rem 1rem; overflow-y: auto; transform: translateX(-100%); transition: transform 0.25s ease; box-shadow: 4px 0 30px rgba(0,0,0,0.2); }
         .drawer-panel.open { transform: translateX(0); }
         .drawer-panel .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.6rem; }
         .drawer-panel .drawer-header h3 { font-weight: 800; font-size: 1rem; }
@@ -142,36 +242,26 @@
         .drawer-panel .filter-group label { display: block; font-weight: 700; font-size: 0.65rem; color: #64748b; margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
         .drawer-panel .filter-group .chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
 
-        /* 结算面板 */
+        /* 结算 */
         .checkout-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 1rem; }
         .checkout-overlay.active { display: flex; }
         .checkout-panel { background: white; border-radius: 1.5rem; max-width: 700px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; }
         .checkout-panel .close-btn { position: sticky; top: 0; float: right; background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 9999px; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .checkout-panel .close-btn:hover { background: #e2e8f0; }
-        .checkout-item { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid #f1f5f9; font-size: 0.75rem; }
-        .checkout-item .left { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-        .checkout-item .right { font-weight: 700; }
+        .checkout-item { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid #f1f5f9; font-size: 0.75rem; gap: 0.5rem; }
+        .checkout-item .left { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: baseline; }
+        .checkout-item .right { font-weight: 800; }
         .checkout-total { margin-top: 1rem; padding-top: 0.8rem; border-top: 2px solid #e2e8f0; display: flex; justify-content: space-between; font-weight: 800; font-size: 1rem; }
-        .checkout-empresa { font-size: 0.65rem; color: #64748b; margin-top: 0.25rem; padding: 0.25rem 0.5rem; background: #f1f5f9; border-radius: 0.3rem; }
+        .checkout-empresa { font-size: 0.65rem; color: #64748b; margin-top: 0.6rem; padding: 0.25rem 0.5rem; background: #f1f5f9; border-radius: 0.3rem; }
 
-        .multi-select-actions { display: flex; align-items: center; gap: 0.3rem; flex-wrap: wrap; padding: 0.3rem 0; background: #f8fafc; border-radius: 0.5rem; margin-bottom: 0.3rem; }
-        .multi-select-actions input { width: 40px; text-align: center; border: 1px solid #e2e8f0; border-radius: 0.3rem; padding: 0.1rem 0; font-weight: 600; font-size: 0.6rem; }
-        .multi-select-actions button { background: #e2e8f0; border: none; border-radius: 0.3rem; padding: 0.1rem 0.5rem; font-weight: 700; font-size: 0.5rem; cursor: pointer; transition: 0.2s; }
+        .multi-select-actions { display: flex; align-items: center; gap: 0.3rem; flex-wrap: wrap; padding: 0.3rem 0; background: #f8fafc; border-radius: 0.5rem; }
+        .multi-select-actions input { width: 44px; text-align: center; border: 1px solid #e2e8f0; border-radius: 0.3rem; padding: 0.1rem 0; font-weight: 600; font-size: 0.6rem; }
+        .multi-select-actions button { background: #e2e8f0; border: none; border-radius: 0.3rem; padding: 0.12rem 0.55rem; font-weight: 700; font-size: 0.5rem; cursor: pointer; transition: 0.2s; }
         .multi-select-actions button:hover { background: #cbd5e1; }
-        .multi-select-actions .select-all-btn { background: #3b82f6; color: white; padding: 0.1rem 0.6rem; }
-        .multi-select-actions .select-all-btn:hover { background: #2563eb; }
         @media (min-width:640px) {
-            .multi-select-actions input { width: 50px; font-size: 0.8rem; }
-            .multi-select-actions button { font-size: 0.7rem; padding: 0.15rem 0.8rem; }
+            .multi-select-actions input { width: 56px; font-size: 0.8rem; }
+            .multi-select-actions button { font-size: 0.7rem; padding: 0.18rem 0.9rem; }
         }
-        .check-row { cursor: pointer; }
-        .check-row input[type="checkbox"] { width: 14px; height: 14px; accent-color: #3b82f6; }
-        @media (min-width:640px) {
-            .check-row input[type="checkbox"] { width: 18px; height: 18px; }
-        }
-
-        /* 主搜索框保持在页面 */
-        .main-search { width: 100%; }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
@@ -182,16 +272,15 @@
             <span>RIF J507436055</span>
             <span>Electroluz PV · 点货</span>
         </div>
-        <div class="max-w-7xl mx-auto px-2 py-1.5 flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-2 py-1.5 flex justify-between items-center gap-1">
             <div class="flex items-center gap-1.5 cursor-pointer" onclick="location.reload()">
                 <div class="w-7 h-7 sm:w-10 sm:h-10 bg-white rounded-lg flex items-center justify-center p-0.5 shadow-lg"><img src="https://pub-db6d95a9369746c6ae9e956ab6f6ebe7.r2.dev/logo%20pv.png" class="w-full h-full object-cover" alt="logo"></div>
                 <div>
                     <h1 class="text-white font-black header-title leading-tight">Electroluz PV</h1>
-                    <p class="text-slate-400 header-sub font-black tracking-[0.15em] uppercase mt-0">点货 · INVENTARIO</p>
+                    <p class="text-slate-400 header-sub font-black tracking-[0.15em] uppercase mt-0">点货 · CATÁLOGO</p>
                 </div>
             </div>
             <div class="flex items-center gap-1.5">
-                <!-- 汉堡菜单按钮 -->
                 <button onclick="openDrawer()" class="text-white text-lg sm:text-xl p-1 hover:bg-white/10 rounded-lg transition"><i class="ph-bold ph-list"></i></button>
                 <button onclick="openCheckout()" class="bg-amber-500 hover:bg-amber-400 text-white px-2 py-0.5 sm:px-3 sm:py-1 rounded-lg font-bold text-[0.5rem] sm:text-sm flex items-center gap-0.5 transition">
                     <i class="ph-bold ph-shopping-cart text-[0.6rem] sm:text-base"></i> <span class="hidden sm:inline">结算</span>
@@ -205,11 +294,11 @@
     </header>
 
     <!-- TOAST -->
-    <div id="toast" class="hidden fixed top-6 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full text-white font-bold text-[0.6rem] sm:text-sm shadow-2xl z-50 flex items-center gap-1.5 transition-all duration-300"></div>
+    <div id="toast" class="hidden fixed top-6 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full text-white font-bold text-[0.6rem] sm:text-sm shadow-2xl z-[500] flex items-center gap-1.5 transition-all duration-300"></div>
 
     <!-- IMAGE MODAL -->
-    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
-        <img id="modalImage" src="" alt="Producto" />
+    <div id="imageModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[100] hidden items-center justify-center p-4" onclick="closeImageModal()">
+        <img id="modalImage" src="" alt="Producto" class="max-w-[95vw] max-h-[85vh] rounded-2xl shadow-2xl object-contain bg-white p-2" />
     </div>
 
     <!-- CHECKOUT PANEL -->
@@ -233,13 +322,25 @@
         </div>
     </div>
 
-    <!-- DRAWER (汉堡菜单) -->
+    <!-- DRAWER -->
     <div id="drawerOverlay" class="drawer-overlay" onclick="closeDrawer()"></div>
     <div id="drawerPanel" class="drawer-panel">
         <div class="drawer-header">
             <h3><i class="ph-bold ph-funnel-simple"></i> Filtros</h3>
             <button class="drawer-close" onclick="closeDrawer()">✕</button>
         </div>
+
+        <!-- Rotación de venta -->
+        <div class="filter-group">
+            <label>Rotación de venta</label>
+            <div class="chips">
+                <button class="filter-chip active" data-rot="" onclick="setRotFilter('')">Todas</button>
+                <button class="filter-chip" data-rot="Popular" onclick="setRotFilter('Popular')">🔥 Popular</button>
+                <button class="filter-chip" data-rot="Regular" onclick="setRotFilter('Regular')">Regular</button>
+                <button class="filter-chip" data-rot="Baja rotación" onclick="setRotFilter('Baja rotación')">💤 Baja rotación</button>
+            </div>
+        </div>
+
         <!-- Mostrar -->
         <div class="filter-group">
             <label>Mostrar</label>
@@ -249,6 +350,7 @@
                 <button class="filter-chip" data-filter="low" onclick="setFilter('low')">Stock bajo (≤5)</button>
             </div>
         </div>
+
         <!-- Marca -->
         <div class="filter-group">
             <label>Marca</label>
@@ -259,78 +361,89 @@
                 <button class="filter-chip" data-brand="VERT" onclick="setBrandFilter('VERT')">VERT</button>
             </div>
         </div>
+
         <!-- Empresa -->
-        <div class="filter-group" id="drawer-empresa-group">
+        <div class="filter-group">
             <label>Empresa</label>
             <div class="chips" id="drawer-empresa-chips">
                 <button class="filter-chip active" data-empresa="" onclick="setEmpresaFilter('')">Todos</button>
                 <span class="text-[0.5rem] text-slate-400">Cargando...</span>
             </div>
         </div>
+
         <!-- Orden -->
         <div class="filter-group">
             <label>Orden</label>
             <div class="chips">
                 <button class="filter-chip active" data-sort="default" onclick="setSort('default')">Por defecto</button>
-                <button class="filter-chip" data-sort="qty-asc" onclick="setSort('qty-asc')">Cant ⬆</button>
-                <button class="filter-chip" data-sort="qty-desc" onclick="setSort('qty-desc')">Cant ⬇</button>
+                <button class="filter-chip" data-sort="qty-asc" onclick="setSort('qty-asc')">Stock ⬆</button>
+                <button class="filter-chip" data-sort="qty-desc" onclick="setSort('qty-desc')">Stock ⬇</button>
             </div>
         </div>
-        <div class="mt-4 border-t pt-2 text-[0.5rem] text-slate-400">Electroluz PV · 点货 v1.0</div>
+
+        <div class="mt-4 border-t pt-2 text-[0.5rem] text-slate-400">Electroluz PV · 点货 v2.1</div>
     </div>
 
     <!-- MAIN -->
     <main class="flex-1 w-full max-w-7xl mx-auto px-1.5 sm:px-4 py-1.5 sm:py-6">
 
-        <!-- 搜索框 (主页面) -->
-        <div class="w-full relative mb-1.5 sm:mb-3">
-            <i class="ph-bold ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[0.65rem] sm:text-sm"></i>
-            <input type="text" id="mainSearchInput" placeholder="Buscar por código, descripción o marca..." 
-                class="w-full pl-6 sm:pl-8 pr-2 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-[0.6rem] sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/60 focus:border-blue-400 transition bg-slate-50/80"
-                oninput="applySearchMain()">
+        <!-- 搜索框 + 视图切换 -->
+        <div class="w-full flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-3">
+            <div class="relative flex-1">
+                <i class="ph-bold ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[0.65rem] sm:text-sm"></i>
+                <input type="text" id="mainSearchInput" placeholder="Buscar por código, descripción o marca..."
+                    class="w-full pl-6 sm:pl-8 pr-2 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-[0.6rem] sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/60 focus:border-blue-400 transition bg-slate-50/80"
+                    oninput="applySearchMain()">
+            </div>
+            <div class="view-toggle bg-white border border-slate-200 rounded-lg p-0.5 shadow-sm flex-shrink-0">
+                <button data-view="catalog" class="active" onclick="setView('catalog')" title="Catálogo">
+                    <i class="ph-bold ph-squares-four"></i>
+                </button>
+                <button data-view="tabla" onclick="setView('tabla')" title="Tabla">
+                    <i class="ph-bold ph-rows"></i>
+                </button>
+            </div>
         </div>
 
-        <!-- 多选批量操作栏 -->
+        <!-- 批量操作栏 -->
         <div class="bg-white p-1.5 sm:p-3 rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 mb-1.5 sm:mb-3 flex flex-wrap items-center gap-2">
-            <button onclick="toggleSelectAll()" class="select-all-btn text-[0.5rem] sm:text-sm px-2 py-1 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 transition"><i class="ph-bold ph-check-square"></i> <span id="selectAllLabel">Seleccionar todos</span></button>
+            <input type="checkbox" id="selectAllCheck" onchange="toggleSelectAll()" class="accent-blue-600 w-3.5 h-3.5 sm:w-4 sm:h-4 cursor-pointer" />
+            <button onclick="toggleSelectAllBtn()" class="text-[0.5rem] sm:text-sm px-2 py-1 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 transition">
+                <i class="ph-bold ph-check-square"></i> <span id="selectAllLabel">Seleccionar todos</span>
+            </button>
             <span class="text-[0.5rem] sm:text-sm text-slate-500"><span id="selectedCount">0</span> seleccionados</span>
-            <div class="multi-select-actions">
+            <div class="multi-select-actions px-1.5">
                 <span class="text-[0.5rem] sm:text-sm font-bold text-slate-600">Cant:</span>
-                <input type="number" id="batchQtyInput" value="1" min="0" class="border rounded w-10 sm:w-14 text-center" />
+                <input type="number" id="batchQtyInput" value="1" min="0" class="border rounded text-center" />
                 <button onclick="applyBatchQty()" class="bg-green-100 hover:bg-green-200 text-green-700 transition"><i class="ph-bold ph-check"></i> Aplicar</button>
                 <button onclick="batchClear()" class="bg-rose-100 hover:bg-rose-200 text-rose-700 transition"><i class="ph-bold ph-x"></i> Limpiar</button>
             </div>
         </div>
 
-        <!-- Tabla -->
-        <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="inventory-table w-full text-[0.5rem] sm:text-sm">
-                    <thead>
-                        <tr>
-                            <th class="w-6"><input type="checkbox" id="selectAllCheck" onchange="toggleSelectAll()" class="accent-blue-600 w-3 h-3 sm:w-4 sm:h-4" /></th>
-                            <th class="text-left">IMG</th>
-                            <th class="text-left" colspan="2">PRODUCTO</th>
-                            <th class="text-center">Stock</th>
-                            <th class="text-center">Mayor</th>
-                            <th class="text-center">点货</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventory-body">
-                        <tr><td colspan="7" class="text-center py-4 sm:py-8 text-[0.5rem] sm:text-sm text-slate-400">Cargando productos...</td></tr>
-                    </tbody>
-                </table>
+        <!-- 无结果 -->
+        <div id="no-results" class="hidden py-10 sm:py-16 text-center text-slate-400">
+            <i class="ph-bold ph-magnifying-glass text-2xl sm:text-4xl block mb-2"></i>
+            <span class="font-bold text-[0.7rem] sm:text-sm">No hay productos que coincidan</span>
+        </div>
+
+        <!-- 画册视图 -->
+        <div id="view-catalog">
+            <div id="catalog-grid" class="catalog-grid">
+                <div class="col-span-full text-center py-8 text-slate-400 text-sm">Cargando productos...</div>
             </div>
-            <div id="no-results" class="hidden py-6 sm:py-12 text-center text-slate-400">
-                <i class="ph-bold ph-magnifying-glass text-2xl sm:text-3xl block mb-1 sm:mb-2"></i>
-                <span class="font-bold text-[0.6rem] sm:text-sm">No hay productos que coincidan</span>
+            <div id="pagination" class="flex justify-center items-center gap-2 sm:gap-4 mt-3 sm:mt-6 text-[0.6rem] sm:text-sm font-bold text-slate-600">
+                <button id="prev-page" onclick="changePage(-1)" class="w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center disabled:opacity-40"><i class="ph-bold ph-caret-left text-[0.5rem] sm:text-base"></i></button>
+                <span id="page-info">Página 1 de 1</span>
+                <button id="next-page" onclick="changePage(1)" class="w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center disabled:opacity-40"><i class="ph-bold ph-caret-right text-[0.5rem] sm:text-base"></i></button>
             </div>
         </div>
 
-        <div id="pagination" class="flex justify-center items-center gap-2 sm:gap-4 mt-2 sm:mt-6 text-[0.6rem] sm:text-sm font-bold text-slate-600">
-            <button id="prev-page" onclick="changePage(-1)" class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center"><i class="ph-bold ph-caret-left text-[0.5rem] sm:text-base"></i></button>
-            <span id="page-info">Página 1 de 1</span>
-            <button id="next-page" onclick="changePage(1)" class="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center"><i class="ph-bold ph-caret-right text-[0.5rem] sm:text-base"></i></button>
+        <!-- 表格视图（两列独立滚动） -->
+        <div id="view-tabla" class="hidden">
+            <div class="tabla-view">
+                <div id="tabla-col-left" class="tabla-col"></div>
+                <div id="tabla-col-right" class="tabla-col"></div>
+            </div>
         </div>
     </main>
 
@@ -341,54 +454,81 @@
             WHATSAPP_NUMBER: '5804128538888'
         };
 
-        // ========== 本地测试数据（包含 Mayor 价格） ==========
-        const TEST_DATA = `Codigo,Descripcion,Almacen_1,Costo,Otro,Detal,Precio1,Grupo,Empresa,Mayor
-CAS-14,CALCULADORA CASIO FX-82MS 2ND EDITION,12,16.23,31.65,40.58,34.08,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.,29.50
-887RGB,CORNETA 1X100,8,2.63,5.13,6.57,5.52,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.,4.80
-X-997,CORNETA 1X100,9,3.26,6.24,8,6.72,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.,5.90
-PV-633,CORNETA 1X12,11,19.32,37.44,48,40.32,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.,35.00
-AO-82,CORNETA 1X20,10,13.71,26.73,34.28,28.79,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.,25.00
-SZ-1950BT,CORNETA 1X24,12,10.51,20.49,26.28,22.07,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.,19.00
-SZ-1951BT,CORNETA 1X24,11,10.63,20.73,26.58,22.32,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.,19.00
-SZ-1949BT,CORNETA 1X24,12,9.03,17.61,22.58,18.96,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.,16.50
-ZF-30FT,EXTENSION NARANJA 30FT 1X20U ZF-30FT,15,2.53,4.93,6.32,5.31,OTROS,J505574140 ORIENTE DISTRIBUCION C.A.,4.50
-MH-61,GUANTES CON LINTERNA LED DE 2W COLOR NEGRO,7,4.17,7.38,8.61,7.38,INGOC,J505572220 BELMENGY, C.A.,6.20
-WKKK131,SET DE 3 CUCHILLO DE COCINA (8/5/3.5),3,2.47,4.45,5.19,4.45,INGO,J505572220 BELMENGY, C.A.,3.90
-WWV1822,VALVULA DE BOLA DE PVC PEGABLE 1/2",0,0.54,0.97,1.13,0.97,INGO,J505572220 BELMENGY, C.A.,0.80
-928116,ABRAZADERA DANNI 16MM 1X12U 928116,34,0.43,0.84,1.07,0.9,OTROS,J505574140 ORIENTE DISTRIBUCION C.A.,0.75
-928125,ABRAZADERA DANNI 25MM 1X12U 928125,35,0.43,0.84,1.07,0.9,OTROS,J505574140 ORIENTE DISTRIBUCION C.A.,0.75
-MG-0054,ABRE VINO,18,2.07,4.04,5.18,4.35,OTROS,J504750824 LASER LED, C.A.,3.80
-B-3339,ABRELATAS 1X96 ZAN FENG,1,1.83,3.57,4.58,3.84,OTROS,J501459606 INVERSIOS PROVIN CENTER, C.A.,3.20
-AKMG6020,ACCESORIOS PARA DRIMER(20UND) PARA (PIEDRA),2,2.34,4.21,4.91,4.21,INGO,J505572220 BELMENGY, C.A.,3.70
-AKMG5031,ACCESORIOS PARA DRIMER(32UND) PARA(LIADO Y PU),2,2.72,4.59,5.71,4.9,INGO,J505572220 BELMENGY, C.A.,4.20
-AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,INGO,J505572220 BELMENGY, C.A.,5.80`;
+        const ROT = { POPULAR: 'Popular', REGULAR: 'Regular', BAJA: 'Baja rotación' };
+
+        const FALLBACK_IMG = "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3e%3crect width='80' height='80' fill='%23f1f5f9'/%3e%3ctext x='40' y='40' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='9' fill='%2394a3b8'%3eSin%3c/text%3e%3c/svg%3e";
+
+        // ========== 本地测试数据 ==========
+        const TEST_DATA = `Codigo,Descripcion,Almacen_1,Costo,Otro,Detal,Precio1,Grupo,Empresa,Mayor,Rotacion
+CAS-14,CALCULADORA CASIO FX-82MS 2ND EDITION,12,16.23,31.65,40.58,34.08,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",29.50,Popular
+887RGB,CORNETA 1X100,8,2.63,5.13,6.57,5.52,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",4.80,Popular
+X-997,CORNETA 1X100,9,3.26,6.24,8,6.72,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",5.90,Regular
+PV-633,CORNETA 1X12,11,19.32,37.44,48,40.32,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",35.00,Regular
+AO-82,CORNETA 1X20,10,13.71,26.73,34.28,28.79,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",25.00,Baja rotacion
+SZ-1950BT,CORNETA 1X24,12,10.51,20.49,26.28,22.07,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",19.00,Popular
+SZ-1951BT,CORNETA 1X24,11,10.63,20.73,26.58,22.32,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",19.00,Regular
+SZ-1949BT,CORNETA 1X24,12,9.03,17.61,22.58,18.96,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",16.50,Baja rotacion
+ZF-30FT,EXTENSION NARANJA 30FT 1X20U ZF-30FT,15,2.53,4.93,6.32,5.31,OTROS,"J505574140 ORIENTE DISTRIBUCION C.A.",4.50,Popular
+MH-61,GUANTES CON LINTERNA LED DE 2W COLOR NEGRO,7,4.17,7.38,8.61,7.38,INGOC,"J505572220 BELMENGY, C.A.",6.20,Regular
+WKKK131,SET DE 3 CUCHILLO DE COCINA (8/5/3.5),3,2.47,4.45,5.19,4.45,INGO,"J505572220 BELMENGY, C.A.",3.90,Baja rotacion
+WWV1822,VALVULA DE BOLA DE PVC PEGABLE 1/2",0,0.54,0.97,1.13,0.97,INGO,"J505572220 BELMENGY, C.A.",0.80,Baja rotacion
+928116,ABRAZADERA DANNI 16MM 1X12U 928116,34,0.43,0.84,1.07,0.9,OTROS,"J505574140 ORIENTE DISTRIBUCION C.A.",0.75,Popular
+928125,ABRAZADERA DANNI 25MM 1X12U 928125,35,0.43,0.84,1.07,0.9,OTROS,"J505574140 ORIENTE DISTRIBUCION C.A.",0.75,Popular
+MG-0054,ABRE VINO,18,2.07,4.04,5.18,4.35,OTROS,"J504750824 LASER LED, C.A.",3.80,Regular
+B-3339,ABRELATAS 1X96 ZAN FENG,1,1.83,3.57,4.58,3.84,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",3.20,Baja rotacion
+AKMG6020,ACCESORIOS PARA DRIMER(20UND) PARA (PIEDRA),2,2.34,4.21,4.91,4.21,INGO,"J505572220 BELMENGY, C.A.",3.70,Regular
+AKMG5031,ACCESORIOS PARA DRIMER(32UND) PARA(LIADO Y PU),2,2.72,4.59,5.71,4.9,INGO,"J505572220 BELMENGY, C.A.",4.20,Regular
+AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,INGO,"J505572220 BELMENGY, C.A.",5.80,Popular`;
 
         // ========== ESTADO ==========
         let products = [];
         let filtered = [];
         let currentPage = 1;
-        const perPage = 15;
+        const perPage = 20;
         let filterMode = 'all';
         let brandFilter = '';
         let empresaFilter = '';
+        let rotationFilter = '';
         let sortMode = 'default';
         let searchTerm = '';
         let counts = {};
-        let selectedRows = new Set(); // id 集合
+        let selectedRows = new Set();
         let empresasSet = new Set();
+        let warnedBaja = new Set();
+        let viewMode = 'catalog'; // 'catalog' | 'tabla'
 
         // ========== UTILIDADES ==========
         function sanitize(str) { if (!str) return ''; const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }; return str.toString().replace(/[&<>"']/g, m => map[m]); }
         function normalize(str) { return str ? str.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase() : ''; }
         function parseNumber(str) { if (!str) return 0; const cleaned = str.toString().replace(/[$]/g, '').replace(/,/g, '.').trim(); return parseFloat(cleaned) || 0; }
+        function cssEsc(v) { return (window.CSS && CSS.escape) ? CSS.escape(v) : String(v).replace(/["\\]/g, '\\$&'); }
 
         function toast(msg, isErr = false) {
             const el = document.getElementById('toast');
             if (!el) return;
-            el.innerHTML = `<i class="ph-fill ${isErr ? 'ph-warning-circle' : 'ph-check-circle'} text-[0.5rem] sm:text-base"></i> ${sanitize(msg)}`;
-            el.className = `fixed top-6 left-1/2 -translate-x-1/2 px-3 sm:px-6 py-1.5 sm:py-3 rounded-full text-white font-bold text-[0.6rem] sm:text-sm shadow-2xl z-50 flex items-center gap-1.5 sm:gap-2 transition-all duration-300 ${isErr ? 'bg-rose-500' : 'bg-slate-800'}`;
-            setTimeout(() => el.classList.add('-translate-y-12', 'opacity-0'), 2500);
-            setTimeout(() => el.className = 'hidden', 2800);
+            el.innerHTML = `<i class="ph-fill ${isErr ? 'ph-warning-circle' : 'ph-check-circle'}"></i> ${sanitize(msg)}`;
+            el.className = `fixed top-6 left-1/2 -translate-x-1/2 px-3 sm:px-6 py-1.5 sm:py-3 rounded-full text-white font-bold text-[0.6rem] sm:text-sm shadow-2xl z-[500] flex items-center gap-1.5 sm:gap-2 transition-all duration-300 ${isErr ? 'bg-amber-500' : 'bg-slate-800'}`;
+            clearTimeout(el._t);
+            el._t = setTimeout(() => {
+                el.classList.add('-translate-y-12', 'opacity-0');
+                setTimeout(() => el.className = 'hidden', 300);
+            }, 2600);
+        }
+
+        // ============ 售卖程度规范化 ============
+        function normalizeRotacion(raw) {
+            const v = normalize(raw);
+            if (!v) return '';
+            if (/popular|alta|alto|buena|excelente|rapida|frecuente|top|estrella/.test(v)) return ROT.POPULAR;
+            if (/baja|bajo|lenta|poca|nula|poco|muert|estancad|bajo rotacion/.test(v)) return ROT.BAJA;
+            if (/regular|media|medio|normal|moderad|estandar/.test(v)) return ROT.REGULAR;
+            const n = parseFloat(v);
+            if (!isNaN(n)) {
+                if (n >= 4) return ROT.POPULAR;
+                if (n <= 2) return ROT.BAJA;
+                return ROT.REGULAR;
+            }
+            return ROT.REGULAR;
         }
 
         // ========== CARGAR DATOS ==========
@@ -410,25 +550,29 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
         function parseCSV(text) {
             const lines = text.split(/\r?\n/);
             if (lines.length < 2) {
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="7" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">CSV vacío</td></tr>';
+                document.getElementById('catalog-grid').innerHTML = '<div class="col-span-full text-center py-8 text-rose-500 font-bold text-sm">CSV vacío</div>';
                 return;
             }
-            
-            const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
-            console.log('📋 Headers:', headers);
-            
-            const idxCode = headers.findIndex(h => /codigo|id|cód/i.test(h));
-            const idxName = headers.findIndex(h => /descripcion|nombre|producto/i.test(h));
-            const idxStock = headers.findIndex(h => /almacen_1|stock|cant|inv/i.test(h));
-            const idxEmpresa = headers.findIndex(h => /empresa|proveedor|prov|supplier/i.test(h));
-            const idxBrand = headers.findIndex(h => /grupo|marca|brand/i.test(h));
-            const idxImage = headers.findIndex(h => /images|img|url|imagen|foto/i.test(h));
-            const idxMayor = headers.findIndex(h => /mayor|precio_mayor|p_mayor/i.test(h));
 
-            console.log('🔍 Índices:', { idxCode, idxName, idxStock, idxEmpresa, idxBrand, idxImage, idxMayor });
+            const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
+            const hNorm = headers.map(h => normalize(h));
+            console.log('📋 Headers:', headers);
+
+            const findIdx = (re) => hNorm.findIndex(h => re.test(h));
+
+            const idxCode    = findIdx(/codigo|^id$|cód/);
+            const idxName    = findIdx(/descripcion|nombre|producto/);
+            const idxStock   = findIdx(/almacen_1|stock|cant|inv/);
+            const idxEmpresa = findIdx(/empresa|proveedor|prov|supplier/);
+            const idxBrand   = findIdx(/grupo|marca|brand/);
+            const idxImage   = findIdx(/images|img|url|imagen|foto/);
+            const idxMayor   = findIdx(/mayor|precio_mayor|p_mayor/);
+            const idxRot     = findIdx(/rotacion|venta|salida|popular|desempe|rotaci|售卖|程度/);
+
+            console.log('🔍 Índices:', { idxCode, idxName, idxStock, idxEmpresa, idxBrand, idxImage, idxMayor, idxRot });
 
             if (idxCode === -1) {
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="7" class="text-center py-4 sm:py-8 text-rose-500 font-bold text-[0.5rem] sm:text-sm">No se encontró columna de código</td></tr>';
+                document.getElementById('catalog-grid').innerHTML = '<div class="col-span-full text-center py-8 text-rose-500 font-bold text-sm">No se encontró columna de código</div>';
                 return;
             }
 
@@ -447,7 +591,7 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                 }
                 values.push(cur.trim());
                 while (values.length < headers.length) values.push('');
-                
+
                 const code = idxCode !== -1 ? values[idxCode] : '';
                 if (!code) continue;
                 const name = idxName !== -1 ? values[idxName] : 'Sin nombre';
@@ -462,6 +606,8 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                 }
                 const image = idxImage !== -1 ? values[idxImage] : '';
                 const mayor = idxMayor !== -1 ? parseNumber(values[idxMayor]) : 0;
+                const rotRaw = idxRot !== -1 ? values[idxRot] : '';
+                const rotacion = normalizeRotacion(rotRaw);
 
                 if (empresa) empresasSet.add(empresa);
 
@@ -472,23 +618,30 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                     stock: stock,
                     empresa: sanitize(empresa),
                     image: sanitize(image),
-                    mayor: mayor
+                    mayor: mayor,
+                    rotacion: rotacion
                 });
             }
-            
+
             if (products.length === 0) {
-                document.getElementById('inventory-body').innerHTML = '<tr><td colspan="7" class="text-center py-4 sm:py-8 text-amber-500 font-bold text-[0.5rem] sm:text-sm">No se encontraron productos</td></tr>';
+                document.getElementById('catalog-grid').innerHTML = '<div class="col-span-full text-center py-8 text-amber-500 font-bold text-sm">No se encontraron productos</div>';
                 return;
             }
 
             console.log(`✅ Productos: ${products.length}, Empresas: ${empresasSet.size}`);
+            console.log('📊 Rotación:', {
+                Popular: products.filter(p => p.rotacion === ROT.POPULAR).length,
+                Regular: products.filter(p => p.rotacion === ROT.REGULAR).length,
+                Baja: products.filter(p => p.rotacion === ROT.BAJA).length
+            });
+
             products.sort((a, b) => a.id.localeCompare(b.id));
             products.forEach(p => { counts[p.id] = 0; });
 
             renderDrawerEmpresaChips();
             filtered = [...products];
             applyFiltersAndSort();
-            renderInventory();
+            renderView();
             updateCheckoutBadge();
         }
 
@@ -500,15 +653,14 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                 container.innerHTML += '<span class="text-[0.5rem] text-slate-400">No hay empresas</span>';
                 return;
             }
-            const sorted = Array.from(empresasSet).sort();
-            sorted.forEach(emp => {
+            Array.from(empresasSet).sort().forEach(emp => {
                 const short = emp.length > 25 ? emp.substring(0, 22) + '…' : emp;
                 const btn = document.createElement('button');
                 btn.className = 'filter-chip';
                 btn.dataset.empresa = emp;
                 btn.textContent = short;
                 btn.title = emp;
-                btn.onclick = function() { setEmpresaFilter(emp); };
+                btn.onclick = function () { setEmpresaFilter(emp); };
                 container.appendChild(btn);
             });
         }
@@ -518,161 +670,293 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             let data = [...products];
             if (searchTerm.trim() !== '') {
                 const term = normalize(searchTerm);
-                data = data.filter(p => normalize(p.id).includes(term) || normalize(p.name).includes(term) || normalize(p.brand).includes(term) || normalize(p.empresa).includes(term));
+                data = data.filter(p =>
+                    normalize(p.id).includes(term) ||
+                    normalize(p.name).includes(term) ||
+                    normalize(p.brand).includes(term) ||
+                    normalize(p.empresa).includes(term)
+                );
             }
             if (filterMode === 'zero') data = data.filter(p => p.stock === 0);
             else if (filterMode === 'low') data = data.filter(p => p.stock <= 5 && p.stock > 0);
             if (brandFilter) data = data.filter(p => p.brand === brandFilter);
             if (empresaFilter) data = data.filter(p => p.empresa === empresaFilter);
+            if (rotationFilter) data = data.filter(p => p.rotacion === rotationFilter);
+
             if (sortMode === 'qty-asc') data.sort((a, b) => a.stock - b.stock);
             else if (sortMode === 'qty-desc') data.sort((a, b) => b.stock - a.stock);
             else data.sort((a, b) => a.id.localeCompare(b.id));
+
             filtered = data;
         }
 
         function applySearchMain() {
-            const input = document.getElementById('mainSearchInput');
-            searchTerm = input.value;
+            searchTerm = document.getElementById('mainSearchInput').value;
             currentPage = 1;
             applyFiltersAndSort();
-            renderInventory();
+            renderView();
         }
 
         function setFilter(mode) {
             filterMode = mode;
             document.querySelectorAll('.filter-chip[data-filter]').forEach(el => el.classList.toggle('active', el.dataset.filter === mode));
-            currentPage = 1;
-            applyFiltersAndSort();
-            renderInventory();
+            currentPage = 1; applyFiltersAndSort(); renderView();
         }
-
         function setBrandFilter(brand) {
             brandFilter = brand;
             document.querySelectorAll('.filter-chip[data-brand]').forEach(el => el.classList.toggle('active', el.dataset.brand === brand));
-            currentPage = 1;
-            applyFiltersAndSort();
-            renderInventory();
+            currentPage = 1; applyFiltersAndSort(); renderView();
         }
-
         function setEmpresaFilter(empresa) {
             empresaFilter = empresa;
             document.querySelectorAll('.filter-chip[data-empresa]').forEach(el => el.classList.toggle('active', el.dataset.empresa === empresa));
-            currentPage = 1;
-            applyFiltersAndSort();
-            renderInventory();
+            currentPage = 1; applyFiltersAndSort(); renderView();
         }
-
+        function setRotFilter(rot) {
+            rotationFilter = rot;
+            document.querySelectorAll('.filter-chip[data-rot]').forEach(el => el.classList.toggle('active', el.dataset.rot === rot));
+            currentPage = 1; applyFiltersAndSort(); renderView();
+            if (rot === ROT.BAJA) toast('💤 Mostrando productos de baja rotación — no necesitan点货');
+        }
         function setSort(mode) {
             sortMode = mode;
             document.querySelectorAll('.filter-chip[data-sort]').forEach(el => el.classList.toggle('active', el.dataset.sort === mode));
-            currentPage = 1;
-            applyFiltersAndSort();
-            renderInventory();
+            currentPage = 1; applyFiltersAndSort(); renderView();
         }
 
-        // ========== RENDER TABLA ==========
-        function renderInventory() {
-            const tbody = document.getElementById('inventory-body');
+        // ========== 视图切换 ==========
+        function setView(mode) {
+            if (viewMode === mode) return;
+            viewMode = mode;
+            document.querySelectorAll('.view-toggle button').forEach(b => {
+                b.classList.toggle('active', b.dataset.view === mode);
+            });
+            // 清空非当前视图，避免重复 id
+            if (mode === 'tabla') {
+                document.getElementById('catalog-grid').innerHTML = '';
+                document.getElementById('view-catalog').classList.add('hidden');
+            } else {
+                document.getElementById('tabla-col-left').innerHTML = '';
+                document.getElementById('tabla-col-right').innerHTML = '';
+                document.getElementById('view-tabla').classList.add('hidden');
+            }
+            renderView();
+        }
+
+        function renderView() {
             const noRes = document.getElementById('no-results');
-            if (!tbody) return;
+            const viewCatalog = document.getElementById('view-catalog');
+            const viewTabla = document.getElementById('view-tabla');
+
             if (products.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 sm:py-8 text-slate-400 text-[0.5rem] sm:text-sm">Cargando productos...</td></tr>';
+                viewCatalog.classList.remove('hidden');
+                viewTabla.classList.add('hidden');
+                noRes.classList.add('hidden');
+                document.getElementById('catalog-grid').innerHTML = '<div class="col-span-full text-center py-8 text-slate-400 text-sm">Cargando productos...</div>';
                 return;
             }
+
+            if (filtered.length === 0) {
+                noRes.classList.remove('hidden');
+                viewCatalog.classList.add('hidden');
+                viewTabla.classList.add('hidden');
+                updateSelectedCount();
+                return;
+            }
+
+            noRes.classList.add('hidden');
+
+            if (viewMode === 'catalog') {
+                viewCatalog.classList.remove('hidden');
+                viewTabla.classList.add('hidden');
+                renderCatalog();
+            } else {
+                viewCatalog.classList.add('hidden');
+                viewTabla.classList.remove('hidden');
+                renderTabla();
+            }
+        }
+
+        // ========== RENDER 画册 ==========
+        function cardHTML(p) {
+            const qty = counts[p.id] || 0;
+            const checked = selectedRows.has(p.id) ? 'checked' : '';
+            const imgSrc = p.image && p.image.trim() !== '' ? p.image : FALLBACK_IMG;
+            const isBaja = p.rotacion === ROT.BAJA;
+
+            let stockBadge;
+            if (p.stock === 0) stockBadge = '<span class="stock-badge stock-zero">0</span>';
+            else if (p.stock <= 5) stockBadge = `<span class="stock-badge stock-low">${p.stock}</span>`;
+            else stockBadge = `<span class="stock-badge stock-ok">${p.stock}</span>`;
+
+            let rotBadge = '';
+            if (p.rotacion === ROT.POPULAR) rotBadge = '<span class="rot-badge rot-popular">🔥 Popular</span>';
+            else if (p.rotacion === ROT.REGULAR) rotBadge = '<span class="rot-badge rot-regular">Regular</span>';
+            else if (isBaja) rotBadge = '<span class="rot-badge rot-baja">💤 Baja</span>';
+
+            const mayorDisplay = p.mayor > 0 ? `$${p.mayor.toFixed(2)}` : '—';
+            const empShort = p.empresa ? (p.empresa.length > 24 ? p.empresa.substring(0, 22) + '…' : p.empresa) : '';
+
+            return `
+            <div class="card item-row ${isBaja ? 'card-baja' : ''} ${qty > 0 ? 'item-active' : ''}" data-id="${p.id}">
+                <div class="card-img-wrap">
+                    <img src="${imgSrc}" class="card-img" alt="${p.name}" loading="lazy"
+                         onclick="openImageModal(this.src)"
+                         onerror="this.onerror=null;this.src='${FALLBACK_IMG}'" />
+                    <input type="checkbox" class="card-check row-check" data-id="${p.id}" ${checked} onchange="toggleRow('${p.id}')" />
+                    ${rotBadge}
+                </div>
+                <div class="card-body">
+                    <div class="flex items-center gap-1 flex-wrap">
+                        <span class="code-pill">${p.id}</span>
+                        <span class="card-brand">${p.brand || '—'}</span>
+                    </div>
+                    <div class="card-name" title="${p.name}">${p.name}</div>
+                    <div class="card-emp" title="${p.empresa}">${empShort || '—'}</div>
+                    <div class="card-info">
+                        <span class="card-stock">Stock ${stockBadge}</span>
+                        <span class="card-price f-num">${mayorDisplay}</span>
+                    </div>
+                    ${isBaja ? '<div class="baja-hint">💤 No requiere点货</div>' : ''}
+                    <div class="qty-wrapper">
+                        <button class="qty-btn" onclick="adjustCount('${p.id}', -1)" type="button">−</button>
+                        <input type="number" class="qty-input-mobile" id="count_${p.id}" value="${qty}" min="0"
+                            oninput="updateCount('${p.id}', this.value)"
+                            onchange="updateCount('${p.id}', this.value)"
+                            onfocus="this.select()" inputmode="numeric" pattern="[0-9]*" />
+                        <button class="qty-btn" onclick="adjustCount('${p.id}', 1)" type="button">+</button>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        function renderCatalog() {
+            const grid = document.getElementById('catalog-grid');
             const data = filtered;
             const total = data.length;
-            const totalPages = Math.ceil(total / perPage);
-            if (currentPage > totalPages) currentPage = totalPages || 1;
+            const totalPages = Math.max(1, Math.ceil(total / perPage));
+            if (currentPage > totalPages) currentPage = totalPages;
             const start = (currentPage - 1) * perPage;
             const pageItems = data.slice(start, start + perPage);
 
-            if (total === 0) {
-                tbody.innerHTML = '';
-                noRes.classList.remove('hidden');
-                document.getElementById('pagination').classList.add('hidden');
-                return;
-            }
-            noRes.classList.add('hidden');
-            document.getElementById('pagination').classList.remove('hidden');
-
-            let html = '';
-            pageItems.forEach(p => {
-                const qty = counts[p.id] || 0;
-                const checked = selectedRows.has(p.id) ? 'checked' : '';
-                const imgSrc = p.image && p.image.trim() !== '' ? p.image : 'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"%3e%3crect width="48" height="48" fill="%23f1f5f9"/%3e%3ctext x="24" y="24" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="6" fill="%2394a3b8"%3eSin%3c/text%3e%3c/svg%3e';
-                let stockBadge = '';
-                if (p.stock === 0) stockBadge = '<span class="stock-badge stock-zero">0</span>';
-                else if (p.stock <= 5) stockBadge = `<span class="stock-badge stock-low">${p.stock}</span>`;
-                else stockBadge = `<span class="stock-badge stock-ok">${p.stock}</span>`;
-
-                const mayorDisplay = p.mayor > 0 ? `$${p.mayor.toFixed(2)}` : '—';
-                const empDisplay = p.empresa && p.empresa.length > 20 ? p.empresa.substring(0, 18) + '…' : p.empresa;
-
-                // 手机端两行：第一行短信息，第二行描述
-                html += `
-                    <tr class="check-row">
-                        <td><input type="checkbox" class="row-check" data-id="${p.id}" ${checked} onchange="toggleRow('${p.id}')" /></td>
-                        <td><img src="${imgSrc}" class="thumb" onclick="openImageModal('${imgSrc}')" loading="lazy" onerror="this.src='data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 48 48\'%3e%3crect width=\'48\' height=\'48\' fill=\'%23f1f5f9\'/%3e%3ctext x=\'24\' y=\'24\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'6\' fill=\'%2394a3b8\'%3eSin%3c/text%3e%3c/svg%3e'" /></td>
-                        <td colspan="2">
-                            <div class="compact-row">
-                                <div class="row-first">
-                                    <span class="code-pill">${p.id}</span>
-                                    <span class="font-bold text-slate-700 text-[0.4rem] sm:text-sm">${p.brand || '—'}</span>
-                                    <span class="text-slate-500 text-[0.35rem] sm:text-xs truncate max-w-[60px] sm:max-w-[120px]" title="${sanitize(p.empresa)}">${sanitize(empDisplay) || '—'}</span>
-                                </div>
-                                <div class="row-second">${p.name}</div>
-                            </div>
-                        </td>
-                        <td class="text-center">${stockBadge}</td>
-                        <td class="text-center font-bold text-[0.5rem] sm:text-sm">${mayorDisplay}</td>
-                        <td class="text-center">
-                            <div class="qty-wrapper">
-                                <button class="qty-btn" onclick="adjustCount('${p.id}', -1)" type="button">−</button>
-                                <input type="number" class="qty-input-mobile" id="count_${p.id}" value="${qty}" min="0" 
-                                    onchange="updateCount('${p.id}', this.value)" 
-                                    onfocus="this.select()"
-                                    inputmode="numeric"
-                                    pattern="[0-9]*" />
-                                <button class="qty-btn" onclick="adjustCount('${p.id}', 1)" type="button">+</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-            tbody.innerHTML = html;
+            grid.innerHTML = pageItems.map(cardHTML).join('');
             updateCheckoutBadge();
             updateSelectedCount();
 
-            document.getElementById('page-info').textContent = `Página ${currentPage} de ${totalPages || 1}`;
+            document.getElementById('page-info').textContent = `Página ${currentPage} de ${totalPages}`;
             document.getElementById('prev-page').disabled = currentPage <= 1;
             document.getElementById('next-page').disabled = currentPage >= totalPages;
         }
 
-        // ========== 点货操作 ==========
-        function adjustCount(id, delta) {
-            const input = document.getElementById(`count_${id}`);
-            if (!input) return;
-            let val = parseInt(input.value) || 0;
-            val = Math.max(0, val + delta);
-            input.value = val;
-            updateCount(id, val);
+        // ========== RENDER 表格（两列独立滚动） ==========
+        function tablaRowHTML(p) {
+            const qty = counts[p.id] || 0;
+            const checked = selectedRows.has(p.id) ? 'checked' : '';
+            const imgSrc = p.image && p.image.trim() !== '' ? p.image : FALLBACK_IMG;
+            const isBaja = p.rotacion === ROT.BAJA;
+
+            let stockBadge;
+            if (p.stock === 0) stockBadge = '<span class="stock-badge stock-zero">0</span>';
+            else if (p.stock <= 5) stockBadge = `<span class="stock-badge stock-low">${p.stock}</span>`;
+            else stockBadge = `<span class="stock-badge stock-ok">${p.stock}</span>`;
+
+            let rotTag = '';
+            if (p.rotacion === ROT.POPULAR) rotTag = '<span class="tabla-rot rot-popular">🔥</span>';
+            else if (p.rotacion === ROT.REGULAR) rotTag = '<span class="tabla-rot rot-regular">R</span>';
+            else if (isBaja) rotTag = '<span class="tabla-rot rot-baja">💤</span>';
+
+            const mayorDisplay = p.mayor > 0 ? `$${p.mayor.toFixed(2)}` : '—';
+
+            return `
+            <div class="tabla-row item-row ${qty > 0 ? 'item-active' : ''} ${isBaja ? 'row-baja' : ''}" data-id="${p.id}">
+                <input type="checkbox" class="tabla-check row-check" data-id="${p.id}" ${checked} onchange="toggleRow('${p.id}')" />
+                <img src="${imgSrc}" class="tabla-thumb" alt="${p.name}" loading="lazy"
+                     onclick="openImageModal(this.src)"
+                     onerror="this.onerror=null;this.src='${FALLBACK_IMG}'" />
+                <div class="tabla-info">
+                    <div class="flex items-center gap-1 flex-wrap">
+                        <span class="code-pill">${p.id}</span>
+                        <span class="tabla-brand">${p.brand || '—'}</span>
+                        ${rotTag}
+                    </div>
+                    <div class="tabla-name" title="${p.name}">${p.name}</div>
+                    <div class="tabla-emp" title="${p.empresa}">${p.empresa || '—'}</div>
+                    <div class="tabla-bottom">
+                        <span>${stockBadge}</span>
+                        <span class="tabla-price f-num">${mayorDisplay}</span>
+                        <div class="qty-wrapper">
+                            <button class="qty-btn" onclick="adjustCount('${p.id}', -1)" type="button">−</button>
+                            <input type="number" class="qty-input-mobile" id="count_${p.id}" value="${qty}" min="0"
+                                oninput="updateCount('${p.id}', this.value)"
+                                onchange="updateCount('${p.id}', this.value)"
+                                onfocus="this.select()" inputmode="numeric" pattern="[0-9]*" />
+                            <button class="qty-btn" onclick="adjustCount('${p.id}', 1)" type="button">+</button>
+                        </div>
+                    </div>
+                    ${isBaja ? '<div class="baja-hint">💤 No requiere点货</div>' : ''}
+                </div>
+            </div>`;
         }
 
-        function updateCount(id, val) {
-            const num = parseInt(val);
-            counts[id] = isNaN(num) || num < 0 ? 0 : num;
-            const input = document.getElementById(`count_${id}`);
-            if (input) input.value = counts[id];
+        function renderTabla() {
+            const half = Math.ceil(filtered.length / 2);
+            const left = filtered.slice(0, half);
+            const right = filtered.slice(half);
+            const leftEl = document.getElementById('tabla-col-left');
+            const rightEl = document.getElementById('tabla-col-right');
+            const emptyMsg = '<div class="text-center text-slate-400 text-[0.6rem] sm:text-sm py-6">Sin productos</div>';
+
+            leftEl.innerHTML = left.length ? left.map(tablaRowHTML).join('') : emptyMsg;
+            rightEl.innerHTML = right.length ? right.map(tablaRowHTML).join('') : emptyMsg;
+
+            // 重置滚动位置（首次渲染时）
+            leftEl.scrollTop = 0;
+            rightEl.scrollTop = 0;
+
             updateCheckoutBadge();
+            updateSelectedCount();
+        }
+
+        // ========== 点货操作 ==========
+        function adjustCount(id, delta) {
+            const cur = counts[id] || 0;
+            const val = Math.max(0, cur + delta);
+            counts[id] = val;
+            const input = document.getElementById(`count_${id}`);
+            if (input) input.value = val;
+            updateCheckoutBadge();
+            handleCountChange(id, cur, val);
+        }
+
+        function updateCount(id, raw) {
+            let num = parseInt(raw, 10);
+            if (isNaN(num) || num < 0) num = 0;
+            const prev = counts[id] || 0;
+            counts[id] = num;
+            updateCheckoutBadge();
+            handleCountChange(id, prev, num);
+        }
+
+        function handleCountChange(id, prev, val) {
+            const row = document.querySelector(`.item-row[data-id="${cssEsc(id)}"]`);
+            if (row) row.classList.toggle('item-active', val > 0);
+
+            if (val > 0 && val > prev && !warnedBaja.has(id)) {
+                const p = products.find(x => x.id === id);
+                if (p && p.rotacion === ROT.BAJA) {
+                    warnedBaja.add(id);
+                    toast('💤 Producto de BAJA ROTACIÓN — no necesita点货', true);
+                }
+            }
         }
 
         function changePage(delta) {
-            const total = filtered.length;
-            const totalPages = Math.ceil(total / perPage);
+            const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
             const newPage = currentPage + delta;
             if (newPage < 1 || newPage > totalPages) return;
             currentPage = newPage;
-            renderInventory();
+            renderCatalog();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // ========== MULTI-SELECT ==========
@@ -680,11 +964,6 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             if (selectedRows.has(id)) selectedRows.delete(id);
             else selectedRows.add(id);
             updateSelectedCount();
-            const allCheck = document.getElementById('selectAllCheck');
-            const checks = document.querySelectorAll('.row-check');
-            const checked = document.querySelectorAll('.row-check:checked');
-            if (checks.length === 0) allCheck.checked = false;
-            else allCheck.checked = checked.length === checks.length;
         }
 
         function toggleSelectAll() {
@@ -698,27 +977,40 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             updateSelectedCount();
         }
 
+        function toggleSelectAllBtn() {
+            const allCheck = document.getElementById('selectAllCheck');
+            allCheck.checked = !allCheck.checked;
+            toggleSelectAll();
+        }
+
         function updateSelectedCount() {
             document.getElementById('selectedCount').textContent = selectedRows.size;
             const allCheck = document.getElementById('selectAllCheck');
             const checks = document.querySelectorAll('.row-check');
-            if (checks.length > 0) {
-                const checked = document.querySelectorAll('.row-check:checked');
-                allCheck.checked = checked.length === checks.length;
-            }
+            const checked = document.querySelectorAll('.row-check:checked');
+            allCheck.checked = checks.length > 0 && checked.length === checks.length;
+            document.getElementById('selectAllLabel').textContent = allCheck.checked ? 'Deseleccionar' : 'Seleccionar todos';
         }
 
         function applyBatchQty() {
             const val = parseInt(document.getElementById('batchQtyInput').value);
             if (isNaN(val) || val < 0) { toast('Cantidad inválida', true); return; }
             if (selectedRows.size === 0) { toast('Selecciona al menos un producto', true); return; }
+
+            let bajas = 0;
             selectedRows.forEach(id => {
+                const prev = counts[id] || 0;
                 counts[id] = val;
                 const input = document.getElementById(`count_${id}`);
                 if (input) input.value = val;
+                const row = document.querySelector(`.item-row[data-id="${cssEsc(id)}"]`);
+                if (row) row.classList.toggle('item-active', val > 0);
+                const p = products.find(x => x.id === id);
+                if (p && p.rotacion === ROT.BAJA && val > 0 && val > prev) bajas++;
             });
             updateCheckoutBadge();
             toast(`Aplicado ${val} a ${selectedRows.size} productos`);
+            if (bajas > 0) setTimeout(() => toast(`💤 ${bajas} producto(s) de baja rotación`, true), 900);
         }
 
         function batchClear() {
@@ -727,6 +1019,8 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                 counts[id] = 0;
                 const input = document.getElementById(`count_${id}`);
                 if (input) input.value = 0;
+                const row = document.querySelector(`.item-row[data-id="${cssEsc(id)}"]`);
+                if (row) row.classList.remove('item-active');
             });
             updateCheckoutBadge();
             toast(`Limpiados ${selectedRows.size} productos`);
@@ -752,8 +1046,6 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                 return;
             }
 
-            let html = '';
-            let total = 0;
             const grouped = {};
             items.forEach(p => {
                 const key = p.empresa || 'Sin Empresa';
@@ -761,17 +1053,21 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                 grouped[key].push(p);
             });
 
+            let html = '';
+            let total = 0;
             for (const [emp, prods] of Object.entries(grouped)) {
                 html += `<div class="checkout-empresa font-bold">🏢 ${emp}</div>`;
                 prods.forEach(p => {
                     const qty = counts[p.id] || 0;
                     total += qty;
+                    const bajaTag = p.rotacion === ROT.BAJA ? '<span class="text-amber-600 text-[0.6rem] font-bold">💤 baja rot.</span>' : '';
                     html += `
                         <div class="checkout-item">
                             <div class="left">
                                 <span class="font-bold">${p.id}</span>
                                 <span>${p.name}</span>
                                 <span class="text-slate-400 text-[0.6rem]">${p.brand || ''}</span>
+                                ${bajaTag}
                             </div>
                             <div class="right">${qty}</div>
                         </div>
@@ -784,17 +1080,17 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             overlay.classList.add('active');
         }
 
-        function closeCheckout() {
-            document.getElementById('checkoutOverlay').classList.remove('active');
-        }
+        function closeCheckout() { document.getElementById('checkoutOverlay').classList.remove('active'); }
 
         function clearAllCounts() {
             if (!confirm('¿Vaciar todos los conteos?')) return;
-            products.forEach(p => { counts[p.id] = 0; });
             products.forEach(p => {
+                counts[p.id] = 0;
                 const input = document.getElementById(`count_${p.id}`);
                 if (input) input.value = 0;
             });
+            document.querySelectorAll('.item-active').forEach(c => c.classList.remove('item-active'));
+            warnedBaja.clear();
             updateCheckoutBadge();
             closeCheckout();
             toast('Conteos vaciados');
@@ -814,19 +1110,19 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
         function openImageModal(src) {
             const modal = document.getElementById('imageModal');
             document.getElementById('modalImage').src = src;
-            modal.classList.add('active');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
         function closeImageModal() {
-            document.getElementById('imageModal').classList.remove('active');
+            const modal = document.getElementById('imageModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
 
         // ========== WHATSAPP ==========
         function sendWhatsApp() {
             const items = products.filter(p => (counts[p.id] || 0) > 0);
-            if (items.length === 0) {
-                toast('No hay productos点货', true);
-                return;
-            }
+            if (items.length === 0) { toast('No hay productos点货', true); return; }
 
             let msg = '📋 *Nuevo Pedido - Electroluz PV*\n';
             msg += `📅 ${new Date().toLocaleString('es-ES')}\n`;
@@ -860,16 +1156,13 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             msg += `───────────────────\n`;
             msg += `Pedido Nuevo Electroluz PV`;
 
-            const url = `https://wa.me/${CONFIG.WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-            window.open(url, '_blank');
+            window.open(`https://wa.me/${CONFIG.WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
             toast('📤 Abriendo WhatsApp...');
             closeCheckout();
         }
 
         // ========== INICIO ==========
-        window.onload = function() {
-            fetchCSV();
-        };
+        window.onload = function () { fetchCSV(); };
     </script>
 </body>
 </html>
