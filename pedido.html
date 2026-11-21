@@ -20,6 +20,21 @@
         .fade-in { animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* ============ 顶部统计标签 ============ */
+        .stats-banner { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+        .stat-chip {
+            flex: 1; min-width: 80px; display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+            padding: 0.5rem; border-radius: 0.6rem; font-size: 0.65rem; font-weight: 800;
+            cursor: pointer; transition: 0.2s; border: 1.5px solid transparent;
+        }
+        .stat-chip.active { border-color: currentColor; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .stat-pop { background: #dcfce7; color: #166534; }
+        .stat-reg { background: #e0e7ff; color: #3730a3; }
+        .stat-baja { background: #e2e8f0; color: #64748b; }
+        @media (min-width: 640px) {
+            .stat-chip { font-size: 0.85rem; padding: 0.6rem 1rem; }
+        }
+
         /* ============ 视图切换 ============ */
         .view-toggle { display: flex; align-items: center; gap: 0.12rem; }
         .view-toggle button {
@@ -49,12 +64,16 @@
         .card.card-baja { background: #fbfcfd; }
         .card.card-baja .card-img-wrap { filter: grayscale(.45); }
 
+        /* 固定尺寸的图片容器，不裁剪 */
         .card-img-wrap {
-            position: relative; width: 100%; aspect-ratio: 1 / 1; background: #f8fafc;
+            position: relative; width: 100%; height: 130px; background: #f8fafc;
             display: flex; align-items: center; justify-content: center; padding: 0.45rem;
-            border-bottom: 1px solid #f1f5f9;
+            border-bottom: 1px solid #f1f5f9; flex-shrink: 0;
         }
-        .card-img { max-width: 100%; max-height: 100%; object-fit: contain; cursor: zoom-in; transition: transform .2s; }
+        @media (min-width: 640px) { .card-img-wrap { height: 170px; } }
+        @media (min-width: 1024px) { .card-img-wrap { height: 190px; } }
+
+        .card-img { width: 100%; height: 100%; object-fit: contain; cursor: zoom-in; transition: transform .2s; }
         .card-img:hover { transform: scale(1.05); }
 
         .card-check {
@@ -98,20 +117,16 @@
             .baja-hint { font-size: 0.55rem; padding: 0.14rem 0.4rem; }
         }
 
-        /* ============ 表格视图（两列独立滚动） ============ */
+        /* ============ 表格视图（两列） ============ */
         .tabla-view {
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
             gap: 0.5rem;
+            margin-bottom: 1rem;
         }
         @media (min-width: 640px) { .tabla-view { gap: 0.9rem; } }
 
         .tabla-col {
-            height: calc(100vh - 250px);
-            min-height: 320px;
-            overflow-y: auto;
-            overscroll-behavior: contain;
-            -webkit-overflow-scrolling: touch;
             background: #fff;
             border: 1px solid #e2e8f0;
             border-radius: 0.85rem;
@@ -121,15 +136,9 @@
             gap: 0.35rem;
             box-shadow: 0 1px 3px rgba(15,23,42,.04);
         }
-        @supports (height: 100dvh) {
-            .tabla-col { height: calc(100dvh - 250px); }
-        }
         @media (min-width: 640px) {
             .tabla-col { padding: 0.6rem; gap: 0.55rem; border-radius: 1rem; }
         }
-        .tabla-col::-webkit-scrollbar { width: 5px; }
-        .tabla-col::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
-        .tabla-col::-webkit-scrollbar-track { background: transparent; }
 
         .tabla-row {
             display: flex; gap: 0.35rem; padding: 0.35rem;
@@ -197,6 +206,21 @@
             .qty-wrapper .qty-input-mobile { width: 46px; font-size: 0.85rem; padding: 0.12rem 0; }
         }
 
+        /* ============ 分页 ============ */
+        .pagination-bar { display: flex; justify-content: center; align-items: center; gap: 0.3rem; flex-wrap: wrap; margin-top: 1rem; }
+        .page-btn {
+            min-width: 28px; height: 28px; padding: 0 0.4rem; border-radius: 0.4rem;
+            background: white; border: 1px solid #e2e8f0; font-size: 0.7rem; font-weight: 700; color: #475569;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
+        }
+        .page-btn:hover:not(:disabled) { background: #f1f5f9; }
+        .page-btn.active { background: #1e293b; color: white; border-color: #1e293b; }
+        .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        @media (min-width: 640px) {
+            .pagination-bar { gap: 0.5rem; margin-top: 1.5rem; }
+            .page-btn { min-width: 34px; height: 34px; font-size: 0.85rem; }
+        }
+
         /* ============ 其他 ============ */
         .search-input { font-size: 0.7rem; padding: 0.4rem 0.6rem; }
         @media (min-width: 640px) { .search-input { font-size: 0.9rem; padding: 0.6rem 0.8rem; } }
@@ -253,15 +277,6 @@
         .checkout-item .right { font-weight: 800; }
         .checkout-total { margin-top: 1rem; padding-top: 0.8rem; border-top: 2px solid #e2e8f0; display: flex; justify-content: space-between; font-weight: 800; font-size: 1rem; }
         .checkout-empresa { font-size: 0.65rem; color: #64748b; margin-top: 0.6rem; padding: 0.25rem 0.5rem; background: #f1f5f9; border-radius: 0.3rem; }
-
-        .multi-select-actions { display: flex; align-items: center; gap: 0.3rem; flex-wrap: wrap; padding: 0.3rem 0; background: #f8fafc; border-radius: 0.5rem; }
-        .multi-select-actions input { width: 44px; text-align: center; border: 1px solid #e2e8f0; border-radius: 0.3rem; padding: 0.1rem 0; font-weight: 600; font-size: 0.6rem; }
-        .multi-select-actions button { background: #e2e8f0; border: none; border-radius: 0.3rem; padding: 0.12rem 0.55rem; font-weight: 700; font-size: 0.5rem; cursor: pointer; transition: 0.2s; }
-        .multi-select-actions button:hover { background: #cbd5e1; }
-        @media (min-width:640px) {
-            .multi-select-actions input { width: 56px; font-size: 0.8rem; }
-            .multi-select-actions button { font-size: 0.7rem; padding: 0.18rem 0.9rem; }
-        }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
@@ -381,14 +396,14 @@
             </div>
         </div>
 
-        <div class="mt-4 border-t pt-2 text-[0.5rem] text-slate-400">Electroluz PV · 点货 v2.1</div>
+        <div class="mt-4 border-t pt-2 text-[0.5rem] text-slate-400">Electroluz PV · 点货 v2.2</div>
     </div>
 
     <!-- MAIN -->
     <main class="flex-1 w-full max-w-7xl mx-auto px-1.5 sm:px-4 py-1.5 sm:py-6">
 
         <!-- 搜索框 + 视图切换 -->
-        <div class="w-full flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-3">
+        <div class="w-full flex items-center gap-1.5 sm:gap-2 mb-2">
             <div class="relative flex-1">
                 <i class="ph-bold ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[0.65rem] sm:text-sm"></i>
                 <input type="text" id="mainSearchInput" placeholder="Buscar por código, descripción o marca..."
@@ -405,18 +420,16 @@
             </div>
         </div>
 
-        <!-- 批量操作栏 -->
-        <div class="bg-white p-1.5 sm:p-3 rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 mb-1.5 sm:mb-3 flex flex-wrap items-center gap-2">
-            <input type="checkbox" id="selectAllCheck" onchange="toggleSelectAll()" class="accent-blue-600 w-3.5 h-3.5 sm:w-4 sm:h-4 cursor-pointer" />
-            <button onclick="toggleSelectAllBtn()" class="text-[0.5rem] sm:text-sm px-2 py-1 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 transition">
-                <i class="ph-bold ph-check-square"></i> <span id="selectAllLabel">Seleccionar todos</span>
-            </button>
-            <span class="text-[0.5rem] sm:text-sm text-slate-500"><span id="selectedCount">0</span> seleccionados</span>
-            <div class="multi-select-actions px-1.5">
-                <span class="text-[0.5rem] sm:text-sm font-bold text-slate-600">Cant:</span>
-                <input type="number" id="batchQtyInput" value="1" min="0" class="border rounded text-center" />
-                <button onclick="applyBatchQty()" class="bg-green-100 hover:bg-green-200 text-green-700 transition"><i class="ph-bold ph-check"></i> Aplicar</button>
-                <button onclick="batchClear()" class="bg-rose-100 hover:bg-rose-200 text-rose-700 transition"><i class="ph-bold ph-x"></i> Limpiar</button>
+        <!-- 顶部统计标签（点击快捷筛选） -->
+        <div class="stats-banner">
+            <div class="stat-chip stat-pop" id="chip-pop" onclick="toggleStatFilter('Popular')">
+                <i class="ph-fill ph-fire"></i> Popular (<span id="count-pop">0</span>)
+            </div>
+            <div class="stat-chip stat-reg" id="chip-reg" onclick="toggleStatFilter('Regular')">
+                <i class="ph-fill ph-star"></i> Regular (<span id="count-reg">0</span>)
+            </div>
+            <div class="stat-chip stat-baja" id="chip-baja" onclick="toggleStatFilter('Baja rotación')">
+                <i class="ph-fill ph-moon"></i> Baja (<span id="count-baja">0</span>)
             </div>
         </div>
 
@@ -431,20 +444,18 @@
             <div id="catalog-grid" class="catalog-grid">
                 <div class="col-span-full text-center py-8 text-slate-400 text-sm">Cargando productos...</div>
             </div>
-            <div id="pagination" class="flex justify-center items-center gap-2 sm:gap-4 mt-3 sm:mt-6 text-[0.6rem] sm:text-sm font-bold text-slate-600">
-                <button id="prev-page" onclick="changePage(-1)" class="w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center disabled:opacity-40"><i class="ph-bold ph-caret-left text-[0.5rem] sm:text-base"></i></button>
-                <span id="page-info">Página 1 de 1</span>
-                <button id="next-page" onclick="changePage(1)" class="w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 transition flex items-center justify-center disabled:opacity-40"><i class="ph-bold ph-caret-right text-[0.5rem] sm:text-base"></i></button>
-            </div>
         </div>
 
-        <!-- 表格视图（两列独立滚动） -->
+        <!-- 表格视图（双列固定） -->
         <div id="view-tabla" class="hidden">
             <div class="tabla-view">
                 <div id="tabla-col-left" class="tabla-col"></div>
                 <div id="tabla-col-right" class="tabla-col"></div>
             </div>
         </div>
+
+        <!-- 统一分页器 -->
+        <div id="pagination-bar" class="pagination-bar hidden"></div>
     </main>
 
     <script>
@@ -484,7 +495,7 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
         let products = [];
         let filtered = [];
         let currentPage = 1;
-        const perPage = 20;
+        let itemsPerPage = 20; // 默认画册 20
         let filterMode = 'all';
         let brandFilter = '';
         let empresaFilter = '';
@@ -556,8 +567,7 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
 
             const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
             const hNorm = headers.map(h => normalize(h));
-            console.log('📋 Headers:', headers);
-
+            
             const findIdx = (re) => hNorm.findIndex(h => re.test(h));
 
             const idxCode    = findIdx(/codigo|^id$|cód/);
@@ -568,8 +578,6 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             const idxImage   = findIdx(/images|img|url|imagen|foto/);
             const idxMayor   = findIdx(/mayor|precio_mayor|p_mayor/);
             const idxRot     = findIdx(/rotacion|venta|salida|popular|desempe|rotaci|售卖|程度/);
-
-            console.log('🔍 Índices:', { idxCode, idxName, idxStock, idxEmpresa, idxBrand, idxImage, idxMayor, idxRot });
 
             if (idxCode === -1) {
                 document.getElementById('catalog-grid').innerHTML = '<div class="col-span-full text-center py-8 text-rose-500 font-bold text-sm">No se encontró columna de código</div>';
@@ -623,26 +631,26 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                 });
             }
 
-            if (products.length === 0) {
-                document.getElementById('catalog-grid').innerHTML = '<div class="col-span-full text-center py-8 text-amber-500 font-bold text-sm">No se encontraron productos</div>';
-                return;
-            }
-
-            console.log(`✅ Productos: ${products.length}, Empresas: ${empresasSet.size}`);
-            console.log('📊 Rotación:', {
-                Popular: products.filter(p => p.rotacion === ROT.POPULAR).length,
-                Regular: products.filter(p => p.rotacion === ROT.REGULAR).length,
-                Baja: products.filter(p => p.rotacion === ROT.BAJA).length
-            });
-
             products.sort((a, b) => a.id.localeCompare(b.id));
             products.forEach(p => { counts[p.id] = 0; });
+
+            // 更新顶部统计数量
+            updateStats();
 
             renderDrawerEmpresaChips();
             filtered = [...products];
             applyFiltersAndSort();
             renderView();
             updateCheckoutBadge();
+        }
+
+        function updateStats() {
+            const pop = products.filter(p => p.rotacion === ROT.POPULAR).length;
+            const reg = products.filter(p => p.rotacion === ROT.REGULAR).length;
+            const baja = products.filter(p => p.rotacion === ROT.BAJA).length;
+            document.getElementById('count-pop').textContent = pop;
+            document.getElementById('count-reg').textContent = reg;
+            document.getElementById('count-baja').textContent = baja;
         }
 
         function renderDrawerEmpresaChips() {
@@ -716,8 +724,24 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             rotationFilter = rot;
             document.querySelectorAll('.filter-chip[data-rot]').forEach(el => el.classList.toggle('active', el.dataset.rot === rot));
             currentPage = 1; applyFiltersAndSort(); renderView();
+            
+            // 同步顶部统计标签的高亮
+            ['Popular', 'Regular', 'Baja rotación'].forEach(r => {
+                const id = r === 'Popular' ? 'chip-pop' : r === 'Regular' ? 'chip-reg' : 'chip-baja';
+                document.getElementById(id).classList.toggle('active', r === rot);
+            });
+
             if (rot === ROT.BAJA) toast('💤 Mostrando productos de baja rotación — no necesitan点货');
         }
+
+        function toggleStatFilter(rot) {
+            if (rotationFilter === rot) {
+                setRotFilter('');
+            } else {
+                setRotFilter(rot);
+            }
+        }
+
         function setSort(mode) {
             sortMode = mode;
             document.querySelectorAll('.filter-chip[data-sort]').forEach(el => el.classList.toggle('active', el.dataset.sort === mode));
@@ -728,18 +752,20 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
         function setView(mode) {
             if (viewMode === mode) return;
             viewMode = mode;
+            
+            // 根据视图调整每页数量
+            if (mode === 'tabla') {
+                itemsPerPage = 10; // 表格模式一页10个（左5右5）
+            } else {
+                itemsPerPage = 20; // 画册模式一页20个
+            }
+            
+            currentPage = 1; // 切换视图重置页码
+
             document.querySelectorAll('.view-toggle button').forEach(b => {
                 b.classList.toggle('active', b.dataset.view === mode);
             });
-            // 清空非当前视图，避免重复 id
-            if (mode === 'tabla') {
-                document.getElementById('catalog-grid').innerHTML = '';
-                document.getElementById('view-catalog').classList.add('hidden');
-            } else {
-                document.getElementById('tabla-col-left').innerHTML = '';
-                document.getElementById('tabla-col-right').innerHTML = '';
-                document.getElementById('view-tabla').classList.add('hidden');
-            }
+            
             renderView();
         }
 
@@ -747,11 +773,13 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             const noRes = document.getElementById('no-results');
             const viewCatalog = document.getElementById('view-catalog');
             const viewTabla = document.getElementById('view-tabla');
+            const pagBar = document.getElementById('pagination-bar');
 
             if (products.length === 0) {
                 viewCatalog.classList.remove('hidden');
                 viewTabla.classList.add('hidden');
                 noRes.classList.add('hidden');
+                pagBar.classList.add('hidden');
                 document.getElementById('catalog-grid').innerHTML = '<div class="col-span-full text-center py-8 text-slate-400 text-sm">Cargando productos...</div>';
                 return;
             }
@@ -760,21 +788,27 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                 noRes.classList.remove('hidden');
                 viewCatalog.classList.add('hidden');
                 viewTabla.classList.add('hidden');
-                updateSelectedCount();
+                pagBar.classList.add('hidden');
                 return;
             }
 
             noRes.classList.add('hidden');
+            pagBar.classList.remove('hidden');
+
+            const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+            if (currentPage > totalPages) currentPage = totalPages;
 
             if (viewMode === 'catalog') {
                 viewCatalog.classList.remove('hidden');
                 viewTabla.classList.add('hidden');
-                renderCatalog();
+                renderCatalog(totalPages);
             } else {
                 viewCatalog.classList.add('hidden');
                 viewTabla.classList.remove('hidden');
-                renderTabla();
+                renderTabla(totalPages);
             }
+
+            renderPagination(totalPages);
         }
 
         // ========== RENDER 画册 ==========
@@ -830,25 +864,17 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             </div>`;
         }
 
-        function renderCatalog() {
+        function renderCatalog(totalPages) {
             const grid = document.getElementById('catalog-grid');
-            const data = filtered;
-            const total = data.length;
-            const totalPages = Math.max(1, Math.ceil(total / perPage));
-            if (currentPage > totalPages) currentPage = totalPages;
-            const start = (currentPage - 1) * perPage;
-            const pageItems = data.slice(start, start + perPage);
-
+            const start = (currentPage - 1) * itemsPerPage;
+            const pageItems = filtered.slice(start, start + itemsPerPage);
             grid.innerHTML = pageItems.map(cardHTML).join('');
+            
             updateCheckoutBadge();
             updateSelectedCount();
-
-            document.getElementById('page-info').textContent = `Página ${currentPage} de ${totalPages}`;
-            document.getElementById('prev-page').disabled = currentPage <= 1;
-            document.getElementById('next-page').disabled = currentPage >= totalPages;
         }
 
-        // ========== RENDER 表格（两列独立滚动） ==========
+        // ========== RENDER 表格（双列） ==========
         function tablaRowHTML(p) {
             const qty = counts[p.id] || 0;
             const checked = selectedRows.has(p.id) ? 'checked' : '';
@@ -898,23 +924,78 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             </div>`;
         }
 
-        function renderTabla() {
-            const half = Math.ceil(filtered.length / 2);
-            const left = filtered.slice(0, half);
-            const right = filtered.slice(half);
+        function renderTabla(totalPages) {
             const leftEl = document.getElementById('tabla-col-left');
             const rightEl = document.getElementById('tabla-col-right');
+            
+            const start = (currentPage - 1) * itemsPerPage;
+            const pageItems = filtered.slice(start, start + itemsPerPage);
+            
+            // 分左右两列，每列最多 5 个
+            const leftItems = pageItems.slice(0, 5);
+            const rightItems = pageItems.slice(5, 10);
+            
             const emptyMsg = '<div class="text-center text-slate-400 text-[0.6rem] sm:text-sm py-6">Sin productos</div>';
-
-            leftEl.innerHTML = left.length ? left.map(tablaRowHTML).join('') : emptyMsg;
-            rightEl.innerHTML = right.length ? right.map(tablaRowHTML).join('') : emptyMsg;
-
-            // 重置滚动位置（首次渲染时）
-            leftEl.scrollTop = 0;
-            rightEl.scrollTop = 0;
-
+            
+            leftEl.innerHTML = leftItems.length ? leftItems.map(tablaRowHTML).join('') : emptyMsg;
+            rightEl.innerHTML = rightItems.length ? rightItems.map(tablaRowHTML).join('') : emptyMsg;
+            
             updateCheckoutBadge();
             updateSelectedCount();
+        }
+
+        // ========== 统一分页器 ==========
+        function renderPagination(totalPages) {
+            const bar = document.getElementById('pagination-bar');
+            if (totalPages <= 1) {
+                bar.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            // 上一页
+            html += `<button class="page-btn" onclick="changePage(-1)" ${currentPage === 1 ? 'disabled' : ''}><i class="ph-bold ph-caret-left"></i></button>`;
+            
+            // 页码逻辑（显示当前页附近的页码）
+            const maxVisible = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+            
+            if (endPage - startPage + 1 < maxVisible) {
+                startPage = Math.max(1, endPage - maxVisible + 1);
+            }
+
+            if (startPage > 1) {
+                html += `<button class="page-btn" onclick="jumpPage(1)">1</button>`;
+                if (startPage > 2) html += `<span class="text-slate-400 text-xs">...</span>`;
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="jumpPage(${i})">${i}</button>`;
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) html += `<span class="text-slate-400 text-xs">...</span>`;
+                html += `<button class="page-btn" onclick="jumpPage(${totalPages})">${totalPages}</button>`;
+            }
+
+            // 下一页
+            html += `<button class="page-btn" onclick="changePage(1)" ${currentPage === totalPages ? 'disabled' : ''}><i class="ph-bold ph-caret-right"></i></button>`;
+
+            bar.innerHTML = html;
+        }
+
+        function jumpPage(page) {
+            currentPage = page;
+            renderView();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function changePage(delta) {
+            const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+            const newPage = currentPage + delta;
+            if (newPage < 1 || newPage > totalPages) return;
+            jumpPage(newPage);
         }
 
         // ========== 点货操作 ==========
@@ -950,15 +1031,6 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             }
         }
 
-        function changePage(delta) {
-            const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
-            const newPage = currentPage + delta;
-            if (newPage < 1 || newPage > totalPages) return;
-            currentPage = newPage;
-            renderCatalog();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
         // ========== MULTI-SELECT ==========
         function toggleRow(id) {
             if (selectedRows.has(id)) selectedRows.delete(id);
@@ -966,64 +1038,10 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             updateSelectedCount();
         }
 
-        function toggleSelectAll() {
-            const allCheck = document.getElementById('selectAllCheck');
-            const checks = document.querySelectorAll('.row-check');
-            if (allCheck.checked) {
-                checks.forEach(c => { selectedRows.add(c.dataset.id); c.checked = true; });
-            } else {
-                checks.forEach(c => { selectedRows.delete(c.dataset.id); c.checked = false; });
-            }
-            updateSelectedCount();
-        }
-
-        function toggleSelectAllBtn() {
-            const allCheck = document.getElementById('selectAllCheck');
-            allCheck.checked = !allCheck.checked;
-            toggleSelectAll();
-        }
-
         function updateSelectedCount() {
-            document.getElementById('selectedCount').textContent = selectedRows.size;
-            const allCheck = document.getElementById('selectAllCheck');
             const checks = document.querySelectorAll('.row-check');
             const checked = document.querySelectorAll('.row-check:checked');
-            allCheck.checked = checks.length > 0 && checked.length === checks.length;
-            document.getElementById('selectAllLabel').textContent = allCheck.checked ? 'Deseleccionar' : 'Seleccionar todos';
-        }
-
-        function applyBatchQty() {
-            const val = parseInt(document.getElementById('batchQtyInput').value);
-            if (isNaN(val) || val < 0) { toast('Cantidad inválida', true); return; }
-            if (selectedRows.size === 0) { toast('Selecciona al menos un producto', true); return; }
-
-            let bajas = 0;
-            selectedRows.forEach(id => {
-                const prev = counts[id] || 0;
-                counts[id] = val;
-                const input = document.getElementById(`count_${id}`);
-                if (input) input.value = val;
-                const row = document.querySelector(`.item-row[data-id="${cssEsc(id)}"]`);
-                if (row) row.classList.toggle('item-active', val > 0);
-                const p = products.find(x => x.id === id);
-                if (p && p.rotacion === ROT.BAJA && val > 0 && val > prev) bajas++;
-            });
-            updateCheckoutBadge();
-            toast(`Aplicado ${val} a ${selectedRows.size} productos`);
-            if (bajas > 0) setTimeout(() => toast(`💤 ${bajas} producto(s) de baja rotación`, true), 900);
-        }
-
-        function batchClear() {
-            if (selectedRows.size === 0) { toast('Selecciona al menos un producto', true); return; }
-            selectedRows.forEach(id => {
-                counts[id] = 0;
-                const input = document.getElementById(`count_${id}`);
-                if (input) input.value = 0;
-                const row = document.querySelector(`.item-row[data-id="${cssEsc(id)}"]`);
-                if (row) row.classList.remove('item-active');
-            });
-            updateCheckoutBadge();
-            toast(`Limpiados ${selectedRows.size} productos`);
+            // 同步复选框状态（非必须，但保持一致性）
         }
 
         // ========== CHECKOUT ==========
