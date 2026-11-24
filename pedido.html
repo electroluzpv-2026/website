@@ -63,6 +63,8 @@
         .card.item-active { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,.22); }
         .card.card-baja { background: #fbfcfd; }
         .card.card-baja .card-img-wrap { filter: grayscale(.45); }
+        .card.card-hidden-item { background: #f9fafb; opacity: 0.75; border-style: dashed; }
+        .card.card-hidden-item .card-img-wrap { filter: grayscale(1) brightness(0.9); }
 
         /* 固定尺寸的图片容器，不裁剪 */
         .card-img-wrap {
@@ -90,6 +92,17 @@
         .rot-regular { background: #e0e7ff; color: #3730a3; }
         .rot-baja    { background: #e2e8f0; color: #64748b; }
 
+        /* 隐藏标记 */
+        .hidden-badge {
+            position: absolute; bottom: 0.35rem; left: 0.35rem;
+            font-size: 0.4rem; font-weight: 800; padding: 0.08rem 0.4rem; border-radius: 9999px;
+            background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;
+            letter-spacing: 0.02em; box-shadow: 0 1px 4px rgba(0,0,0,.06);
+        }
+        @media (min-width: 640px) {
+            .hidden-badge { font-size: 0.6rem; padding: 0.12rem 0.6rem; bottom: 0.5rem; left: 0.5rem; }
+        }
+
         .card-body { padding: 0.42rem 0.45rem 0.5rem; display: flex; flex-direction: column; gap: 0.18rem; flex: 1; }
         .card-brand { font-size: 0.44rem; font-weight: 800; color: #475569; letter-spacing: .02em; }
         .card-name {
@@ -104,6 +117,10 @@
             font-size: 0.36rem; font-weight: 800; color: #b45309; background: #fef3c7;
             border-radius: 0.3rem; padding: 0.1rem 0.25rem; text-align: center; letter-spacing: .01em;
         }
+        .nodispo-hint {
+            font-size: 0.36rem; font-weight: 800; color: #64748b; background: #e2e8f0;
+            border-radius: 0.3rem; padding: 0.1rem 0.25rem; text-align: center; letter-spacing: .01em;
+        }
 
         @media (min-width: 640px) {
             .code-pill { font-size: 0.6rem; padding: 0.08rem 0.5rem; }
@@ -115,6 +132,7 @@
             .card-emp { font-size: 0.6rem; }
             .card-info { font-size: 0.68rem; }
             .baja-hint { font-size: 0.55rem; padding: 0.14rem 0.4rem; }
+            .nodispo-hint { font-size: 0.55rem; padding: 0.14rem 0.4rem; }
         }
 
         /* ============ 表格视图（两列） ============ */
@@ -150,6 +168,8 @@
         .tabla-row.item-active { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,.18); }
         .tabla-row.row-baja { background: #fbfcfd; }
         .tabla-row.row-baja .tabla-thumb { filter: grayscale(.45); }
+        .tabla-row.row-hidden { background: #f9fafb; border-style: dashed; opacity: 0.8; }
+        .tabla-row.row-hidden .tabla-thumb { filter: grayscale(1) brightness(0.9); }
 
         .tabla-check {
             width: 14px; height: 14px; accent-color: #3b82f6; flex-shrink: 0;
@@ -195,11 +215,13 @@
         }
         .qty-wrapper .qty-btn:active { background: #e2e8f0; transform: scale(0.9); }
         .qty-wrapper .qty-btn:hover { background: #f1f5f9; }
+        .qty-wrapper .qty-btn:disabled { opacity: 0.35; pointer-events: none; }
         .qty-wrapper .qty-input-mobile {
             width: 30px; text-align: center; border: 1px solid #e2e8f0; border-radius: 0.3rem;
             padding: 0.05rem 0; font-weight: 700; font-size: 0.58rem; background: white;
         }
         .qty-wrapper .qty-input-mobile:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,.25); }
+        .qty-wrapper .qty-input-mobile:disabled { background: #f1f5f9; color: #94a3b8; cursor: not-allowed; }
         @media (min-width: 640px) {
             .qty-wrapper { margin-top: 0.25rem; }
             .qty-wrapper .qty-btn { width: 28px; height: 28px; font-size: 0.85rem; }
@@ -252,6 +274,20 @@
         .filter-chip.active:hover { background: #0f172a; }
         @media (min-width: 640px) {
             .filter-chip { font-size: 0.7rem; padding: 0.2rem 1rem; max-width: 250px; }
+        }
+
+        /* 隐藏开关按钮 */
+        .toggle-hide-btn {
+            display: flex; align-items: center; gap: 0.3rem;
+            padding: 0.2rem 0.6rem; border-radius: 0.5rem; border: 1.5px solid #e2e8f0;
+            background: white; color: #475569; font-weight: 700; font-size: 0.55rem;
+            cursor: pointer; transition: 0.2s; white-space: nowrap;
+        }
+        .toggle-hide-btn.active { background: #1e293b; border-color: #1e293b; color: white; }
+        .toggle-hide-btn:hover { background: #f1f5f9; }
+        .toggle-hide-btn.active:hover { background: #0f172a; }
+        @media (min-width: 640px) {
+            .toggle-hide-btn { font-size: 0.75rem; padding: 0.35rem 0.9rem; }
         }
 
         /* 抽屉 */
@@ -402,21 +438,26 @@
     <!-- MAIN -->
     <main class="flex-1 w-full max-w-7xl mx-auto px-1.5 sm:px-4 py-1.5 sm:py-6">
 
-        <!-- 搜索框 + 视图切换 -->
-        <div class="w-full flex items-center gap-1.5 sm:gap-2 mb-2">
-            <div class="relative flex-1">
+        <!-- 搜索框 + 视图切换 + 隐藏不可点货按钮 -->
+        <div class="w-full flex items-center gap-1.5 sm:gap-2 mb-2 flex-wrap">
+            <div class="relative flex-1 min-w-[150px]">
                 <i class="ph-bold ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[0.65rem] sm:text-sm"></i>
                 <input type="text" id="mainSearchInput" placeholder="Buscar por código, descripción o marca..."
                     class="w-full pl-6 sm:pl-8 pr-2 py-1.5 sm:py-2 border border-slate-200 rounded-lg text-[0.6rem] sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-400/60 focus:border-blue-400 transition bg-slate-50/80"
                     oninput="applySearchMain()">
             </div>
-            <div class="view-toggle bg-white border border-slate-200 rounded-lg p-0.5 shadow-sm flex-shrink-0">
-                <button data-view="catalog" class="active" onclick="setView('catalog')" title="Catálogo">
-                    <i class="ph-bold ph-squares-four"></i>
+            <div class="flex items-center gap-1.5">
+                <button id="hideUnavailableBtn" class="toggle-hide-btn" onclick="toggleHideUnavailable()">
+                    <i class="ph-bold ph-eye-slash"></i> <span class="hidden xs:inline">隐藏No disponible</span>
                 </button>
-                <button data-view="tabla" onclick="setView('tabla')" title="Tabla">
-                    <i class="ph-bold ph-rows"></i>
-                </button>
+                <div class="view-toggle bg-white border border-slate-200 rounded-lg p-0.5 shadow-sm flex-shrink-0">
+                    <button data-view="catalog" class="active" onclick="setView('catalog')" title="Catálogo">
+                        <i class="ph-bold ph-squares-four"></i>
+                    </button>
+                    <button data-view="tabla" onclick="setView('tabla')" title="Tabla">
+                        <i class="ph-bold ph-rows"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -469,27 +510,28 @@
 
         const FALLBACK_IMG = "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3e%3crect width='80' height='80' fill='%23f1f5f9'/%3e%3ctext x='40' y='40' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='9' fill='%2394a3b8'%3eSin%3c/text%3e%3c/svg%3e";
 
-        // ========== 本地测试数据 ==========
-        const TEST_DATA = `Codigo,Descripcion,Almacen_1,Costo,Otro,Detal,Precio1,Grupo,Empresa,Mayor,Rotacion
-CAS-14,CALCULADORA CASIO FX-82MS 2ND EDITION,12,16.23,31.65,40.58,34.08,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",29.50,Popular
-887RGB,CORNETA 1X100,8,2.63,5.13,6.57,5.52,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",4.80,Popular
-X-997,CORNETA 1X100,9,3.26,6.24,8,6.72,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",5.90,Regular
-PV-633,CORNETA 1X12,11,19.32,37.44,48,40.32,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",35.00,Regular
-AO-82,CORNETA 1X20,10,13.71,26.73,34.28,28.79,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",25.00,Baja rotacion
-SZ-1950BT,CORNETA 1X24,12,10.51,20.49,26.28,22.07,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",19.00,Popular
-SZ-1951BT,CORNETA 1X24,11,10.63,20.73,26.58,22.32,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",19.00,Regular
-SZ-1949BT,CORNETA 1X24,12,9.03,17.61,22.58,18.96,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",16.50,Baja rotacion
-ZF-30FT,EXTENSION NARANJA 30FT 1X20U ZF-30FT,15,2.53,4.93,6.32,5.31,OTROS,"J505574140 ORIENTE DISTRIBUCION C.A.",4.50,Popular
-MH-61,GUANTES CON LINTERNA LED DE 2W COLOR NEGRO,7,4.17,7.38,8.61,7.38,INGOC,"J505572220 BELMENGY, C.A.",6.20,Regular
-WKKK131,SET DE 3 CUCHILLO DE COCINA (8/5/3.5),3,2.47,4.45,5.19,4.45,INGO,"J505572220 BELMENGY, C.A.",3.90,Baja rotacion
-WWV1822,VALVULA DE BOLA DE PVC PEGABLE 1/2",0,0.54,0.97,1.13,0.97,INGO,"J505572220 BELMENGY, C.A.",0.80,Baja rotacion
-928116,ABRAZADERA DANNI 16MM 1X12U 928116,34,0.43,0.84,1.07,0.9,OTROS,"J505574140 ORIENTE DISTRIBUCION C.A.",0.75,Popular
-928125,ABRAZADERA DANNI 25MM 1X12U 928125,35,0.43,0.84,1.07,0.9,OTROS,"J505574140 ORIENTE DISTRIBUCION C.A.",0.75,Popular
-MG-0054,ABRE VINO,18,2.07,4.04,5.18,4.35,OTROS,"J504750824 LASER LED, C.A.",3.80,Regular
-B-3339,ABRELATAS 1X96 ZAN FENG,1,1.83,3.57,4.58,3.84,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",3.20,Baja rotacion
-AKMG6020,ACCESORIOS PARA DRIMER(20UND) PARA (PIEDRA),2,2.34,4.21,4.91,4.21,INGO,"J505572220 BELMENGY, C.A.",3.70,Regular
-AKMG5031,ACCESORIOS PARA DRIMER(32UND) PARA(LIADO Y PU),2,2.72,4.59,5.71,4.9,INGO,"J505572220 BELMENGY, C.A.",4.20,Regular
-AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,INGO,"J505572220 BELMENGY, C.A.",5.80,Popular`;
+        // ========== 本地测试数据（新增 hide 列） ==========
+        const TEST_DATA = `Codigo,Descripcion,Almacen_1,Costo,Otro,Detal,Precio1,Grupo,Empresa,Mayor,Rotacion,hide
+CAS-14,CALCULADORA CASIO FX-82MS 2ND EDITION,12,16.23,31.65,40.58,34.08,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",29.50,Popular,
+887RGB,CORNETA 1X100,8,2.63,5.13,6.57,5.52,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",4.80,Popular,
+X-997,CORNETA 1X100,9,3.26,6.24,8,6.72,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",5.90,Regular,
+PV-633,CORNETA 1X12,11,19.32,37.44,48,40.32,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",35.00,Regular,
+AO-82,CORNETA 1X20,10,13.71,26.73,34.28,28.79,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",25.00,Baja rotacion,
+SZ-1950BT,CORNETA 1X24,12,10.51,20.49,26.28,22.07,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",19.00,Popular,
+SZ-1951BT,CORNETA 1X24,11,10.63,20.73,26.58,22.32,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",19.00,Regular,
+SZ-1949BT,CORNETA 1X24,12,9.03,17.61,22.58,18.96,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",16.50,Baja rotacion,
+ZF-30FT,EXTENSION NARANJA 30FT 1X20U ZF-30FT,15,2.53,4.93,6.32,5.31,OTROS,"J505574140 ORIENTE DISTRIBUCION C.A.",4.50,Popular,
+MH-61,GUANTES CON LINTERNA LED DE 2W COLOR NEGRO,7,4.17,7.38,8.61,7.38,INGOC,"J505572220 BELMENGY, C.A.",6.20,Regular,
+WKKK131,SET DE 3 CUCHILLO DE COCINA (8/5/3.5),3,2.47,4.45,5.19,4.45,INGO,"J505572220 BELMENGY, C.A.",3.90,Baja rotacion,
+WWV1822,VALVULA DE BOLA DE PVC PEGABLE 1/2",0,0.54,0.97,1.13,0.97,INGO,"J505572220 BELMENGY, C.A.",0.80,Baja rotacion,
+928116,ABRAZADERA DANNI 16MM 1X12U 928116,34,0.43,0.84,1.07,0.9,OTROS,"J505574140 ORIENTE DISTRIBUCION C.A.",0.75,Popular,
+928125,ABRAZADERA DANNI 25MM 1X12U 928125,35,0.43,0.84,1.07,0.9,OTROS,"J505574140 ORIENTE DISTRIBUCION C.A.",0.75,Popular,
+MG-0054,ABRE VINO,18,2.07,4.04,5.18,4.35,OTROS,"J504750824 LASER LED, C.A.",3.80,Regular,
+B-3339,ABRELATAS 1X96 ZAN FENG,1,1.83,3.57,4.58,3.84,OTROS,"J501459606 INVERSIOS PROVIN CENTER, C.A.",3.20,Baja rotacion,
+AKMG6020,ACCESORIOS PARA DRIMER(20UND) PARA (PIEDRA),2,2.34,4.21,4.91,4.21,INGO,"J505572220 BELMENGY, C.A.",3.70,Regular,
+AKMG5031,ACCESORIOS PARA DRIMER(32UND) PARA(LIADO Y PU),2,2.72,4.59,5.71,4.9,INGO,"J505572220 BELMENGY, C.A.",4.20,Regular,
+AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,INGO,"J505572220 BELMENGY, C.A.",5.80,Popular,
+999HIDE,PRODUCTO OCULTO DE PRUEBA,5,1.00,2.00,3.00,2.50,OTROS,"J505574140 ORIENTE DISTRIBUCION C.A.",2.00,Regular,HIDE`;
 
         // ========== ESTADO ==========
         let products = [];
@@ -507,6 +549,7 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
         let empresasSet = new Set();
         let warnedBaja = new Set();
         let viewMode = 'catalog'; // 'catalog' | 'tabla'
+        let hideUnavailable = false; // 是否隐藏不可点货的产品
 
         // ========== UTILIDADES ==========
         function sanitize(str) { if (!str) return ''; const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }; return str.toString().replace(/[&<>"']/g, m => map[m]); }
@@ -578,6 +621,7 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             const idxImage   = findIdx(/images|img|url|imagen|foto/);
             const idxMayor   = findIdx(/mayor|precio_mayor|p_mayor/);
             const idxRot     = findIdx(/rotacion|venta|salida|popular|desempe|rotaci|售卖|程度/);
+            const idxHide    = findIdx(/^hide$|hidden|oculto|隐藏/);
 
             if (idxCode === -1) {
                 document.getElementById('catalog-grid').innerHTML = '<div class="col-span-full text-center py-8 text-rose-500 font-bold text-sm">No se encontró columna de código</div>';
@@ -617,6 +661,14 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                 const rotRaw = idxRot !== -1 ? values[idxRot] : '';
                 const rotacion = normalizeRotacion(rotRaw);
 
+                // 检测 hide 列
+                let hideVal = '';
+                if (idxHide !== -1) {
+                    hideVal = (values[idxHide] || '').trim().toLowerCase();
+                }
+                // 只要出现 hide / hidden / oculto / 隐藏 等就视为隐藏
+                const isHidden = /^(hide|hidden|oculto|隐藏|1|si|sí|yes|x)$/.test(hideVal) || hideVal === 'hide';
+
                 if (empresa) empresasSet.add(empresa);
 
                 products.push({
@@ -627,7 +679,8 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                     empresa: sanitize(empresa),
                     image: sanitize(image),
                     mayor: mayor,
-                    rotacion: rotacion
+                    rotacion: rotacion,
+                    isHidden: isHidden   // 新增属性
                 });
             }
 
@@ -676,6 +729,12 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
         // ========== FILTROS Y ORDEN ==========
         function applyFiltersAndSort() {
             let data = [...products];
+
+            // 新增：是否隐藏不可点货产品
+            if (hideUnavailable) {
+                data = data.filter(p => !p.isHidden);
+            }
+
             if (searchTerm.trim() !== '') {
                 const term = normalize(searchTerm);
                 data = data.filter(p =>
@@ -748,19 +807,31 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             currentPage = 1; applyFiltersAndSort(); renderView();
         }
 
+        // ========== 新增：一键隐藏不可点货 ==========
+        function toggleHideUnavailable() {
+            hideUnavailable = !hideUnavailable;
+            const btn = document.getElementById('hideUnavailableBtn');
+            btn.classList.toggle('active', hideUnavailable);
+            btn.innerHTML = hideUnavailable
+                ? '<i class="ph-bold ph-eye"></i> <span class="hidden xs:inline">显示全部</span>'
+                : '<i class="ph-bold ph-eye-slash"></i> <span class="hidden xs:inline">隐藏No disponible</span>';
+            currentPage = 1;
+            applyFiltersAndSort();
+            renderView();
+            toast(hideUnavailable ? '🙈 Productos no disponibles ocultos' : '👁️ Mostrando todos los productos');
+        }
+
         // ========== 视图切换 ==========
         function setView(mode) {
             if (viewMode === mode) return;
             viewMode = mode;
             
-            // 根据视图调整每页数量
             if (mode === 'tabla') {
-                itemsPerPage = 10; // 表格模式一页10个（左5右5）
+                itemsPerPage = 10;
             } else {
-                itemsPerPage = 20; // 画册模式一页20个
+                itemsPerPage = 20;
             }
-            
-            currentPage = 1; // 切换视图重置页码
+            currentPage = 1;
 
             document.querySelectorAll('.view-toggle button').forEach(b => {
                 b.classList.toggle('active', b.dataset.view === mode);
@@ -817,6 +888,8 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             const checked = selectedRows.has(p.id) ? 'checked' : '';
             const imgSrc = p.image && p.image.trim() !== '' ? p.image : FALLBACK_IMG;
             const isBaja = p.rotacion === ROT.BAJA;
+            const isHidden = p.isHidden;
+            const disabled = isHidden;
 
             let stockBadge;
             if (p.stock === 0) stockBadge = '<span class="stock-badge stock-zero">0</span>';
@@ -831,14 +904,25 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             const mayorDisplay = p.mayor > 0 ? `$${p.mayor.toFixed(2)}` : '—';
             const empShort = p.empresa ? (p.empresa.length > 24 ? p.empresa.substring(0, 22) + '…' : p.empresa) : '';
 
+            // 隐藏标记
+            const hiddenBadge = isHidden ? '<span class="hidden-badge">🚫 No disponible</span>' : '';
+
+            // 禁用点货的提示
+            const noDispoHint = isHidden ? '<div class="nodispo-hint">🚫 No disponible · 不可点货</div>' : '';
+
+            // 数量控制是否禁用
+            const qtyDisabled = disabled ? 'disabled' : '';
+            const qtyDisabledAttr = disabled ? 'disabled' : '';
+
             return `
-            <div class="card item-row ${isBaja ? 'card-baja' : ''} ${qty > 0 ? 'item-active' : ''}" data-id="${p.id}">
+            <div class="card item-row ${isBaja ? 'card-baja' : ''} ${isHidden ? 'card-hidden-item' : ''} ${qty > 0 ? 'item-active' : ''}" data-id="${p.id}">
                 <div class="card-img-wrap">
                     <img src="${imgSrc}" class="card-img" alt="${p.name}" loading="lazy"
                          onclick="openImageModal(this.src)"
                          onerror="this.onerror=null;this.src='${FALLBACK_IMG}'" />
-                    <input type="checkbox" class="card-check row-check" data-id="${p.id}" ${checked} onchange="toggleRow('${p.id}')" />
+                    <input type="checkbox" class="card-check row-check" data-id="${p.id}" ${checked} onchange="toggleRow('${p.id}')" ${qtyDisabledAttr} />
                     ${rotBadge}
+                    ${hiddenBadge}
                 </div>
                 <div class="card-body">
                     <div class="flex items-center gap-1 flex-wrap">
@@ -851,14 +935,15 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                         <span class="card-stock">Stock ${stockBadge}</span>
                         <span class="card-price f-num">${mayorDisplay}</span>
                     </div>
-                    ${isBaja ? '<div class="baja-hint">💤 No requiere点货</div>' : ''}
+                    ${isBaja && !isHidden ? '<div class="baja-hint">💤 No requiere点货</div>' : ''}
+                    ${noDispoHint}
                     <div class="qty-wrapper">
-                        <button class="qty-btn" onclick="adjustCount('${p.id}', -1)" type="button">−</button>
+                        <button class="qty-btn" onclick="adjustCount('${p.id}', -1)" type="button" ${qtyDisabledAttr}>−</button>
                         <input type="number" class="qty-input-mobile" id="count_${p.id}" value="${qty}" min="0"
                             oninput="updateCount('${p.id}', this.value)"
                             onchange="updateCount('${p.id}', this.value)"
-                            onfocus="this.select()" inputmode="numeric" pattern="[0-9]*" />
-                        <button class="qty-btn" onclick="adjustCount('${p.id}', 1)" type="button">+</button>
+                            onfocus="this.select()" inputmode="numeric" pattern="[0-9]*" ${qtyDisabledAttr} />
+                        <button class="qty-btn" onclick="adjustCount('${p.id}', 1)" type="button" ${qtyDisabledAttr}>+</button>
                     </div>
                 </div>
             </div>`;
@@ -880,6 +965,8 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             const checked = selectedRows.has(p.id) ? 'checked' : '';
             const imgSrc = p.image && p.image.trim() !== '' ? p.image : FALLBACK_IMG;
             const isBaja = p.rotacion === ROT.BAJA;
+            const isHidden = p.isHidden;
+            const disabled = isHidden;
 
             let stockBadge;
             if (p.stock === 0) stockBadge = '<span class="stock-badge stock-zero">0</span>';
@@ -893,9 +980,15 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
 
             const mayorDisplay = p.mayor > 0 ? `$${p.mayor.toFixed(2)}` : '—';
 
+            // 禁用
+            const qtyDisabledAttr = disabled ? 'disabled' : '';
+
+            // 隐藏标记
+            const hiddenTag = isHidden ? '<span class="text-[0.4rem] sm:text-[0.55rem] font-bold text-slate-400 ml-1">🚫 No disponible</span>' : '';
+
             return `
-            <div class="tabla-row item-row ${qty > 0 ? 'item-active' : ''} ${isBaja ? 'row-baja' : ''}" data-id="${p.id}">
-                <input type="checkbox" class="tabla-check row-check" data-id="${p.id}" ${checked} onchange="toggleRow('${p.id}')" />
+            <div class="tabla-row item-row ${qty > 0 ? 'item-active' : ''} ${isBaja ? 'row-baja' : ''} ${isHidden ? 'row-hidden' : ''}" data-id="${p.id}">
+                <input type="checkbox" class="tabla-check row-check" data-id="${p.id}" ${checked} onchange="toggleRow('${p.id}')" ${qtyDisabledAttr} />
                 <img src="${imgSrc}" class="tabla-thumb" alt="${p.name}" loading="lazy"
                      onclick="openImageModal(this.src)"
                      onerror="this.onerror=null;this.src='${FALLBACK_IMG}'" />
@@ -904,6 +997,7 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                         <span class="code-pill">${p.id}</span>
                         <span class="tabla-brand">${p.brand || '—'}</span>
                         ${rotTag}
+                        ${hiddenTag}
                     </div>
                     <div class="tabla-name" title="${p.name}">${p.name}</div>
                     <div class="tabla-emp" title="${p.empresa}">${p.empresa || '—'}</div>
@@ -911,15 +1005,16 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                         <span>${stockBadge}</span>
                         <span class="tabla-price f-num">${mayorDisplay}</span>
                         <div class="qty-wrapper">
-                            <button class="qty-btn" onclick="adjustCount('${p.id}', -1)" type="button">−</button>
+                            <button class="qty-btn" onclick="adjustCount('${p.id}', -1)" type="button" ${qtyDisabledAttr}>−</button>
                             <input type="number" class="qty-input-mobile" id="count_${p.id}" value="${qty}" min="0"
                                 oninput="updateCount('${p.id}', this.value)"
                                 onchange="updateCount('${p.id}', this.value)"
-                                onfocus="this.select()" inputmode="numeric" pattern="[0-9]*" />
-                            <button class="qty-btn" onclick="adjustCount('${p.id}', 1)" type="button">+</button>
+                                onfocus="this.select()" inputmode="numeric" pattern="[0-9]*" ${qtyDisabledAttr} />
+                            <button class="qty-btn" onclick="adjustCount('${p.id}', 1)" type="button" ${qtyDisabledAttr}>+</button>
                         </div>
                     </div>
-                    ${isBaja ? '<div class="baja-hint">💤 No requiere点货</div>' : ''}
+                    ${isBaja && !isHidden ? '<div class="baja-hint">💤 No requiere点货</div>' : ''}
+                    ${isHidden ? '<div class="nodispo-hint">🚫 No disponible · 不可点货</div>' : ''}
                 </div>
             </div>`;
         }
@@ -931,7 +1026,6 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             const start = (currentPage - 1) * itemsPerPage;
             const pageItems = filtered.slice(start, start + itemsPerPage);
             
-            // 分左右两列，每列最多 5 个
             const leftItems = pageItems.slice(0, 5);
             const rightItems = pageItems.slice(5, 10);
             
@@ -953,10 +1047,8 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
             }
 
             let html = '';
-            // 上一页
             html += `<button class="page-btn" onclick="changePage(-1)" ${currentPage === 1 ? 'disabled' : ''}><i class="ph-bold ph-caret-left"></i></button>`;
             
-            // 页码逻辑（显示当前页附近的页码）
             const maxVisible = 5;
             let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
             let endPage = Math.min(totalPages, startPage + maxVisible - 1);
@@ -979,7 +1071,6 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
                 html += `<button class="page-btn" onclick="jumpPage(${totalPages})">${totalPages}</button>`;
             }
 
-            // 下一页
             html += `<button class="page-btn" onclick="changePage(1)" ${currentPage === totalPages ? 'disabled' : ''}><i class="ph-bold ph-caret-right"></i></button>`;
 
             bar.innerHTML = html;
@@ -1000,6 +1091,11 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
 
         // ========== 点货操作 ==========
         function adjustCount(id, delta) {
+            const product = products.find(p => p.id === id);
+            if (product && product.isHidden) {
+                toast('🚫 Producto no disponible — no se puede点货', true);
+                return;
+            }
             const cur = counts[id] || 0;
             const val = Math.max(0, cur + delta);
             counts[id] = val;
@@ -1010,6 +1106,13 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
         }
 
         function updateCount(id, raw) {
+            const product = products.find(p => p.id === id);
+            if (product && product.isHidden) {
+                const input = document.getElementById(`count_${id}`);
+                if (input) input.value = counts[id] || 0;
+                toast('🚫 Producto no disponible — no se puede点货', true);
+                return;
+            }
             let num = parseInt(raw, 10);
             if (isNaN(num) || num < 0) num = 0;
             const prev = counts[id] || 0;
@@ -1033,15 +1136,18 @@ AKMG7072,ACCESORIOS PARA DRIMER(73 UND) PARA(PIEZA Y VI),2,3.66,6.59,7.69,6.59,I
 
         // ========== MULTI-SELECT ==========
         function toggleRow(id) {
+            const product = products.find(p => p.id === id);
+            if (product && product.isHidden) {
+                toast('🚫 No se puede seleccionar un producto no disponible', true);
+                return;
+            }
             if (selectedRows.has(id)) selectedRows.delete(id);
             else selectedRows.add(id);
             updateSelectedCount();
         }
 
         function updateSelectedCount() {
-            const checks = document.querySelectorAll('.row-check');
-            const checked = document.querySelectorAll('.row-check:checked');
-            // 同步复选框状态（非必须，但保持一致性）
+            // 仅占位，维持结构
         }
 
         // ========== CHECKOUT ==========
